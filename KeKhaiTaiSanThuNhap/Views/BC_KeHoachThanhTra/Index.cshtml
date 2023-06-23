@@ -1,0 +1,274 @@
+﻿
+@{
+    ViewBag.Title = "Báo Cáo, Thống Kê Kế Hoạch Kê Khai";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<section class="content-header">
+<div class="container-fluid">
+    <div class="row mb-2">
+        <div class="col-sm-6">
+            <ol class="breadcrumb float-sm-left">
+                <li class="breadcrumb-item"><a href="@Url.Action("Index","Home")">Trang chủ</a></li>
+                <li class="breadcrumb-item active">Danh Sách Cơ Quan, Đơn Vị Lập Kế Hoạch</li>
+            </ol>
+        </div>
+    </div>
+</div>
+</section>
+
+<section class="content">
+    <div class="container-fluid">
+        <!-- Small boxes (Stat box) -->
+        <div class="row">
+            <div class="col-lg-4 col-6">
+                <!-- small box -->
+                <div class="small-box bg-info elevation-4">
+                    <div class="inner">
+                        <h4 id="KHTN">SỐ KẾ HOẠCH CHƯA HOÀN THÀNH</h4>
+
+                        <p> kế hoạch</p>
+                    </div>
+                    <a href="@Url.Action("Index","KhachHang",new {MaLoai = "A" })" class="small-box-footer">Xem <i class="fas fa-arrow-circle-right"></i></a>
+                </div>
+            </div>
+            <!-- ./col -->
+            <div class="col-lg-4 col-6">
+                <!-- small box -->
+                <div class="small-box bg-success elevation-4">
+                    <div class="inner">
+                        <h4 id="KHHD">SỐ KẾ HOẠCH ĐÃ LẬP</h4>
+
+                        <p> Bản Kê Khai</p>
+                    </div>
+
+                    <a href="" class="small-box-footer">Xem<i class="fas fa-arrow-circle-right"></i></a>
+                </div>
+            </div>
+            <!-- ./col -->
+            <div class="col-lg-4 col-6">
+                <!-- small box -->
+                <div class="small-box bg-warning elevation-4">
+                    <div class="inner">
+                        <h4 id="KHLH">SỐ CÁN BỘ CHƯA KÊ KHAI</h4>
+                        <p> Bản Kê Khai</p>
+                    </div>
+
+                    <a href="" class="small-box-footer">Xem <i class="fas fa-arrow-circle-right"></i></a>
+                </div>
+            </div>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <div class="card elevation-2">
+                        <div class="card-tools">
+                            <div class="input-group input-group-sm row">
+                                <lable style="line-height: 30px; margin-right: 10px">Loại Kê Khai:</lable>
+                                <select name="LoaiKeKhai" id="LoaiKeKhai" class="form-control" style="margin-right: 15px;">
+                                </select>
+                                <lable style="line-height: 30px; margin-right: 10px; margin-left: 10px; ">Loại Kê Khai:</lable>
+                                <select name="TrangThai" id="TrangThai" class="form-control" style="margin-right: 15px;">
+                                    <option value="true">Đã Kê Khai đầy đủ</option>
+                                    <option value="false">Chưa Kê Khai đầy đủ</option>
+                                </select>
+                                <lable style="line-height: 30px; margin-right: 10px; margin-left: 10px">Kế Hoạch năm:</lable>
+                                <input type="number" id="KeHoachNam" name="KeHoachNam" value="@DateTime.Now.Year" min="2000" max="2100" step="1" style=" margin-right: 10px" />
+
+                                <input type="text" name="table_search" class="form-control float-right mr-1" placeholder="Tìm..." id="Filter">
+                                <div class="input-group-append mr-3">
+                                    <button type="submit" class="btn btn-default" id="search_btn">
+                                        <i class="fas fa-search text-primary"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <table class="table table-hover text-nowrap table-bordered" id="dataTable" style="width: 100%;">
+                            <thead class="bg-primary">
+                                <tr>
+                                    <th style="width: 5%">STT</th>
+                                    <th style="width: 30%">Tên Cơ Quan - Đơn Vị</th>
+                                    <th style="width: 30%">Tên Kế Hoạch</th>
+                                    <th style="width: 5%">Kế Hoạch Năm</th>
+                                    <th style="width: 10%">Tổng Cán Bộ Phải Kê Khai</th>
+                                    <th style="width: 10%">Cán Bộ Đã Kê Khai</th>
+                                    <th style="width: 10%">Trạng Thái</th>
+                                    <th style="width: 5%"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                        <div class="card-footer clearfix" style="height: 51px; width: 100%">
+                            <ul class="pagination pagination-sm m-0 float-right">
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+</section>
+<script>
+    var dt;
+    var kehoachnam = $("#KeHoachNam").val();
+   
+    $("#KeHoachNam").change(() => {
+        dt.columns(2).search($("#LoaiKeKhai").val());
+        dt.columns(1).search($("#Filter").val());
+        dt.columns(0).search($("#KeHoachNam").val());
+        dt.columns(3).search($("#TrangThai").val());
+
+        dt.draw();
+    })
+
+   
+
+
+
+    function loadDataTable() {
+        dt = $("#dataTable").DataTable({
+            "lengthChange": false,
+            "info": false,
+            "searching": true,
+            "language": {
+                "search": "",
+                "info": "Tổng số _TOTAL_ hàng",
+                "infoEmpty": "",
+                "infoFiltered": "",
+                "paginate": {
+                    "next": "»",
+                    "previous": "«"
+                },
+                "processing": `Đang tải dữ liệu`,
+                searchPlaceholder: "Tìm...",
+                zeroRecords: "Không tìm thấy kết quả",
+
+            },
+            dom: 'Bfrtip',
+            buttons: [
+                {
+                    text: '<i class="fa fa-file-excel"></i>',
+                    extend: 'excel',
+                    className: 'btn btn-outline-primary btn-sm mt-2 ml-3'
+                },
+                {
+                    text: '<i class="fa fa-file-pdf"></i>',
+                    extend: 'pdf',
+                    className: 'btn btn-outline-primary btn-sm mt-2'
+                },
+                {
+                    text: '<i class="fa fa-print"></i>',
+                    extend: 'print',
+                    className: 'btn btn-outline-primary btn-sm mt-2'
+                }
+            ],
+
+            "serverSide": true,
+            "processing": true,
+            "ajax": {
+                "url": "/BC_KeHoachThanhTra/LoadDataCoQuan",
+                "type": "POST",
+                "datatype": "json"
+            },
+            "columnDefs": [
+                { className: "cn", "targets": [7] }
+            ],
+
+            //Ma_CoQuan_DonVi = cq.Ma_CoQuan_DonVi, Ten = cq.Ten, MaLoai_CoQuan_DonVi = cq.MaLoai_CoQuan_DonVi, Ten_Loai_CQDV = lcq.Ten_Loai_CQDV, KeHoachNam = khkk.KeHoachNam, TenKeHoachKeKhai = khkk.TenKeHoachKeKhai, Ma_Loai_KeKhai = khkk.Ma_Loai_KeKhai, TrangThai = khkk.TrangThai, DSCanBoPhaiKeKhai 
+            "columns": [
+                { "data": "Ma_CoQuan_DonVi" },
+                { "data": "Ten" },
+                { "data": "TenKeHoachKeKhai" },
+                { "data": "KeHoachNam" },
+                
+                { "data": "DSCanBoPhaiKeKhai" },
+                { "data": "CanBoDaKeKhai" },
+                {
+                    "data": { "DSCanBoPhaiKeKhai": "DSCanBoPhaiKeKhai", "CanBoDaKeKhai": "CanBoDaKeKhai"}, "render": function (data, type, row) {
+                        if (data.DSCanBoPhaiKeKhai > data.CanBoDaKeKhai) {
+                            return `<span class="badge badge-danger">${data.DSCanBoPhaiKeKhai - data.CanBoDaKeKhai} Cán Bộ Chưa Kê Khai</span>`
+                        }
+                        return `<span class="badge badge-success">Đã Kê Khai đầy đủ</span>`
+                    }
+                },
+                {
+                    "data": {
+                        "Ma_CoQuan_DonVi": "Ma_CoQuan_DonVi", "KeHoachNam": "KeHoachNam", "Ma_Loai_KeKhai": "Ma_Loai_KeKhai", "MaKeHoachKeKhai": "MaKeHoachKeKhai"}, "render": function (data, type, row) {
+                        return `<div class="dropleft">
+                                      <button class="btn btn-outline-info btn-sm" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="padding: 4px 13px;">
+                                        <i class="fa-solid fa-ellipsis-vertical"></i>
+                                      </button>
+                                      <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                        <a class="dropdown-item" href="/bao-cao-ke-hoach-ke-khai/ke-hoach-ke-khai?Ma_CoQuan_DonVi=${data.Ma_CoQuan_DonVi}&KeHoachNam=${data.KeHoachNam}&Ma_Loai_KeKhai=${$("#LoaiKeKhai").val()}&MaKeHoach=${data.MaKeHoachKeKhai}" >
+                                            Xem Chi Tiết
+                                        </a>    
+                                      </div>
+                                    </div>`
+                    }
+                },
+            ]
+        });
+        dt.on('draw.dt', function () {
+           
+            var info = dt.page.info();
+            dt.column(0, { search: 'applied', order: 'applied', page: 'applied' }).nodes().each(function (cell, i) {
+                cell.innerHTML = i + 1 + info.start;
+            });
+        });
+    }
+
+    $(document).ready(async function () {
+        loadDataTable();
+       
+        await $.get("/BC_KeHoachThanhTra/GetLoaiKeKhai", async (data) => {
+
+            $("#LoaiKeKhai").empty();
+            await $.each(data, (index, item) => {
+                if (item.Ma_Loai_KeKhai == 3) {
+                    $("#LoaiKeKhai").append(`<option value="${item.Ma_Loai_KeKhai}" selected>${item.Ten_KeKhai}</option>`);
+                } else {
+                    $("#LoaiKeKhai").append(`<option value="${item.Ma_Loai_KeKhai}" >${item.Ten_KeKhai}</option>`);
+                }
+            })
+            $("#LoaiKeKhai").select2()
+            $("#TrangThai").select2()
+            $("#LoaiKeKhai").change(() => {
+                dt.columns(0).search($("#KeHoachNam").val());
+                dt.columns(1).search($("#Filter").val());
+                dt.columns(2).search($("#LoaiKeKhai").val());
+                dt.columns(3).search($("#TrangThai").val());
+                dt.draw();
+            })
+            $("#TrangThai").change(() => {
+                dt.columns(0).search($("#KeHoachNam").val());
+                dt.columns(1).search($("#Filter").val());
+                dt.columns(2).search($("#LoaiKeKhai").val());
+                dt.columns(3).search($("#TrangThai").val());
+                dt.draw();
+            })
+        })
+        dt.columns(0).search($("#KeHoachNam").val());
+        dt.columns(2).search($("#LoaiKeKhai").val());
+        dt.columns(3).search($("#TrangThai").val());
+        dt.draw();
+        $("#search_btn").click(() => {
+            var searchValue = $('#Filter').val().trim()
+            dt.columns(0).search($("#KeHoachNam").val());
+            dt.columns(2).search($("#LoaiKeKhai").val());
+            dt.columns(1).search($("#Filter").val());
+            dt.columns(3).search($("#TrangThai").val());
+
+            dt.draw()
+        })
+
+        $("#Filter").keypress(function (e) {
+            if (e.keyCode == 13) {
+                dt.columns(0).search($("#KeHoachNam").val());
+                dt.columns(2).search($("#LoaiKeKhai").val());
+                dt.columns(1).search($("#Filter").val());
+                dt.columns(3).search($("#TrangThai").val());
+                dt.draw();
+            }
+        });
+    })
+</script>

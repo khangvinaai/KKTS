@@ -1,0 +1,1389 @@
+﻿
+@{
+    ViewBag.Title = "LapKeHoach";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    <style>
+        table {
+            width: 50%;
+            counter-reset: row-num -1;
+        }
+
+            table tr {
+                counter-increment: row-num;
+            }
+
+                table tr td:first-child::before {
+                    content: counter(row-num);
+                }
+
+        /*
+
+        */
+        .line {
+            width: 200px;
+        }
+
+        .stripesLoader {
+            margin: 4px;
+            height: 20px;
+            /*should not be larger than 20px*/
+            position: relative;
+            background: linear-gradient(90deg, #eee 50%, transparent 50%);
+            background-color: crimson;
+            background-size: 200%;
+            background-position: 80%;
+            border-radius: 5px;
+            transform: scale(-1);
+            transition: 0.3s;
+        }
+
+            .stripesLoader:before {
+                content: "";
+                position: absolute;
+                width: 100%;
+                height: 100%;
+                border-radius: 5px;
+                background: linear-gradient( 45deg, transparent 25%, rgba(238, 238, 238, 0.5) 25%, rgba(238, 238, 238, 0.5) 30%, transparent 30%, transparent 35%, rgba(238, 238, 238, 0.5) 35%, rgba(238, 238, 238, 0.5) 70%, transparent 70% );
+                animation: shift 2s linear infinite;
+                background-size: 60px 100%;
+                box-shadow: inset 0 0px 1px rgba(0, 0, 0, 0.2), inset 0 -2px 1px rgba(0, 0, 0, 0.2);
+            }
+
+
+        .multi_step_form {
+            background: #f6f9fb;
+            display: block;
+            overflow-x: hidden;
+        }
+
+            .multi_step_form #msform {
+                text-align: center;
+                position: relative;
+                padding-top: 50px;
+                min-height: 820px;
+                height: auto;
+                margin: 0 auto;
+                background: #ffffff;
+                z-index: 1;
+            }
+
+                .multi_step_form #msform .tittle {
+                    text-align: center;
+                    padding-bottom: 55px;
+                }
+
+                    .multi_step_form #msform .tittle h2 {
+                        font: 500 24px/35px "Roboto", sans-serif;
+                        color: #3f4553;
+                        padding-bottom: 5px;
+                    }
+
+                    .multi_step_form #msform .tittle p {
+                        font: 400 16px/28px "Roboto", sans-serif;
+                        color: #5f6771;
+                    }
+
+                .multi_step_form #msform fieldset {
+                    border: 0;
+                    padding: 20px 105px 0;
+                    position: relative;
+                    width: 100%;
+                    left: 0;
+                    right: 0;
+                }
+
+                    .multi_step_form #msform fieldset:not(:first-of-type) {
+                        display: none;
+                    }
+
+                    .multi_step_form #msform fieldset h3 {
+                        font: 500 18px/35px "Roboto", sans-serif;
+                        color: #3f4553;
+                    }
+
+                    .multi_step_form #msform fieldset h6 {
+                        font: 400 15px/28px "Roboto", sans-serif;
+                        color: #5f6771;
+                        padding-bottom: 30px;
+                    }
+
+                    .multi_step_form #msform fieldset .intl-tel-input {
+                        display: block;
+                        background: transparent;
+                        border: 0;
+                        box-shadow: none;
+                        outline: none;
+                    }
+
+                        .multi_step_form #msform fieldset .intl-tel-input .flag-container .selected-flag {
+                            padding: 0 20px;
+                            background: transparent;
+                            border: 0;
+                            box-shadow: none;
+                            outline: none;
+                            width: 65px;
+                        }
+
+                            .multi_step_form #msform fieldset .intl-tel-input .flag-container .selected-flag .iti-arrow {
+                                border: 0;
+                            }
+
+                                .multi_step_form #msform fieldset .intl-tel-input .flag-container .selected-flag .iti-arrow:after {
+                                    content: "\f35f";
+                                    position: absolute;
+                                    top: 0;
+                                    right: 0;
+                                    font: normal normal normal 24px/7px Ionicons;
+                                    color: #5f6771;
+                                }
+
+                    .multi_step_form #msform fieldset #phone {
+                        padding-left: 80px;
+                    }
+
+                    .multi_step_form #msform fieldset .form-group {
+                        padding: 0 10px;
+                    }
+
+                    .multi_step_form #msform fieldset .fg_2, .multi_step_form #msform fieldset .fg_3 {
+                        padding-top: 10px;
+                        display: block;
+                        overflow: hidden;
+                    }
+
+                    .multi_step_form #msform fieldset .fg_3 {
+                        padding-bottom: 70px;
+                    }
+
+                    .multi_step_form #msform fieldset .form-control, .multi_step_form #msform fieldset .product_select {
+                        border-radius: 3px;
+                        border: 1px solid #d8e1e7;
+                        padding: 0 20px;
+                        height: auto;
+                        font: 400 15px/48px "Roboto", sans-serif;
+                        color: #5f6771;
+                        box-shadow: none;
+                        outline: none;
+                        width: 100%;
+                    }
+
+                        .multi_step_form #msform fieldset .form-control.placeholder, .multi_step_form #msform fieldset .product_select.placeholder {
+                            color: #5f6771;
+                        }
+
+                        .multi_step_form #msform fieldset .form-control:-moz-placeholder, .multi_step_form #msform fieldset .product_select:-moz-placeholder {
+                            color: #5f6771;
+                        }
+
+                        .multi_step_form #msform fieldset .form-control::-moz-placeholder, .multi_step_form #msform fieldset .product_select::-moz-placeholder {
+                            color: #5f6771;
+                        }
+
+                        .multi_step_form #msform fieldset .form-control::-webkit-input-placeholder, .multi_step_form #msform fieldset .product_select::-webkit-input-placeholder {
+                            color: #5f6771;
+                        }
+
+                        .multi_step_form #msform fieldset .form-control:hover, .multi_step_form #msform fieldset .form-control:focus, .multi_step_form #msform fieldset .product_select:hover, .multi_step_form #msform fieldset .product_select:focus {
+                            border-color: #5cb85c;
+                        }
+
+                            .multi_step_form #msform fieldset .form-control:focus.placeholder, .multi_step_form #msform fieldset .product_select:focus.placeholder {
+                                color: transparent;
+                            }
+
+                            .multi_step_form #msform fieldset .form-control:focus:-moz-placeholder, .multi_step_form #msform fieldset .product_select:focus:-moz-placeholder {
+                                color: transparent;
+                            }
+
+                            .multi_step_form #msform fieldset .form-control:focus::-moz-placeholder, .multi_step_form #msform fieldset .product_select:focus::-moz-placeholder {
+                                color: transparent;
+                            }
+
+                            .multi_step_form #msform fieldset .form-control:focus::-webkit-input-placeholder, .multi_step_form #msform fieldset .product_select:focus::-webkit-input-placeholder {
+                                color: transparent;
+                            }
+
+                        .multi_step_form #msform fieldset .product_select:after {
+                            display: none;
+                        }
+
+                        .multi_step_form #msform fieldset .product_select:before {
+                            content: "\f35f";
+                            position: absolute;
+                            top: 0;
+                            right: 20px;
+                            font: normal normal normal 24px/48px Ionicons;
+                            color: #5f6771;
+                        }
+
+                        .multi_step_form #msform fieldset .product_select .list {
+                            width: 100%;
+                        }
+
+                    .multi_step_form #msform fieldset .done_text {
+                        padding-top: 40px;
+                    }
+
+                        .multi_step_form #msform fieldset .done_text .don_icon {
+                            height: 36px;
+                            width: 36px;
+                            line-height: 36px;
+                            font-size: 22px;
+                            margin-bottom: 10px;
+                            background: #1E90FF;
+                            display: inline-block;
+                            border-radius: 50%;
+                            color: #ffffff;
+                            text-align: center;
+                        }
+
+                        .multi_step_form #msform fieldset .done_text h6 {
+                            line-height: 23px;
+                        }
+
+                    .multi_step_form #msform fieldset .code_group {
+                        margin-bottom: 60px;
+                    }
+
+                        .multi_step_form #msform fieldset .code_group .form-control {
+                            border: 0;
+                            border-bottom: 1px solid #a1a7ac;
+                            border-radius: 0;
+                            display: inline-block;
+                            width: 30px;
+                            font-size: 30px;
+                            color: #5f6771;
+                            padding: 0;
+                            margin-right: 7px;
+                            text-align: center;
+                            line-height: 1;
+                        }
+
+                    .multi_step_form #msform fieldset .passport {
+                        margin-top: -10px;
+                        padding-bottom: 30px;
+                        position: relative;
+                    }
+
+                        .multi_step_form #msform fieldset .passport .don_icon {
+                            height: 36px;
+                            width: 36px;
+                            line-height: 36px;
+                            font-size: 22px;
+                            position: absolute;
+                            top: 4px;
+                            right: 0;
+                            background: #1E90FF;
+                            display: inline-block;
+                            border-radius: 50%;
+                            color: #ffffff;
+                            text-align: center;
+                        }
+
+                        .multi_step_form #msform fieldset .passport h4 {
+                            font: 500 15px/23px "Roboto", sans-serif;
+                            color: #5f6771;
+                            padding: 0;
+                        }
+
+                    .multi_step_form #msform fieldset .input-group {
+                        padding-bottom: 40px;
+                    }
+
+                        .multi_step_form #msform fieldset .input-group .custom-file {
+                            width: 100%;
+                            height: auto;
+                        }
+
+                            .multi_step_form #msform fieldset .input-group .custom-file .custom-file-label {
+                                width: 168px;
+                                border-radius: 5px;
+                                cursor: pointer;
+                                font: 700 14px/40px "Roboto", sans-serif;
+                                border: 1px solid #99a2a8;
+                                text-align: center;
+                                transition: all 300ms linear 0s;
+                                color: #5f6771;
+                            }
+
+                                .multi_step_form #msform fieldset .input-group .custom-file .custom-file-label i {
+                                    font-size: 20px;
+                                    padding-right: 10px;
+                                }
+
+                                .multi_step_form #msform fieldset .input-group .custom-file .custom-file-label:hover, .multi_step_form #msform fieldset .input-group .custom-file .custom-file-label:focus {
+                                    background: #1E90FF;
+                                    border-color: #1E90FF;
+                                    color: #fff;
+                                }
+
+                            .multi_step_form #msform fieldset .input-group .custom-file input {
+                                display: none;
+                            }
+
+                    .multi_step_form #msform fieldset .file_added {
+                        text-align: left;
+                        padding-left: 190px;
+                        padding-bottom: 60px;
+                    }
+
+                        .multi_step_form #msform fieldset .file_added li {
+                            font: 400 15px/28px "Roboto", sans-serif;
+                            color: #5f6771;
+                        }
+
+                            .multi_step_form #msform fieldset .file_added li a {
+                                color: #1E90FF;
+                                font-weight: 500;
+                                display: inline-block;
+                                position: relative;
+                                padding-left: 15px;
+                            }
+
+                                .multi_step_form #msform fieldset .file_added li a i {
+                                    font-size: 22px;
+                                    padding-right: 8px;
+                                    position: absolute;
+                                    left: 0;
+                                    transform: rotate(20deg);
+                                }
+
+                .multi_step_form #msform #progressbar {
+                    margin-bottom: 30px;
+                    overflow: hidden;
+                }
+
+                    .multi_step_form #msform #progressbar li {
+                        list-style-type: none;
+                        color: #99a2a8;
+                        font-size: 9px;
+                        width: calc(100%/4);
+                        float: left;
+                        position: relative;
+                        font: 500 13px/1 "Roboto", sans-serif;
+                    }
+
+                        .multi_step_form #msform #progressbar li:nth-child(2):before {
+                            content: "\f47f";
+                        }
+
+                        .multi_step_form #msform #progressbar li:nth-child(3):before {
+                            content: "\f12f";
+                        }
+                        .multi_step_form #msform #progressbar li:nth-child(4):before {
+                            content: "\f376";
+                        }
+
+                        .multi_step_form #msform #progressbar li:before {
+                            content: "\f373";
+                            font: normal normal normal 30px/50px Ionicons;
+                            width: 50px;
+                            height: 50px;
+                            line-height: 50px;
+                            display: block;
+                            background: #eaf0f4;
+                            border-radius: 50%;
+                            margin: 0 auto 10px auto;
+                        }
+
+                        .multi_step_form #msform #progressbar li:after {
+                            content: '';
+                            width: 100%;
+                            height: 10px;
+                            background: #eaf0f4;
+                            position: absolute;
+                            left: -50%;
+                            top: 21px;
+                            z-index: -1;
+                        }
+
+                        .multi_step_form #msform #progressbar li:last-child:after {
+                            width: 150%;
+                        }
+
+                        .multi_step_form #msform #progressbar li.active {
+                            color: #1E90FF;
+                        }
+
+
+                            .multi_step_form #msform #progressbar li.active:before, .multi_step_form #msform #progressbar li.active:after {
+                                background: #1E90FF;
+                                color: white;
+                                content: "\f373";
+                            }
+                            
+
+                .multi_step_form #msform .action-button {
+                    background: #5cb85c;
+                    color: white;
+                    border: 0 none;
+                    border-radius: 5px;
+                    cursor: pointer;
+                    min-width: 130px;
+                    font: 700 14px/40px "Roboto", sans-serif;
+                    border: 1px solid #5cb85c;
+                    margin: 0 5px;
+                    text-transform: uppercase;
+                    display: inline-block;
+                }
+
+                    .multi_step_form #msform .action-button:hover, .multi_step_form #msform .action-button:focus {
+                        background: #405867;
+                        border-color: #405867;
+                    }
+
+                .multi_step_form #msform .previous_button {
+                    background: transparent;
+                    color: #99a2a8;
+                    border-color: #99a2a8;
+                }
+
+                    .multi_step_form #msform .previous_button:hover, .multi_step_form #msform .previous_button:focus {
+                        background: #405867;
+                        border-color: #405867;
+                        color: #fff;
+                    }
+
+        .intro {
+            background: #fff;
+            padding: 60px 30px;
+            color: #333;
+            margin-bottom: 15px;
+            line-height: 1.5;
+            text-align: center;
+        }
+
+            .intro h1 {
+                font-size: 18pt;
+                padding-bottom: 15px;
+            }
+
+            .intro p {
+                font-size: 14px;
+            }
+
+        .action {
+            text-align: center;
+            display: block;
+            margin-top: 20px;
+        }
+
+        a.btn {
+            text-decoration: none;
+            color: #666;
+            border: 2px solid #666;
+            padding: 10px 15px;
+            display: inline-block;
+            margin-left: 5px;
+        }
+
+            a.btn:hover {
+                background: #666;
+                color: #fff;
+                transition: .3s;
+                -webkit-transition: .3s;
+            }
+
+        .btn:before {
+            font-family: FontAwesome;
+            font-weight: normal;
+            margin-right: 10px;
+        }
+
+        .github:before {
+            content: "\f09b"
+        }
+
+        .down:before {
+            content: "\f019"
+        }
+
+        .back:before {
+            content: "\f112"
+        }
+
+        .credit {
+            background: #fff;
+            padding: 12px;
+            font-size: 9pt;
+            text-align: center;
+            color: #333;
+            margin-top: 40px;
+        }
+
+            .credit span:before {
+                font-family: FontAwesome;
+                color: #e41b17;
+                content: "\f004";
+            }
+
+            .credit a {
+                color: #333;
+                text-decoration: none;
+            }
+
+                .credit a:hover {
+                    color: #1DBF73;
+                }
+
+                    .credit a:hover:after {
+                        font-family: FontAwesome;
+                        content: "\f08e";
+                        font-size: 9pt;
+                        position: absolute;
+                        margin: 3px;
+                    }
+
+        main {
+            background: #fff;
+            padding:: 20px;
+        }
+
+        article h1,
+        article h2,
+        article h3,
+        article h4,
+        article p {
+            padding: 14px;
+            color: #333;
+        }
+
+        article p {
+            font-size: 15px;
+            line-height: 1.5;
+        }
+
+
+        .set-overlayer,
+        .set-glass,
+        .set-sticky {
+            cursor: pointer;
+            height: 45px;
+            line-height: 45px;
+            padding: 0 15px;
+            color: #333;
+            font-size: 16px;
+        }
+
+            .set-overlayer:after,
+            .set-glass:after,
+            .to-active:after,
+            .set-sticky:after {
+                font-family: FontAwesome;
+                font-size: 18pt;
+                position: relative;
+                float: right;
+            }
+
+            .set-overlayer:after,
+            .set-glass:after,
+            .set-sticky:after {
+                content: "\f204";
+                transition: .6s;
+            }
+
+        .to-active:after {
+            content: "\f205";
+            color: #008080;
+            transition: .6s;
+        }
+
+        .set-overlayer,
+        .set-glass,
+        .set-sticky,
+        .source,
+        .theme-tray {
+            margin: 10px;
+            background: #f2f2f2;
+            border-radius: 5px;
+            border: 2px solid #f1f1f1;
+            box-sizing: border-box;
+        }
+        /* Syntax Highlighter*/
+
+        pre.prettyprint {
+            padding: 15px !important;
+            margin: 10px;
+            border: 0 !important;
+            background: #f2f2f2;
+            overflow: auto;
+        }
+
+        .source {
+            white-space: pre;
+            overflow: auto;
+            max-height: 400px;
+        }
+
+        code {
+            border: 1px solid #ddd;
+            padding: 2px;
+            border-radius: 2px;
+        }
+    </style>
+}
+
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-left">
+                    <li class="breadcrumb-item"><a href="@Url.Action("Index", "Home")">Trang chủ</a></li>
+                    <li class="breadcrumb-item active">Lập kế hoạch xác minh</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="content">
+    <div class="container-fluid">
+        @*<div class="row">
+            @using (Ajax.BeginForm("Create", "NV_LapKeHoachXacMinh", new AjaxOptions { HttpMethod = "POST", OnSuccess = "FnSuccess" }, new { @class = "form_KeKhai form-horizontal" }))
+            {*@
+        @*<div class="col-12">
+            <div class="card text_ui_right_cus Card-control">
+            <div class="row line_header">
+                <div class="col-md-6 title_ngtao clsTitleFrom" style="text-align: left; ">
+
+                </div>
+                <div class="col-md-6 title_ngtao clsTitleFrom" style="text-align: right; ">
+                    <button class="btn btn-primary clsCreateKeKhaiTaiSan" id="btnCreateKeKhaiTaiSan"><i class="fas fa-edit"></i> Lưu kế hoạch xác minh</button>
+                </div>
+            </div>
+            <div style="padding-bottom: 1%; padding-left:2%; padding-right:2%;" class="row">
+                <div class="col-md-12">
+                    <ul class="nav nav-tabs nav-justified">
+                        <li id="tab_patient_reception_status_wait" class="nav-item">
+                            <a class="nav-link active" data-toggle="tab" href="#thongtinchung">Thông tin kế hoạch</a>
+                        </li>
+                    </ul>
+                    <div class="tab-content">
+                        <div class="tab-pane active" id="thongtinchung">
+                            <div class="row">
+                                <div class="col-md-12" style="text-align: left; padding-top: 10px;">
+                                    <label class="Showheader-title">
+                                        <label class="mt-0 header-title header-title-Edit" data-toggle="collapse" data-target="#collapseThongTinLapKeHoach" aria-expanded="false" aria-controls="collapseThongTinLapKeHoach">
+                                            <i class="far fa-caret-square-down"></i>
+                                            <span class="TitleForm clsShow cursor-pointer">Thông tin kế hoạch xác minh</span>
+                                        </label>
+                                    </label>
+                                </div>
+                                <div class="col-md-12 collapse show" id="collapseThongTinLapKeHoach">
+                                    <div class="row">
+                                        <div class="col-5">
+                                            <div class="form-group">
+                                                <label>Tên kế hoạch</label>
+                                                <input type="text" class="form-control" id="TenKeHoach" name="TenKeHoachXacMinh">
+                                            </div>
+                                        </div>
+                                        <div class="col-3">
+                                            <div class="form-group">
+                                                <label>Căn cứ quyết định số</label>
+                                                <input type="text" class="form-control" id="CanCuQuyetDinh" name="CanCuQuyetDinh">
+                                            </div>
+                                        </div>
+                                        <div class="col-2">
+                                            <div class="form-group">
+                                                <label>Kế hoạch năm</label>
+                                                <input type="text" class="form-control" placeholder="Nhập năm kế hoạch" id="NamKeHoach" name="KeHoachNam" value="@DateTime.Now.Year">
+                                            </div>
+                                        </div>
+                                        <div class="col-2">
+                                            <div class="form-group">
+                                                <label>Thời hạn xác minh (Ngày)</label>
+                                                <input type="text" class="form-control" placeholder="Nhập thời hạn xác minh" id="ThoiHanXacMinh" name="ThoiHanXacMinh">
+                                            </div>
+                                        </div>
+                                        <div class="col-12">
+                                            <div class="form-group">
+                                                <label>Nội dung kế hoạch</label>
+                                                <textarea class="form-control" id="NoiDungXacMinh" name="NoiDungXacMinh"></textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12" style="text-align: left; padding-top: 10px;">
+                                    <label class="Showheader-title">
+                                        <label class="mt-0 header-title header-title-Edit" data-toggle="collapse" data-target="#collapseDanhSachToXacMinh" aria-expanded="false" aria-controls="collapseDanhSachToXacMinh">
+                                            <i class="far fa-caret-square-down"></i>
+                                            <span class="TitleForm clsShow cursor-pointer">Danh sách thành viên tổ xác minh</span>
+                                        </label>
+                                    </label>
+                                </div>
+                                <div class="col-md-12 collapse show" id="collapseDanhSachToXacMinh">
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <div class="form-group">
+                                                        <input type="radio" id="idRadioAddNew" name="radioAddNewOrEdit" checked>
+                                                        <label>Thêm mới</label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label>Tên tổ xác minh</label>
+                                                        <input type="text" class="form-control" id="TenToXacMinh" name="TenToXacMinh">
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label>Tổ trưởng</label>
+                                                        <select class="form-control" name="ToTruong" id="ToTruong" style="width: 100%; height: 100%">
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                        <div class="col-6">
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <div class="form-group">
+                                                        <input type="radio" id="idRadioEdit" name="radioAddNewOrEdit">
+                                                        <label>Lấy danh sách cũ</label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-12">
+                                                    <div class="form-group">
+                                                        <label>Chọn tổ xác minh</label>
+                                                        <select class="form-control" name="DanhSachToXacMinh" id="DanhSachToXacMinh" style="width: 100%; height: 100%" disabled>
+
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div id="table-wrapper" style=" width: 100%;">
+                                            <div id="table-scroll">
+                                                <table id="datatable-ToXacMinh" class="table table-bordered dt-responsive nowrap content_midle_center table-responsive" style="border-collapse: collapse; border-spacing: 0; width: 100%; height:auto">
+                                                    <thead>
+                                                        <tr>
+                                                            <th style="width: 2%;">STT</th>
+                                                            <th style="width: 15%;">Họ và Tên</th>
+                                                            <th style="width: 8%;">Ngày sinh</th>
+                                                            <th style="width: 22%;">Địa Chỉ</th>
+                                                            <th style="width: 7%;">CCCD</th>
+                                                            <th style="width: 11%;">Cơ quan</th>
+                                                            <th style="width: 22%;">Địa chỉ cơ quan</th>
+                                                            <th style="width: 8%;">Chức vụ</th>
+                                                            <th style="width: 5%;">Chức năng</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody id="danhsachtoxacminh">
+                                                        <tr>
+                                                            <td></td>
+                                                            <td>
+                                                                <select class="form-control Ma_CanBo_XacMinh" name="Ma_CanBo_XacMinh[]" id="Ma_CanBo_XacMinh" style="width: 100%; height: 100%">
+                                                                </select>
+                                                                <input type="text" name="ChucVu_CanBo_XacMinh[]" hidden value="Thành Viên" />
+                                                            </td>
+                                                            <td></td>
+                                                            <td></td>
+                                                            <td></td>
+                                                            <td></td>
+                                                            <td></td>
+                                                            <td>Thành viên</td>
+                                                            <td><span class="btnDelete btn btn-outline-danger btn-sm delete"><i class="fas fa-trash"></i></span></td>
+                                                        </tr>
+                                                    </tbody>
+                                                    <tfoot><tr><td></td><td style="text-align: left; font-size:15px" colspan="13"><label name="toathuoc_tong"><b>- Tổ xác minh phải có 1 tổ trưởng và ít nhất 1 thành viên</b></label></td></tr></tfoot>
+                                                </table>
+
+                                                <div class="col-md-12" style="text-align: right">
+                                                    <span class="btn btn-info btn-sm waves-effect waves-light mt-2" id="clsAddRowThanhVienToXacMinh" style=" font-size: 12px; border: 2px solid #0091ea;">
+                                                        <i class="fas fa-plus"></i> Thêm thành viên
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row" style="margin-top:10px;">
+                                <div class="col-md-12" style="text-align: left; padding-top: 10px;">
+                                    <label class="Showheader-title">
+                                        <label class="mt-0 header-title header-title-Edit" data-toggle="collapse" data-target="#collapseDanhSachCanBoKeKhai" aria-expanded="false" aria-controls="collapseDanhSachCanBoKeKhai">
+                                            <i class="far fa-caret-square-down"></i>
+                                            <span class="TitleForm clsShow cursor-pointer">Danh sách cán bộ được xác minh</span>
+                                        </label>
+                                    </label>
+                                </div>
+                                <div class="col-md-12 collapse show" id="collapseDanhSachCanBoKeKhai">
+
+            <div class="row pb-3">
+                                            <div class="col-2" style="line-height: 28px;">
+                                                <b id="textProcessCoQuan" style="display: none;">Đang tìm ngẫu nhiên Cơ Quan</b>
+                                            </div>
+                                            <div class="col-10 mt-2"  style="text-align: left; font-size:15px" colspan="13" id="processCoQuanDonVi">
+
+                                            </div>
+                                            <div class="col-2" style="line-height: 28px;">
+                                                <b id="textProcessCanBo" style="display: none;">Đang tìm ngẫu nhiên Cán Bộ </b>
+                                            </div>
+                                            <div class="col-10  mt-2" id="processCanBo">
+
+                                            </div>
+
+                                        </div>
+
+                                        <div class="card text_ui_right_cus Card-control">
+
+                                            <div style="padding-bottom: 1%; padding-left:2%; padding-right:2%;" class="row">
+                                                <div class="col-md-12">
+                                                    <ul class="nav nav-tabs nav-justified">
+
+                                                        <li id="tab_patient_reception_status_receive" class="nav-item">
+                                                            <a class="nav-link  active" data-toggle="tab" href="#QuanSuDungDat">Danh sách Cơ Quan ngẫu nhiên </a>
+                                                        </li>
+                                                        <li id="tab_patient_reception_status_receive" class="nav-item">
+                                                            <a class="nav-link" data-toggle="tab" href="#NhaOCongTrinh">Danh sách Cán bộ ngẫu nhiên </a>
+                                                        </li>
+
+                                                    </ul>
+                                                    <div class="tab-content">
+
+                                                        <div class="tab-pane active" id="QuanSuDungDat">
+
+
+                                                            <div class="row" style="margin-top:30px;">
+                                                                <div id="table-wrapper" style=" width: 100%;">
+                                                                    <div id="table-scroll">
+                                                                        <table id="datatable-DanhSachCoQuanDuocXacMinh" class="table table-bordered dt-responsive nowrap content_midle_center table-responsive" style="border-collapse: collapse; border-spacing: 0; width: 100%; height:auto">
+                                                                            <thead>
+                                                                                <tr>
+                                                                                    <th style="width: 2%;">STT</th>
+                                                                                    <th style="width: 10%;">Tên Cơ Quan</th>
+                                                                                    <th style="width: 8%;">Số Điện Thoại</th>
+                                                                                    <th style="width: 22%;">Địa Chỉ</th>
+                                                                                    <th style="width: 17%;">Mã só thuế</th>
+                                                                                    <th style="width: 7%;">Chức năng</th>
+                                                                                </tr>
+                                                                            </thead>
+                                                                            <tbody id="DanhSachCoQuanDuocXacMinh">
+                                                                            </tbody>
+                                                                            <tfoot>
+                                                                                <tr>
+                                                                                    <td></td>
+                                                                                    <td style="text-align: left; font-size:15px" colspan="13" id="loading-canbo">
+                                                                                        <label name="toathuoc_tong" id="lableTyLe"><b>- Tỷ lệ cơ quan : 20%</b><br /></label>
+                                                                                    </td>
+                                                                                </tr>
+                                                                            </tfoot>
+                                                                        </table>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+
+                                                        </div>
+                                                        <div class="tab-pane " id="NhaOCongTrinh">
+
+                                                            <div class="row" style="margin-top:30px;">
+                                                                <div id="table-wrapper" style=" width: 100%;">
+                                                                    <div id="table-scroll">
+                                                                        <table id="datatable-DanhSachCanBoDuocXacMinh" class="table table-bordered dt-responsive nowrap content_midle_center table-responsive" style="border-collapse: collapse; border-spacing: 0; width: 100%; height:auto">
+                                                                            <thead>
+                                                                                <tr>
+                                                                                    <th style="width: 2%;">STT</th>
+                                                                                    <th style="width: 10%;">Họ và Tên</th>
+                                                                                    <th style="width: 8%;">Ngày sinh</th>
+                                                                                    <th style="width: 7%;">CCCD</th>
+                                                                                    <th style="width: 11%;">Cơ quan</th>
+                                                                                    <th style="width: 18%;">Chức vụ</th>
+                                                                                    <th style="width: 8%;">Chức năng</th>
+                                                                                </tr>
+                                                                            </thead>
+                                                                            <tbody id="DanhSachCanBoDuocXacMinh">
+                                                                            </tbody>
+                                                                            <tfoot>
+                                                                                <tr>
+                                                                                    <td></td>
+                                                                                    <td style="text-align: left; font-size:15px" colspan="13" id="loading-canbo">
+                                                                                        <label name="toathuoc_tong" id="lableTyLe"><b>- Tỷ lệ cán bộ mỗi cơ quan : 10% <br />- Trong 10% có ít nhất một người đứng đầu hoặc phó</b></label>
+
+                                                                                    </td>
+                                                                                </tr>
+                                                                            </tfoot>
+                                                                        </table>
+
+
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row line_header mb-2 mr-2">
+                                                <div class="col-md-6 title_ngtao clsTitleFrom" style="text-align: left; ">
+
+                                                </div>
+                                                <div class="col-md-6 title_ngtao clsTitleFrom" style="text-align: right; ">
+                                                    <button class="btn btn-info clsCreateKeKhaiTaiSan" id="clsAddRowDanhSachCanBoDuocXacMinh" type="button"><i class="fas fa-plus"></i> Lấy ngẫu nhiên danh sách</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="row" style="margin-top:10px;">
+                                    <div class="col-md-12" style="text-align: left; padding-top: 10px;">
+                                        <label class="Showheader-title">
+                                            <label class="mt-0 header-title header-title-Edit" data-toggle="collapse" data-target="#collapseDanhSachPhoiHop" aria-expanded="false" aria-controls="collapseDanhSachPhoiHop">
+                                                <i class="far fa-caret-square-down"></i>
+                                                <span class="TitleForm clsShow cursor-pointer">Danh sách các cơ quan, tổ chức, đơn vị, cá nhân phối hợp (Nếu có)</span>
+                                            </label>
+                                        </label>
+                                    </div>
+                                    <div class="col-md-12 collapse show" id="collapseDanhSachPhoiHop">
+                                        <div class="row">
+                                            <div id="table-wrapper" style=" width: 100%;">
+                                                <div id="table-scroll">
+                                                    <table id="datatable-DanhSachCoQuanPhoiHop" class="table table-bordered dt-responsive nowrap content_midle_center table-responsive" style="border-collapse: collapse; border-spacing: 0; width: 100%; height:auto">
+                                                        <thead>
+                                                            <tr>
+                                                                <th style="width: 2%;">STT</th>
+                                                                <th style="width: 20%;">Tên Cơ Quan - Đơn Vị</th>
+                                                                <th style="width: 30%;">Địa chỉ</th>
+                                                                <th style="width: 13%%;">Mã số thuế</th>
+                                                                <th style="width: 10%;">Số điện thoại</th>
+                                                                <th style="width: 10%;">Email</th>
+                                                                <th style="width: 10%;">Website</th>
+                                                                <th style="width: 5%;">Chức năng</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody id="danhsachcoquanphoihop">
+                                                            <tr>
+                                                                <td></td>
+                                                                <td>
+                                                                    <select class="form-control MaCoQuan" name="MaCoQuan[]" id="MaCoQuan" style="width: 100%; height: 100%">
+
+                                                                    </select>
+                                                                </td>
+                                                                <td></td>
+                                                                <td></td>
+                                                                <td></td>
+                                                                <td></td>
+                                                                <td></td>
+                                                                <td><span class="btnDelete btn-outline-danger btn-sm delete" data-model-id="16" onclick=""><i class="fas fa-trash"></i></span></td>
+                                                            </tr>
+                                                        </tbody>
+                                                        <tfoot><tr><td></td><td style="text-align: left; font-size:15px" colspan="13"><label name="toathuoc_tong"><b>- Cơ quan phối hợp có thể có hoặc không</b></label></td></tr></tfoot>
+                                                    </table>
+                                                    <div class="col-md-12" style="text-align: right">
+                                                        <span  class="btn btn-info btn-sm waves-effect waves-light mt-2" id="clsAddRowDanhSachCoQuanPhoiHop" style=" font-size: 12px; border: 2px solid #0091ea;">
+                                                            <i class="fas fa-plus"></i> Thêm mới
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>*@
+
+        <main>
+
+            <article>
+                
+                <section class="multi_step_form">
+                    <div class="modal fade" id="ModalCoQuan" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h4 class="modal-title" id="exampleModalLabel">Đang lấy dữ liệu ngẫu nhiên của Cơ Quan</h4>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <p>Lấy dữ liệu ngẫu nhiên Cơ Quan, Đơn Vị từ máy chủ. Quá trình này có thể mấy vài giây.</p>
+                                    <div class="progress" style="height:40px; ">
+                                        <div class="progress-bar progress-bar-striped progress-bar-animated" style="width:0%;" id="loadingCoQuan"><b id="loadingCoQuan-b"> 0%</b></div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <span>Xin vui lòng chờ trong ít phút</span>
+                                    <div class="spinner-border text-primary" role="status">
+                                        <span class="sr-only">Loading...</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal fade" id="ModalCanBo" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h4 class="modal-title" id="exampleModalLabel">Đang lấy dữ liệu ngẫu nhiên của Cán Bộ</h4>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <p>Lấy dữ liệu ngẫu nhiên của Cán Bộ từ máy chủ. Quá trình này có thể mấy vài giây.</p>
+                                    <div class="progress" style="height:40px; ">
+                                        <div class="progress-bar progress-bar-striped progress-bar-animated" style="width:0%;" id="loadingCanBo"><b id="loadingCanBo-b"> 0%</b></div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <span>Xin vui lòng chờ trong ít phút</span>
+                                    <div class="spinner-border text-primary" role="status">
+                                        <span class="sr-only">Loading...</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    @using (Ajax.BeginForm("Create", "NV_LapKeHoachXacMinh", new AjaxOptions { HttpMethod = "POST", OnSuccess = "FnSuccess" }, new { @class = "form_KeKhai form-horizontal", @id = "msform" }))
+                    {
+                        <ul id="progressbar">
+                            <li class="active">Lấy ngẫu nhiên Cơ Quan</li>
+                            <li>Lấy ngẫu nhiên Cán Bộ</li>
+                            <li>Thông tin và danh sách thành viên xác minh</li>
+                            <li>Cơ Quan, Tổ Chức phối hợp xác minh</li>
+                        </ul>
+
+                        <fieldset>
+                            <div class="row" style="margin-top:30px;">
+                                <div id="table-wrapper" style=" width: 100%;">
+                                    <div id="table-scroll">
+                                        <table id="datatable-DanhSachCoQuanDuocXacMinh" class="table table-bordered dt-responsive nowrap content_midle_center table-responsive" style="border-collapse: collapse; border-spacing: 0; width: 100%; height:auto">
+                                            <thead>
+                                                <tr>
+                                                    <th style="width: 2%;">STT</th>
+                                                    <th style="width: 10%;">Tên Cơ Quan</th>
+                                                    <th style="width: 8%;">Số Điện Thoại</th>
+                                                    <th style="width: 22%;">Địa Chỉ</th>
+                                                    <th style="width: 17%;">Mã só thuế</th>
+                                                    <th style="width: 7%;">Chức năng</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="DanhSachCoQuanDuocXacMinh">
+                                            </tbody>
+                                            <tfoot>
+                                                <tr>
+                                                    <td></td>
+                                                    <td style="text-align: left; font-size:15px" colspan="13" id="loading-canbo">
+                                                        <label name="toathuoc_tong" id="lableTyLe"><b>- Tỷ lệ cơ quan : 20%</b><br /></label>
+                                                    </td>
+                                                </tr>
+                                            </tfoot>
+                                        </table>
+                                        <div class="row line_header mb-2 mr-2">
+                                            <div class="col-md-6 title_ngtao clsTitleFrom" style="text-align: left; ">
+
+                                            </div>
+                                            <div class="col-md-6 title_ngtao clsTitleFrom" style="text-align: right; ">
+                                                <button class="btn btn-info clsCreateKeKhaiTaiSan" id="clsAddRowDanhSachCoQuanDuocXacMinh" type="button"><i class="fas fa-plus"></i> Lấy ngẫu nhiên danh sách</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <button type="button" id="next-page1" disabled class="next action-button btn btn-success">Tiếp theo</button>
+                        </fieldset>
+                        <fieldset>
+                            <div class="row" style="margin-top:30px;">
+                                <div id="table-wrapper" style=" width: 100%;">
+                                    <div id="table-scroll">
+                                        <table id="datatable-DanhSachCanBoDuocXacMinh" class="table table-bordered dt-responsive nowrap content_midle_center table-responsive" style="border-collapse: collapse; border-spacing: 0; width: 100%; height:auto">
+                                            <thead>
+                                                <tr>
+                                                    <th style="width: 2%;">STT</th>
+                                                    <th style="width: 10%;">Họ và Tên</th>
+                                                    <th style="width: 8%;">Ngày sinh</th>
+                                                    <th style="width: 7%;">CCCD</th>
+                                                    <th style="width: 11%;">Cơ quan</th>
+                                                    <th style="width: 18%;">Chức vụ</th>
+                                                    <th style="width: 8%;">Chức năng</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="DanhSachCanBoDuocXacMinh">
+                                            </tbody>
+                                            <tfoot>
+                                                <tr>
+                                                    <td></td>
+                                                    <td style="text-align: left; font-size:15px" colspan="13" id="loading-canbo">
+                                                        <label name="toathuoc_tong" id="lableTyLe"><b>- Tỷ lệ cán bộ mỗi cơ quan : 10% <br />- Trong 10% có ít nhất một người đứng đầu hoặc phó</b></label>
+
+                                                    </td>
+                                                </tr>
+                                            </tfoot>
+                                        </table>
+
+                                        <div class="row line_header mb-2 mr-2">
+                                            <div class="col-md-6 title_ngtao clsTitleFrom" style="text-align: left; ">
+
+                                            </div>
+                                            <div class="col-md-6 title_ngtao clsTitleFrom" style="text-align: right; ">
+                                                <button class="btn btn-info clsCreateKeKhaiTaiSan" id="clsAddRowDanhSachCanBoDuocXacMinh" type="button"><i class="fas fa-plus"></i> Lấy ngẫu nhiên danh sách</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <button type="button" class="action-button previous previous_button">Trở về</button>
+                            <button type="button" id="next-page2" class="next action-button" disabled>Tiếp theo</button>
+                        </fieldset>
+                        <fieldset>
+                            <div class="col-md-12">
+                                <ul class="nav nav-tabs nav-justified">
+                                    <li id="tab_patient_reception_status_wait" class="nav-item">
+                                        <a class="nav-link active" data-toggle="tab" href="#thongtinchung">Thông tin kế hoạch</a>
+                                    </li>
+                                </ul>
+                                <div class="tab-content">
+                                    <div class="tab-pane active" id="thongtinchung">
+                                        <div class="row">
+                                            <div class="col-md-12" style="text-align: left; padding-top: 10px;">
+                                                <label class="Showheader-title">
+                                                    <label class="mt-0 header-title header-title-Edit" data-toggle="collapse" data-target="#collapseThongTinLapKeHoach" aria-expanded="false" aria-controls="collapseThongTinLapKeHoach">
+                                                        <i class="far fa-caret-square-down"></i>
+                                                        <span class="TitleForm clsShow cursor-pointer">Thông tin kế hoạch xác minh</span>
+                                                    </label>
+                                                </label>
+                                            </div>
+                                            <div class="col-md-12 collapse show" id="collapseThongTinLapKeHoach">
+                                                <div class="row">
+                                                    <div class="col-5">
+                                                        <div class="form-group">
+                                                            <label>Tên kế hoạch</label>
+                                                            <input type="text" class="form-control" id="TenKeHoach" name="TenKeHoachXacMinh">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-3">
+                                                        <div class="form-group">
+                                                            <label>Căn cứ quyết định số</label>
+                                                            <input type="text" class="form-control" id="CanCuQuyetDinh" name="CanCuQuyetDinh">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-2">
+                                                        <div class="form-group">
+                                                            <label>Kế hoạch năm</label>
+                                                            <input type="text" class="form-control" placeholder="Nhập năm kế hoạch" id="NamKeHoach" name="KeHoachNam" value="@DateTime.Now.Year">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-2">
+                                                        <div class="form-group">
+                                                            <label>Thời hạn xác minh (Ngày)</label>
+                                                            <input type="number" class="form-control" min="1" placeholder="Nhập thời hạn xác minh" id="ThoiHanXacMinh" name="ThoiHanXacMinh">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-12">
+                                                        <div class="form-group">
+                                                            <label>Nội dung kế hoạch</label>
+                                                            <textarea class="form-control" id="NoiDungXacMinh" name="NoiDungXacMinh"></textarea>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="row">
+                                                <div class="col-md-12" style="text-align: left; padding-top: 10px;">
+                                                    <label class="Showheader-title">
+                                                        <label class="mt-0 header-title header-title-Edit" data-toggle="collapse" data-target="#collapseDanhSachToXacMinh" aria-expanded="false" aria-controls="collapseDanhSachToXacMinh">
+                                                            <i class="far fa-caret-square-down"></i>
+                                                            <span class="TitleForm clsShow cursor-pointer">Danh sách thành viên tổ xác minh</span>
+                                                        </label>
+                                                    </label>
+                                                </div>
+                                                <div class="col-md-12 collapse show" id="collapseDanhSachToXacMinh">
+                                                    <div class="row">
+                                                        <div class="col-6">
+                                                            <div class="row">
+                                                                <div class="col-md-12">
+                                                                    <div class="form-group">
+                                                                        <input type="radio" id="idRadioAddNew" name="radioAddNewOrEdit" checked>
+                                                                        <label>Thêm mới</label>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-6">
+                                                                    <div class="form-group">
+                                                                        <label>Tên tổ xác minh</label>
+                                                                        <input type="text" class="form-control" id="TenToXacMinh" name="TenToXacMinh">
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-6">
+                                                                    <div class="form-group">
+                                                                        <label>Tổ trưởng</label>
+                                                                        <select class="form-control" name="ToTruong" id="ToTruong" style="width: 100%; height: 100%">
+                                                                        </select>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                        </div>
+                                                        <div class="col-6">
+                                                            <div class="row">
+                                                                <div class="col-md-12">
+                                                                    <div class="form-group">
+                                                                        <input type="radio" id="idRadioEdit" name="radioAddNewOrEdit">
+                                                                        <label>Lấy danh sách cũ</label>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-12">
+                                                                    <div class="form-group">
+                                                                        <label>Chọn tổ xác minh</label>
+                                                                        <select class="form-control" name="DanhSachToXacMinh" id="DanhSachToXacMinh" style="width: 100%; height: 100%" disabled>
+                                                                        </select>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div id="table-wrapper" style=" width: 100%;">
+                                                            <div id="table-scroll">
+                                                                <table id="datatable-ToXacMinh" class="table table-bordered dt-responsive nowrap content_midle_center table-responsive" style="border-collapse: collapse; border-spacing: 0; width: 100%; height:auto">
+                                                                    <thead>
+                                                                        <tr>
+                                                                            <th style="width: 2%;">STT</th>
+                                                                            <th style="width: 15%;">Họ và Tên</th>
+                                                                            <th style="width: 8%;">Ngày sinh</th>
+                                                                            <th style="width: 22%;">Địa Chỉ</th>
+                                                                            <th style="width: 7%;">CCCD</th>
+                                                                            <th style="width: 11%;">Cơ quan</th>
+                                                                            <th style="width: 22%;">Địa chỉ cơ quan</th>
+                                                                            <th style="width: 8%;">Chức vụ</th>
+                                                                            <th style="width: 5%;">Chức năng</th>
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody id="danhsachtoxacminh">
+                                                                        <tr>
+                                                                            <td></td>
+                                                                            <td>
+                                                                                <select class="form-control Ma_CanBo_XacMinh" name="Ma_CanBo_XacMinh[]" id="Ma_CanBo_XacMinh" style="width: 100%; height: 100%">
+                                                                                </select>
+                                                                                <input type="text" name="ChucVu_CanBo_XacMinh[]" hidden value="Thành Viên" />
+                                                                            </td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                            <td>Thành viên</td>
+                                                                            <td><span class="btnDelete btn btn-outline-danger btn-sm delete"><i class="fas fa-trash"></i></span></td>
+                                                                        </tr>
+                                                                    </tbody>
+                                                                    <tfoot><tr><td></td><td style="text-align: left; font-size:15px" colspan="13"><label name="toathuoc_tong"><b>- Tổ xác minh phải có 1 tổ trưởng và ít nhất 1 thành viên</b></label></td></tr></tfoot>
+                                                                </table>
+
+                                                                <div class="col-md-12" style="text-align: right">
+                                                                    <span class="btn btn-info btn-sm waves-effect waves-light mt-2" id="clsAddRowThanhVienToXacMinh" style=" font-size: 12px; border: 2px solid #0091ea;">
+                                                                        <i class="fas fa-plus"></i> Thêm thành viên
+                                                                    </span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <button type="button" class="action-button previous previous_button">Trở về</button>
+                            <button type="button" class="next action-button">Tiếp theo</button>
+                        </fieldset>
+                        <fieldset>
+                            <div class="row" style="margin-top:10px;">
+                                <div class="col-md-12" style="text-align: left; padding-top: 10px;">
+                                    <label class="Showheader-title">
+                                        <label class="mt-0 header-title header-title-Edit" data-toggle="collapse" data-target="#collapseDanhSachPhoiHop" aria-expanded="false" aria-controls="collapseDanhSachPhoiHop">
+                                            <i class="far fa-caret-square-down"></i>
+                                            <span class="TitleForm clsShow cursor-pointer">Danh sách các cơ quan, tổ chức, đơn vị, cá nhân phối hợp (Nếu có)</span>
+                                        </label>
+                                    </label>
+                                </div>
+                                <div class="col-md-12 collapse show" id="collapseDanhSachPhoiHop">
+                                    <div class="row">
+                                        <div id="table-wrapper" style=" width: 100%;">
+                                            <div id="table-scroll">
+                                                <table id="datatable-DanhSachCoQuanPhoiHop" class="table table-bordered dt-responsive nowrap content_midle_center table-responsive" style="border-collapse: collapse; border-spacing: 0; width: 100%; height:auto">
+                                                    <thead>
+                                                        <tr>
+                                                            <th style="width: 2%;">STT</th>
+                                                            <th style="width: 20%;">Tên Cơ Quan - Đơn Vị</th>
+                                                            <th style="width: 30%;">Địa chỉ</th>
+                                                            <th style="width: 13%%;">Mã số thuế</th>
+                                                            <th style="width: 10%;">Số điện thoại</th>
+                                                            <th style="width: 5%;">Chức năng</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody id="danhsachcoquanphoihop">
+                                                        <tr>
+                                                            <td></td>
+                                                            <td>
+                                                                <select class="form-control MaCoQuan" name="MaCoQuan[]" id="MaCoQuan" style="width: 100%; height: 100%">
+                                                                </select>
+                                                            </td>
+                                                            <td></td>
+                                                            <td></td>
+                                                            <td></td>
+                                                            <td></td>
+                                                            <td></td>
+                                                            <td><span class="btnDelete btn-outline-danger btn-sm delete" data-model-id="16" onclick=""><i class="fas fa-trash"></i></span></td>
+                                                        </tr>
+                                                    </tbody>
+                                                    <tfoot><tr><td></td><td style="text-align: left; font-size:15px" colspan="13"><label name="toathuoc_tong"><b>- Cơ quan phối hợp có thể có hoặc không</b></label></td></tr></tfoot>
+                                                </table>
+                                                <div class="col-md-12" style="text-align: right">
+                                                    <span class="btn btn-info btn-sm waves-effect waves-light mt-2" id="clsAddRowDanhSachCoQuanPhoiHop" style=" font-size: 12px; border: 2px solid #0091ea;">
+                                                        <i class="fas fa-plus"></i> Thêm mới
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <button type="button" class="action-button previous previous_button">Trở về</button>
+                            <button type="submit" class="action-button">Lưu lại</button>
+                        </fieldset>
+                    }
+                </section>
+
+            </article>
+
+
+        </main>
+
+
+        @*</div>
+                }
+            </div>
+            <div class="modal fade" id="add-sh2">
+
+            </div>*@
+    </div>
+</section>
+
+<script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js'></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.3/jquery.easing.min.js'></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/12.1.2/js/intlTelInput.js'></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js'></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/jquery-nice-select/1.1.0/js/jquery.nice-select.min.js'></script>
+<script src="~/Scripts/NV_LapKeHoachXacMinh_process.js"></script>
+<script src="~/Scripts/NV_LapKeHoachXacMinh.js"></script>

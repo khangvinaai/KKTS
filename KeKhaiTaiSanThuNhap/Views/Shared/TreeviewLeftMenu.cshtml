@@ -1,0 +1,297 @@
+﻿@{ 
+    var LISTQUYEN = (IEnumerable<string>)ViewBag.ListQuyen;
+}
+
+<aside class="main-sidebar sidebar-light-primary elevation-4" id="sizebar">
+    <!-- Brand Logo -->
+    <a href="@Url.Action("Index", "Home")" class="brand-link bg-primary" id="img">
+        <div class="cropped" style="width: 232px; height: 45px; overflow: hidden; margin-left: 10px;">
+            <img src="~/Content/dist/images/vinaai-logo.png" alt="user-avatar" class="img-fluid">
+        </div>
+        <div class="cropped" style="width: 232px; height: 35px; overflow: hidden; margin-left: 10px;">
+            <span class="brand-text" style="font-size: 17px;">KIỂM SOÁT TÀI SẢN THU NHẬP</span>
+        </div>
+    </a>
+    <!-- Sidebar -->
+    <div class="sidebar">
+
+        <!-- Sidebar Menu -->
+        <nav class="mt-2">
+            <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+                @if (LISTQUYEN.Contains("NV_LapKeHoachKeKhai_Xem") || LISTQUYEN.Contains("NV_DanhSachCanBoKeKhai_Xem") || LISTQUYEN.Contains("NV_KeKhaiTaiSan_Xem") || LISTQUYEN.Contains("NV_BaoCaoTienDo_Xem") || LISTQUYEN.Contains("NV_LapKeHoachXacMinh_Xem") || LISTQUYEN.Contains("NV_DanhSachBanKeKhai_Xem") || LISTQUYEN.Contains("NV_HoSoXacMinh_Xem") || LISTQUYEN.Contains("NV_BaoCaoKetQua_Xem"))
+                {
+                    <li class="nav-item menu-open">
+                        <a href="#" class="nav-link active">
+                            <i class="nav-icon fas fa-table"></i>
+                            <p>
+                                NGHIỆP VỤ
+                                <i class="fas fa-angle-left right"></i>
+                            </p>
+                        </a>
+                        <ul class="nav nav-treeview">
+
+                            @if (LISTQUYEN.Contains("NV_LapKeHoachKeKhai_Xem") || LISTQUYEN.Contains("NV_DanhSachCanBoKeKhai_Xem") || LISTQUYEN.Contains("NV_KeKhaiTaiSan_Xem") || LISTQUYEN.Contains("NV_BaoCaoTienDo_Xem"))
+                            {
+                                <li class="nav-item menu-open">
+
+                                    <a href="#" class="nav-link">
+                                        <i class="nav-icon fas fa-columns text-primary"></i>
+                                        <p onclick="New(this)" style="cursor: pointer">KÊ KHAI VÀ CÔNG KHAI</p>
+                                        <p>
+
+                                            <i class="right fas fa-angle-left"></i>
+                                        </p>
+                                    </a>
+                                    <ul class="nav nav-treeview ">
+                                        @if (LISTQUYEN.Contains("NV_LapKeHoachKeKhai_Xem"))
+                                        {
+                                            <li class="nav-item">
+                                                <a href="/lap-ke-hoach-ke-khai" class="nav-link">
+                                                    <i class="nav-icon fas fa-minus text-primary"></i>
+                                                    <p>
+                                                        Lập Kế Hoạch Kê Khai
+                                                    </p>
+                                                </a>
+                                            </li>
+                                        }
+                                        @if (LISTQUYEN.Contains("NV_DanhSachCanBoKeKhai_Xem"))
+                                        {
+                                            <li class="nav-item">
+                                                <a href="/danh-sach-can-bo-ke-khai" class="nav-link">
+                                                    <i class="nav-icon fas fa-minus text-primary"></i>
+                                                    <p>
+                                                        DS Cán Bộ Kê Khai
+                                                    </p>
+                                                </a>
+                                            </li>
+                                        }
+                                        @if (LISTQUYEN.Contains("NV_KeKhaiTaiSan_Xem"))
+                                        {
+                                            <li class="nav-item">
+                                                <a href="/ke-khai-tai-san" class="nav-link">
+                                                    <i class="nav-icon fas fa-minus text-primary"></i>
+                                                    <p>
+                                                        Kê Khai Tài Sản
+                                                    </p>
+                                                </a>
+                                            </li>
+                                        }
+                                        @if (LISTQUYEN.Contains("NV_TiepNhanKekhai_Xem"))
+                                        {
+                                            <li class="nav-item">
+                                                <a href="/NV_TiepNhanKeKhai" class="nav-link">
+                                                    <i class="nav-icon fas fa-minus text-primary"></i>
+                                                    <p>
+                                                        Tiếp Nhận Bản Kê Khai
+                                                    </p>
+                                                </a>
+                                            </li>
+                                        }
+                                        @if (LISTQUYEN.Contains("NV_BaoCaoTienDo_Xem"))
+                                        {
+                                            <li class="nav-item">
+                                                <a href="/ket-qua-ke-khai" class="nav-link">
+                                                    <i class="nav-icon fas fa-minus text-primary"></i>
+                                                    <p>
+                                                        Kết Quả Kê Khai
+                                                    </p>
+                                                </a>
+                                            </li>
+                                        }
+
+                                        @if (LISTQUYEN.Contains("NV_BaoCaoTienDo_Xem"))
+                                        {
+                                            <li class="nav-item">
+                                                <a href="/bao-cao-ket-qua-ke-khai" class="nav-link">
+                                                    <i class="nav-icon fas fa-minus text-primary"></i>
+                                                    <p>
+                                                        Báo Cáo Kết Quả Kê Khai
+                                                    </p>
+                                                </a>
+                                            </li>
+                                        }
+
+                                    </ul>
+                                </li>
+                            }
+                            @if (LISTQUYEN.Contains("NV_LapKeHoachXacMinh_DanhSachCanBoXacMinh_Xem") || LISTQUYEN.Contains("NV_LapKeHoachXacMinh_Xem") || LISTQUYEN.Contains("NV_XacMinhTaiSanThuNhap_Xem"))
+                            {
+                                <li class="nav-item menu-open">
+                                    <a href="#" class="nav-link active">
+                                        <i class="nav-icon fas fa-columns text-primary"></i>
+                                        <p onclick="New(this)" style="cursor: pointer; font-size: 13px !important;">XÁC MINH TÀI SẢN THU NHẬP</p>
+                                        <p>
+                                            <i class="right fas fa-angle-left"></i>
+                                        </p>
+                                    </a>
+                                    <ul class="nav nav-treeview">
+                                        @if (LISTQUYEN.Contains("NV_LapKeHoachXacMinh_DanhSachCanBoXacMinh_Xem"))
+                                        {
+                                            <li class="nav-item">
+                                                <a href="/danh-sach-can-bo-xac-minh" class="nav-link">
+                                                    <i class="nav-icon fas fa-minus text-primary"></i>
+                                                    <p>
+                                                        Danh Sách Xác Minh
+                                                    </p>
+                                                </a>
+                                            </li>
+                                        }
+										@*
+                                        @if (LISTQUYEN.Contains("NV_LapKeHoachXacMinh_Xem"))
+                                        {
+                                            <li class="nav-item">
+                                                <a href="/lap-ke-hoach-xac-minh" class="nav-link">
+                                                    <i class="nav-icon fas fa-minus text-primary"></i>
+                                                    <p>
+                                                        Kế Hoạch Xác Minh
+                                                    </p>
+                                                </a>
+                                            </li>
+                                        }
+                                        @if (LISTQUYEN.Contains("NV_XacMinhTaiSanThuNhap_Xem"))
+                                        {
+                                            <li class="nav-item">
+                                                <a href="/xac-minh-tai-san-thu-nhap" class="nav-link">
+                                                    <i class="nav-icon fas fa-minus text-primary"></i>
+                                                    <p>
+                                                        Nghiệp Vụ Xác Minh
+                                                    </p>
+                                                </a>
+                                            </li>
+                                        }
+										*@
+
+
+                                    </ul>
+
+                                </li>
+                            }
+
+                        </ul>
+
+                    </li>
+                }
+                @if (LISTQUYEN.Contains("DM_LoaiCoQuan_Xem") || LISTQUYEN.Contains("DM_CoQuan_Xem") || LISTQUYEN.Contains("DM_ChucVu_Xem") || LISTQUYEN.Contains("DM_CanBo_Xem"))
+                {
+                    <li class="nav-item">
+                        <a href="#" class="nav-link active">
+                            <i class="nav-icon fas fa-table"></i>
+                            <p>
+                                DANH MỤC
+                                <i class="fas fa-angle-left right"></i>
+                            </p>
+                        </a>
+                        <ul class="nav nav-treeview">
+                            @if (LISTQUYEN.Contains("DM_LoaiCoQuan_Xem"))
+                            {
+                                <li class="nav-item">
+                                    <a href="/loai-co-quan-don-vi" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Loại Cơ Quan Đơn Vị</p>
+                                    </a>
+                                </li>
+                            }
+                            @if (LISTQUYEN.Contains("DM_CoQuan_Xem"))
+                            {
+                                <li class="nav-item">
+                                    <a href="/co-quan-don-vi" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Cơ Quan Đơn Vị</p>
+                                    </a>
+                                </li>
+                            }
+                            @if (LISTQUYEN.Contains("DM_ChucVu_Xem"))
+                            {
+                                <li class="nav-item">
+                                    <a href="/chuc-vu" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Chức Vụ</p>
+                                    </a>
+                                </li>
+                            }
+                            @if (LISTQUYEN.Contains("DM_CanBo_Xem"))
+                            {
+                                <li class="nav-item">
+                                    <a href="/can-bo" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Cán Bộ</p>
+                                    </a>
+                                </li>
+                            }
+                        </ul>
+                    </li>
+                }
+
+                @if (LISTQUYEN.Contains("HT_PhanQuyen_Xem") || LISTQUYEN.Contains("HT_TaiKhoan_Xem") || LISTQUYEN.Contains("HT_NhomTaiKhoan_Xem") || LISTQUYEN.Contains("DM_CapTaiKhoan_Xem"))
+                {
+
+
+                    <li class="nav-item">
+                        <a href="#" class="nav-link active">
+                            <i class="nav-icon fas fa-table"></i>
+                            <p>
+                                HỆ THỐNG
+                                <i class="fas fa-angle-left right"></i>
+                            </p>
+                        </a>
+                        <ul class="nav nav-treeview">
+                            @if (LISTQUYEN.Contains("HT_NhomTaiKhoan_Xem"))
+                            {
+                                <li class="nav-item">
+                                    <a href="/nhom-tai-khoan" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Nhóm Tài Khoản</p>
+                                    </a>
+                                </li>
+                            }
+                            @if (LISTQUYEN.Contains("HT_PhanQuyen_Xem"))
+                            {
+                                <li class="nav-item">
+                                    <a href="/he-thong-phan-quyen" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Phân Quyền</p>
+                                    </a>
+                                </li>
+                            }
+                        </ul>
+                    </li>
+                }
+                @if (ViewBag.GetRole == "NDDTTT" || ViewBag.GetRole == "ADMIN")
+                {
+                    <li class="nav-item">
+                        <a href="#" class="nav-link active">
+                            <i class="nav-icon fas fa-table"></i>
+                            <p>
+                                BÁO CÁO, THỐNG KÊ
+                                <i class="fas fa-angle-left right"></i>
+                            </p>
+                        </a>
+                        <ul class="nav nav-treeview">
+                            <li class="nav-item">
+                                <a href="/bao-cao-ke-hoach-ke-khai" class="nav-link">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>Kế Hoạch Kê Khai</p>
+                                </a>
+                            </li>
+                            @*<li class="nav-item">
+                        <a href="/cap-tai-khoan" class="nav-link">
+                            <i class="far fa-circle nav-icon"></i>
+                            <p>Báo Cáo Kết Quả Kê Khai</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/he-thong-phan-quyen" class="nav-link">
+                            <i class="far fa-circle nav-icon"></i>
+                            <p>Báo Cáo Kết Quả Xác Minh</p>
+                        </a>
+                    </li>*@
+                        </ul>
+                    </li>
+                }
+
+            </ul>
+        </nav>
+        
+    </div>
+    <!-- /.sidebar -->
+</aside>

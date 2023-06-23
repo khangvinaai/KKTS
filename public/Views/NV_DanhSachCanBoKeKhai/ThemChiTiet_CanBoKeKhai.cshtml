@@ -1,0 +1,438 @@
+﻿
+@using KeKhaiTaiSanThuNhap.Models
+@{
+    ViewBag.Title = "ThemChiTiet_CanBoKeKhai";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    <style>
+        .error {
+            color: red;
+            font-weight: 600 !important;
+        }
+
+        #tabs .nav-tabs .nav-item.show .nav-link, .nav-tabs .nav-link.active {
+            color: #38a4f8;
+            background-color: transparent;
+            text-transform: uppercase;
+            border-color: transparent transparent #f3f3f3;
+            border-bottom: transparent;
+            font-weight: 400;
+            border-top: 1px solid #38a4f8 !important;
+            border-left: 1px solid #38a4f8 !important;
+            border-right: 1px solid #38a4f8 !important;
+        }
+
+        .nav-tabs .nav-link {
+            border: 1px solid transparent !IMPORTANT;
+            border-top-left-radius: 0.25rem;
+            border-top-right-radius: 0.25rem;
+        }
+
+        a.active, button.active, a:focus, button:focus, a:hover, button:hover {
+            color: #252525;
+            outline: none !important;
+            text-decoration: none !important;
+        }
+
+        .nav-link {
+            display: block;
+            padding: 0.5rem 1rem;
+        }
+
+         button {
+            outline: none !important;
+            text-decoration: none !important;
+            color: #99abb4;
+            transition: all 0.2s ease 0s;
+        }
+
+        .card {
+            background: #ffffff none repeat scroll 0 0;
+            margin: 0;
+            padding: 20px;
+            border: 0 solid #e7e7e7;
+            border-radius: 5px;
+            box-shadow: 0 5px 20px 0 rgb(0 0 0 / 15%);
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            position: relative;
+            display: -ms-flexbox;
+            display: flex;
+            -ms-flex-direction: column;
+            flex-direction: column;
+            min-width: 0;
+            word-wrap: break-word;
+            background-color: #fff;
+            background-clip: border-box;
+            border: 1px solid rgba(0,0,0,.125);
+            border-radius: 0.25rem;
+        }
+
+
+
+        .card-content-custom {
+            padding-bottom: 1%;
+            padding-left: 2%;
+            padding-right: 2%;
+            border-radius: 10px;
+            width: 100%;
+        }
+        .dt-buttons {
+            border-bottom: 1px solid rgba(0,0,0,.125);
+            padding: 8px;
+        }
+
+        .card-tools {
+            position: absolute;
+            right: 10px;
+            top: 45px;
+            z-index: 999;
+        }
+        .Card-control{
+            padding-bottom: 50px;
+        }
+    </style>
+}
+
+
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-left">
+                    <li class="breadcrumb-item"><a href="@Url.Action("Index", "Home")">Trang chủ</a></li>
+                    <li class="breadcrumb-item"><a href="/NV_DanhSachCanBoKeKhai">Danh Sách Kế Hoạch Kê Khai</a></li>
+
+                    <li class="breadcrumb-item active">Lập Danh Sách Cán Bộ Kê Khai</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+
+                <div class="card text_ui_right_cus Card-control">
+                    <div style="padding-bottom: 1%; padding-left:2%; padding-right:2%;" class="row">
+                        <div class="col-md-12">
+
+                            <ul class="nav nav-tabs nav-justified">
+                                @if (!(bool)ViewBag.complete)
+                                {
+                                    <li id="tab_patient_reception_status_wait" class="nav-item">
+                                        <a class="nav-link active" data-toggle="tab" href="#DSCanBo">Chọn Danh Sách Cán Bộ</a>
+                                    </li>
+
+                                    <li id="tab_patient_reception_status_receive" class="nav-item">
+                                        <a class="nav-link" data-toggle="tab" href="#DSCanBoKKHN">Danh Sách Cán Bộ Kê Khai Hằng Năm</a>
+                                    </li>
+                                }
+                                else
+                                {
+
+                                    <li id="tab_patient_reception_status_receive" class="nav-item">
+                                        <a class="nav-link active" data-toggle="tab" href="#DSCanBoKKHN">Danh Sách Cán Bộ Kê Khai Hằng Năm</a>
+                                    </li>
+                                }
+
+                                <li id="tab_patient_reception_status_receive" class="nav-item">
+                                    <a class="nav-link" data-toggle="tab" href="#DSCanBoKKBS">Danh Sách Cán Bộ Kê Khai Bổ Sung</a>
+                                </li>
+                            </ul>
+                            <div class="tab-content mt-3">
+
+                                @if ((bool)ViewBag.complete)
+                                {
+
+                                    <div class="tab-pane pt-3 active" id="DSCanBoKKHN">
+                                        <div class="card-tools">
+                                            <div class="input-group input-group-sm row">
+
+                                                <div class=" mr-3">
+                                                    <button type="submit" class="btn btn-success mr-4" data-toggle="modal" data-target="#print_dsCB" id="btnPrint_dsCBHN">
+                                                        In danh sách
+                                                    </button>
+                                                </div>
+                                                <input type="text" name="table_search" class="form-control float-right mr-1" placeholder="Tìm Cán Bộ" id="Filter_data2">
+                                                <div class="input-group-append mr-3">
+                                                    <button type="submit" class="btn btn-default" id="search_2">
+                                                        <i class="fas fa-search text-primary"></i>
+                                                    </button>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                        <table class="table table-hover text-nowrap table-bordered mt-4" id="dataTable2" style="width: 100%;">
+                                            <thead class="bg-primary ">
+                                                <tr>
+                                                    <th width="20px" class="">STT</th>
+                                                    <th>
+                                                        Họ Tên Cán Bộ
+                                                    </th>
+                                                    <th>
+                                                        Số CCCD
+                                                    </th>
+                                                    <th>
+                                                        Chức vụ/ chức danh công tác
+                                                    </th>
+                                                    <th>
+                                                        Cơ quan/đơn vị công tác
+                                                    </th>
+                                                    <th>
+                                                        Tên Kế Hoạch Kê khai
+                                                    </th>
+                                                    <th>
+                                                        Kế Hoạch năm
+                                                    </th>
+                                                    <th>
+                                                        Trạng Thái
+                                                    </th>
+                                                    <th>
+                                                        Chức năng
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="tab-pane active" id="DSCanBo">
+                                        <div class="row">
+                                            <div class="col-4">
+                                                <label style="width: 200px">Chọn Loại Kê Khai</label>
+                                                <select class="form-control" name="ChonLoaiKeKhai" id="ChonLoaiKeKhai">
+                                                    <option value="">Chọn</option>
+                                                    <option value="HangNam">Danh Sách Cán Bộ Kê Khai Hằng Năm</option>
+                                                    <option value="BoSung"> Danh Sách Cán Bộ Kê Khai Bổ Sung</option>
+                                                </select>
+                                            </div>
+
+                                            <div class="col-8" style="text-align: end;">
+                                                @{
+                                                    if (ViewBag.complete == false)
+                                                    {
+                                                        <button type="submit" class="btn btn-success mr-4" id="HoanThanh"><i class="fa-solid fa-floppy-disk"></i> Hoàn thành</button>
+                                                        <button type="submit" class="btn btn-info" id="LuuDanhSach"><i class="fa-solid fa-file-arrow-down"></i> Lưu Danh Sách</button>
+                                                    }
+                                                    else if (ViewBag.complete == true)
+                                                    {
+                                                        <button type="submit" class="btn btn-success mr-4" id="isHoanthanh" disabled><i class="fa-solid fa-floppy-disk"></i> Đã Hoàn thành </button>
+                                                    }
+                                                }
+
+                                            </div>
+                                        </div>
+
+                                        <table class="table table-hover text-nowrap table-bordered mt-4" id="dataTable">
+                                            <thead class="bg-primary ">
+                                                <tr>
+                                                    <th width="20px" class=""><div class="form-check form-check-inline m-0 p-0"><input type="checkbox" class="form-check-input" name="CheckAll" id="ChekcAll" style="padding: 10px" /></div></th>
+                                                    <th>
+                                                        Họ và tên
+                                                    </th>
+                                                    <th>
+                                                        Ngày tháng năm sinh
+                                                    </th>
+                                                    <th>
+                                                        Chức vụ/ chức danh công tác
+                                                    </th>
+                                                    <th>
+                                                        Cơ quan/đơn vị công tác
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div class="tab-pane pt-3" id="DSCanBoKKHN">
+                                        <div class="card-tools">
+                                            <div class="input-group input-group-sm row">
+
+                                                <div class=" mr-3">
+                                                    <button type="submit" class="btn btn-success mr-4" data-toggle="modal" data-target="#print_dsCB" id="btnPrint_dsCBHN">
+                                                        In danh sách
+                                                    </button>
+                                                </div>
+                                                <input type="text" name="table_search" class="form-control float-right mr-1" placeholder="Tìm Cán Bộ" id="Filter_data2">
+                                                <div class="input-group-append mr-3">
+                                                    <button type="submit" class="btn btn-default" id="search_2">
+                                                        <i class="fas fa-search text-primary"></i>
+                                                    </button>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                        <table class="table table-hover text-nowrap table-bordered mt-4" id="dataTable2" style="width: 100%;">
+                                            <thead class="bg-primary ">
+                                                <tr>
+                                                    <th width="20px" class="">STT</th>
+                                                    <th>
+                                                        Họ Tên Cán Bộ
+                                                    </th>
+                                                    <th>
+                                                        Số CCCD
+                                                    </th>
+                                                    <th>
+                                                        Chức vụ/ chức danh công tác
+                                                    </th>
+                                                    <th>
+                                                        Cơ quan/đơn vị công tác
+                                                    </th>
+                                                    <th>
+                                                        Tên Kế Hoạch Kê khai
+                                                    </th>
+                                                    <th>
+                                                        Kế Hoạch năm
+                                                    </th>
+                                                    <th>
+                                                        Trạng Thái
+                                                    </th>
+                                                    <th>
+                                                        Chức năng
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                }
+
+                                <div class="tab-pane pt-3" id="DSCanBoKKBS">
+                                    <div class="card-tools">
+
+                                        <div class="input-group input-group-sm row">
+                                            <div class=" mr-3">
+                                                <button type="submit" class="btn btn-success mr-4" data-toggle="modal" data-target="#print_dsCB" id="btnPrint_dsCBBS">
+                                                    In danh sách
+                                                </button>
+                                            </div>
+                                            <input type="text" name="table_search" class="form-control float-right mr-1" placeholder="Tìm Cán Bộ" id="Filter_data3">
+                                            <div class="input-group-append mr-3">
+                                                <button type="submit" class="btn btn-default" id="search_3">
+                                                    <i class="fas fa-search text-primary"></i>
+                                                </button>
+                                            </div>
+
+                                        </div>
+                                    </div>
+
+                                    <table class="table table-hover text-nowrap table-bordered mt-4" id="dataTable3" style="width: 100%;">
+                                        <thead class="bg-primary ">
+                                            <tr>
+                                                <th width="20px" class="">STT</th>
+                                                <th>
+                                                    Họ Tên Cán Bộ
+                                                </th>
+                                                <th>
+                                                    Số CCCD
+                                                </th>
+                                                <th>
+                                                    Chức vụ/ chức danh công tác
+                                                </th>
+                                                <th>
+                                                    Cơ quan/đơn vị công tác
+                                                </th>
+                                                <th>
+                                                    Tên Kế Hoạch Kê khai
+                                                </th>
+                                                <th>
+                                                    Kế Hoạch năm
+                                                </th>
+                                                <th>
+                                                    Trạng Thái
+                                                </th>
+                                                <th>
+                                                    Chức năng
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+        <div class="modal fade" id="print_dsCB">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Lập bảng kế hoạch kê khai</h4>
+                        <button type="button" class="close closeform" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">×</span>
+                        </button>
+                    </div>
+                    <div class="modal-body" id="print_dsCB_body">
+
+                    </div>
+                    <div class="modal-footer justify-content-between">
+                        <button type="submit" class="btn btn-primary" style="position: relative; width: 155px;" id="printdsCanBoBS">
+                            <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="background: none; display: block; shape-rendering: auto; margin: 0px; padding: 0px; width: 20px; height: 20px; position: absolute;left: 5px;top: 6px;" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid" class="loading_dscb d-none">
+                                <circle cx="50" cy="50" r="32" stroke-width="8" stroke="#ffffff" stroke-dasharray="50.26548245743669 50.26548245743669" fill="none" stroke-linecap="round">
+                                    <animateTransform attributeName="transform" type="rotate" repeatCount="indefinite" dur="1s" keyTimes="0;1" values="0 50 50;360 50 50"></animateTransform>
+                                </circle>
+                            </svg>
+                            In danh sách
+                        </button>
+                        <button type="button" class="btn btn-danger closeform" data-dismiss="modal" style="width: 105px">
+                            Đóng
+                        </button>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="print_bankkCB">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Lập bảng kế hoạch kê khai</h4>
+                        <button type="button" class="close closeform" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">×</span>
+                        </button>
+                    </div>
+                    <div class="modal-body" id="print_bankkCB_body">
+
+                    </div>
+                    <div class="modal-footer justify-content-between">
+                        <button type="submit" class="btn btn-primary" style="position: relative; width: 155px;" id="printkkCanBoBS">
+                            <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="background: none; display: block; shape-rendering: auto; margin: 0px; padding: 0px; width: 20px; height: 20px; position: absolute;left: 5px;top: 6px;" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid" class="loading_dscb d-none">
+                                <circle cx="50" cy="50" r="32" stroke-width="8" stroke="#ffffff" stroke-dasharray="50.26548245743669 50.26548245743669" fill="none" stroke-linecap="round">
+                                    <animateTransform attributeName="transform" type="rotate" repeatCount="indefinite" dur="1s" keyTimes="0;1" values="0 50 50;360 50 50"></animateTransform>
+                                </circle>
+                            </svg>
+                            In danh sách
+                        </button>
+                        <button type="button" class="btn btn-danger closeform" data-dismiss="modal" style="width: 105px">
+                            Đóng
+                        </button>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<script src="~/Scripts/NV_ThemChiTieKeKhai.js"></script>
+
+
+
+
+
+

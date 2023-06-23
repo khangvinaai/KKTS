@@ -1,0 +1,296 @@
+﻿@using KeKhaiTaiSanThuNhap.Models
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var MENU = (IEnumerable<HT_DanhSachMenu>)ViewBag.MENU;
+}
+
+
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" class="loading d-none" style="margin: auto; background: none; display: block; shape-rendering: auto; margin-bottom: -65px;" width="80px" height="80px" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid">
+    <circle cx="50" cy="50" r="32" stroke-width="8" stroke="#93dbe9" stroke-dasharray="50.26548245743669 50.26548245743669" fill="none" stroke-linecap="round">
+        <animateTransform attributeName="transform" type="rotate" repeatCount="indefinite" dur="1s" keyTimes="0;1" values="0 50 50;360 50 50"></animateTransform>
+    </circle>
+</svg>
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-left">
+                    <li class="breadcrumb-item"><a href="#">Trang chủ</a></li>
+                    <li class="breadcrumb-item active">Phân quyền</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="content">
+    <div class="row">
+        <div class="col-12">
+            <div class="card elevation-3">
+                <div class="card-header">
+                    <div class="form-group row">
+                        <label for="input" class="col-sm-2 col-form-label">Chọn Nhóm Quyền</label>
+                        <div class="col-sm-5">
+                            <select class="form-control" name="MaNhomTaiKhoan" id="MaNhomTaiKhoan" style="width: 100%; height: 100%">
+                            </select>
+                        </div>
+                        <div class="col-sm-3"></div>
+                        <div class="col-sm-2 input-group-append justify-content-end">
+                            <button type="button" class="btn btn-primary" id="capnhat">
+                                <i class="fas fa-save pr-2"></i>Cập Nhật
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <!-- ./card-header -->
+                <div class="card-body p-0">
+                    <table class="table table-hover">
+                        <tbody>
+
+                            @{
+
+                                var mListParents = MENU.Where(o => o.MenuType == 1).OrderBy(o => o.SorOrder).ToList();
+                                foreach (var item in mListParents)
+                                {
+                                    <tr class="expandable-body">
+                                        <td>
+                                            <div class="p-0">
+                                                <table class="table table-hover">
+                                                    <tbody>
+                                                        <tr data-widget="expandable-table" aria-expanded="false">
+                                                            <td>
+                                                                <button type="button" class="btn btn-primary p-0">
+                                                                    <i class="expandable-table-caret fas fa-caret-right fa-fw"></i>
+                                                                </button>
+                                                                <strong class="text-primary">@item.MenuName</strong>
+                                                            </td>
+                                                        </tr>
+                                                        <tr class="expandable-body">
+                                                            <td>
+                                                                <div class="p-0">
+                                                                    <table class="table table-hover">
+                                                                        <tbody>
+                                                                            @{
+                                                                                var ListNodes = MENU.Where(o => o.MenuType == 2 && o.Module == item.Module).OrderBy(o => o.SorOrder).ToList();
+                                                                                if (ListNodes != null && ListNodes.Count > 0)
+                                                                                {
+                                                                                    foreach (var item1 in ListNodes)
+                                                                                    {
+
+                                                                                        <tr>
+                                                                                            <td><strong class="text-primary">@item1.MenuName</strong></td>
+                                                                                            <td>
+                                                                                                <div class="form-group clearfix" style="display: flex; flex-wrap: wrap">
+                                                                                                    <div class="icheck-primary d-inline pr-5">
+                                                                                                        @{
+                                                                                                            var t = item1.KeyMenu + "_VIEWS";
+                                                                                                            <input type="checkbox" id="@t" name="@t">
+                                                                                                            <label for="@t">
+                                                                                                                XEM
+                                                                                                            </label>
+                                                                                                        }
+                                                                                                    </div>
+                                                                                                    <div class="icheck-primary d-inline pr-5">
+                                                                                                        @{
+                                                                                                            t = item1.KeyMenu + "_ADD";
+                                                                                                            <input type="checkbox" id="@t" name="@t">
+                                                                                                            <label for="@t">
+                                                                                                                THÊM
+                                                                                                            </label>
+                                                                                                        }
+                                                                                                    </div>
+                                                                                                    <div class="icheck-primary d-inline pr-5">
+                                                                                                        @{
+                                                                                                            t = item1.KeyMenu + "_EDIT";
+                                                                                                            <input type="checkbox" id="@t" name="@t">
+                                                                                                            <label for="@t">
+                                                                                                                SỬA
+                                                                                                            </label>
+                                                                                                        }
+                                                                                                    </div>
+                                                                                                    <div class="icheck-primary d-inline pr-5">
+                                                                                                        @{
+                                                                                                            t = item1.KeyMenu + "_DELETE";
+                                                                                                            <input type="checkbox" id="@t" name="@t">
+                                                                                                            <label for="@t">
+                                                                                                                XÓA
+                                                                                                            </label>
+                                                                                                        }
+                                                                                                    </div>
+                                                                                                    <div class="icheck-primary d-inline pr-5">
+                                                                                                        @{
+                                                                                                            t = item1.KeyMenu + "_COPY";
+                                                                                                            <input type="checkbox" id="@t" name="@t">
+                                                                                                            <label for="@t">
+                                                                                                                SAO CHÉP
+                                                                                                            </label>
+                                                                                                        }
+                                                                                                    </div>
+                                                                                                    <div class="icheck-primary d-inline pr-5">
+                                                                                                        @{
+                                                                                                            t = item1.KeyMenu + "_PRINT";
+                                                                                                            <input type="checkbox" id="@t" name="@t">
+                                                                                                            <label for="@t">
+                                                                                                                IN
+                                                                                                            </label>
+                                                                                                        }
+                                                                                                    </div>
+                                                                                                    <div class="icheck-primary d-inline pr-5">
+                                                                                                        @{
+                                                                                                            t = item1.KeyMenu + "_EXPORT";
+                                                                                                            <input type="checkbox" id="@t" name="@t">
+                                                                                                            <label for="@t">
+                                                                                                                XUẤT FILE
+                                                                                                            </label>
+                                                                                                        }
+                                                                                                    </div>
+                                                                                                    <div class="icheck-primary d-inline pr-5">
+                                                                                                        @{
+                                                                                                            t = item1.KeyMenu + "_IMPORT";
+                                                                                                            <input type="checkbox" id="@t" name="@t">
+                                                                                                            <label for="@t">
+                                                                                                                NHẬP FILE
+                                                                                                            </label>
+                                                                                                        }
+                                                                                                    </div>
+                                                                                                    <div class="icheck-primary d-inline pr-5">
+                                                                                                        @{
+                                                                                                            t = item1.KeyMenu + "_SEND";
+                                                                                                            <input type="checkbox" id="@t" name="@t">
+                                                                                                            <label for="@t">
+                                                                                                                GỬI
+                                                                                                            </label>
+                                                                                                        }
+                                                                                                    </div>
+                                                                                                    <div class="icheck-primary d-inline pr-5">
+                                                                                                        @{
+                                                                                                            t = item1.KeyMenu + "_CONFIRM";
+                                                                                                            <input type="checkbox" id="@t" name="@t">
+                                                                                                            <label for="@t">
+                                                                                                                XÁC NHẬN
+                                                                                                            </label>
+                                                                                                        }
+                                                                                                    </div>
+                                                                                                </div>
+                                                                                            </td>
+                                                                                        </tr>
+
+
+                                                                                    }
+                                                                                }
+                                                                            }
+
+
+                                                                        </tbody>
+                                                                    </table>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+
+
+                        </tbody>
+                    </table>
+                </div>
+                <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+        </div>
+    </div>
+
+</section>
+
+<script>
+    //Load data dropdownlist Nhóm tài khoản
+    $.get("/HT_PhanQuyen/LoadDataDropdownlistNhomTaiKhoan/", (data) => {
+        $("#MaNhomTaiKhoan").append(`<option value = "">Chọn</option>`)
+
+        $.each(data, (index, value) => {
+            $("#MaNhomTaiKhoan").append(`<option value ="${value.ID}">${value.TenNhomTaiKhoan}</option>`)
+        })
+    })
+
+    $("input[type=checkbox]").change(function () {
+        if ($(this).prop("checked")) {
+            $(this).attr('checked', 'checked')
+        }
+        else {
+            $(this).removeAttr('checked');
+        }
+    })
+
+
+
+
+    $('#QLCT_TATCA').click(function () {
+        var name = $(this).attr("name").split("_")[0]
+        $(`input[name*="${name}"]`).prop('checked', this.checked)
+    });
+
+    $('#QLNV_TATCA').click(function () {
+        var name = $(this).attr("name").split("_")[0]
+        $(`input[name*="${name}"]`).prop('checked', this.checked)
+    });
+
+
+
+
+    $.get("/HT_PhanQuyen/getQuyen", function (data) {
+        $.each(data, function (index, row) {
+            $(`input[name="${row}"]`).prop('checked', true)
+        })
+
+    })
+
+    $("#MaNhomTaiKhoan").change(function () {
+        $("input[type=checkbox]").prop('checked', false)
+        $.get("/HT_PhanQuyen/GetQuyen", { MaNhomTaiKhoan: $(this).val() }, function (data) {
+            $.each(data, function (index, row) {
+                $(`input[name="${row}"]`).prop('checked', true)
+            })
+            if ($(`input[name*="QLCT"]:checked`).length == 5) {
+                $(`input[name="QLCT_TATCA"]`).prop('checked', true)
+            }
+            if ($(`input[name*="QLNV"]:checked`).length == 5) {
+                $(`input[name="QLNV_TATCA"]`).prop('checked', true)
+            }
+
+            if ($(`input[name*="QLPB"]:checked`).length == 5) {
+                $(`input[name="QLPB_TATCA"]`).prop('checked', true)
+            }
+            if ($(`input[name*="QLKH"]:checked`).length == 5) {
+                $(`input[name="QLKH_TATCA"]`).prop('checked', true)
+            }
+            if ($(`input[name*="QLKHCT"]:checked`).length == 5) {
+                $(`input[name="QLKHCT_TATCA"]`).prop('checked', true)
+            }
+
+            if ($(`input[name*="DSTK"]:checked`).length == 5) {
+                $(`input[name="DSTK_TATCA"]`).prop('checked', true)
+            }
+            if ($(`input[name*="DSNQ"]:checked`).length == 5) {
+                $(`input[name="DSNQ_TATCA"]`).prop('checked', true)
+            }
+            if ($(`input[name*="DSQ"]:checked`).length == 2) {
+                $(`input[name="DSQ_TATCA"]`).prop('checked', true)
+            }
+            if ($(`input[name*="BACKUP"]:checked`).length == 2) {
+                $(`input[name="BACKUP_TATCA"]`).prop('checked', true)
+            }
+            if ($(`input[name*="IP"]:checked`).length == 5) {
+                $(`input[name="IP_TATCA"]`).prop('checked', true)
+            }
+        })
+    })
+
+
+
+</script>
+<script src="~/Scripts/HT_PhanQuyen.js"></script>

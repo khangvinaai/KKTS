@@ -1,0 +1,174 @@
+﻿@{
+    ViewBag.Title = "Danh Sách Chi Tiết Kê Khai Của Cơ Quan" + @ViewBag.TenCoQuan + " Đã Lập";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-left">
+                    <li class="breadcrumb-item"><a href="@Url.Action("Index","Home")">Trang Chủ</a></li>
+                    <li class="breadcrumb-item"><a href="/bao-cao-ke-hoach-ke-khai">Danh Sách Báo Cáo Kế hoạch</a></li>
+                    <li class="breadcrumb-item active">Danh Sách Chi Tiết Cán Bộ Kê Khai Của Cơ Quan<b>@ViewBag.TenCoQuan</b> </li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="card elevation-2">
+                    <div class="card-tools">
+                        <div class="input-group input-group-sm row">
+
+                            <input type="text" name="table_search" class="form-control float-right mr-1" placeholder="Tìm..." id="Filter">
+                            <div class="input-group-append mr-3">
+                                <button type="submit" class="btn btn-default" id="search_btn">
+                                    <i class="fas fa-search text-primary"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <table class="table table-hover text-nowrap table-bordered" id="dataTable" style="width: 100%;">
+                        <thead class="bg-primary">
+                            <tr>
+                                <th width="5%">STT</th>
+                                <th width="10%">Tên Cơ Quan</th>
+                                <th width="10%">Tên Cán Bộ</th>
+                                <th width="10%">CCCD</th>
+                                <th width="20%">Tên Kế Hoạch</th>
+                                <th width="20%">Loại Kê Khai</th>
+                                <th width="10%">Kế Hoạch Năm</th>
+                                <th width="10%">Trạng Thái</th>
+                                <th width="5%"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                    <div class="card-footer clearfix" style="height: 51px; width: 100%">
+                        <ul class="pagination pagination-sm m-0 float-right">
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    var dt;
+
+    function loadDataTable() {
+        dt = $("#dataTable").DataTable({
+            "lengthChange": false,
+            "info": false,
+            "searching": true,
+            "language": {
+                "search": "",
+                "info": "Tổng số _TOTAL_ hàng",
+                "infoEmpty": "",
+                "infoFiltered": "",
+                "paginate": {
+                    "next": "»",
+                    "previous": "«"
+                },
+                "processing": `Đang tải dữ liệu`,
+                searchPlaceholder: "Tìm...",
+                zeroRecords: "Không tìm thấy kết quả",
+
+            },
+            dom: 'Bfrtip',
+            buttons: [
+                {
+                    text: '<i class="fa fa-file-excel"></i>',
+                    extend: 'excel',
+                    className: 'btn btn-outline-primary btn-sm mt-2 ml-3'
+                },
+                {
+                    text: '<i class="fa fa-file-pdf"></i>',
+                    extend: 'pdf',
+                    className: 'btn btn-outline-primary btn-sm mt-2'
+                },
+                {
+                    text: '<i class="fa fa-print"></i>',
+                    extend: 'print',
+                    className: 'btn btn-outline-primary btn-sm mt-2'
+                }
+            ],
+
+            "serverSide": true,
+            "processing": true,
+            "ajax": {
+                "url": "/BC_KeHoachThanhTra/LoadDataCanBoKeKhai?Ma_CoQuan_DonVi=@ViewBag.Ma_CoQuan_DonVi&KeHoachNam=@ViewBag.KeHoachNam&Ma_Loai_KeKhai=@ViewBag.Ma_Loai_KeKhai&MaKeHoach=@ViewBag.MaKeHoach",
+                "type": "POST",
+                "datatype": "json"
+            },
+            "columnDefs": [
+
+                { className: "cn", "targets": [8] }
+            ],
+            "columns": [
+                { "data": "Ma_CanBo" },
+                { "data": "Ten" },
+                { "data": "HoTen" },
+                { "data": "CCCD" },
+                { "data": "TenKeHoachKeKhai" },
+                { "data": "Ten_KeKhai" },
+                { "data": "KeHoachNam" },
+                {
+                    "data": "TrangThai", "render": function (data, type, row, meta) {
+                        if (data != true) {
+                            return `<span class="badge badge-danger">Chưa Kê Khai</span>`
+                        }
+                        return `<span class="badge badge-success">Đã LKê Khai</span>`
+                    }
+                },
+                {
+                    "data": { "Ma_CanBo": "Ma_CanBo", "TrangThai": "TrangThai" }, "render": function (data, type, row) {
+                        if (data.TrangThai) {
+                            return `<div class="dropleft">
+                                          <button class="btn btn-outline-info btn-sm" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="padding: 4px 13px;">
+                                            <i class="fa-solid fa-ellipsis-vertical"></i>
+                                          </button>
+                                          <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                            <a class="dropdown-item" href="/bao-cao-ke-hoach-ke-khai/ke-hoach-ke-khai/xem-chi-tiet/${data}" >
+                                                Tải bản kê khai
+                                            </a>
+                                      </div>
+                                    </div>`
+                        } else {
+                            return `<div class="dropleft">
+                                          <button class="btn btn-outline-info btn-sm" disabled type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="padding: 4px 13px;">
+                                            <i class="fa-solid fa-ellipsis-vertical"></i>
+                                          </button>
+                                          <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                            
+                                      </div>
+                                    </div>`
+                        }
+                        
+
+                    }
+                },
+            ]
+        });
+        dt.on('draw.dt', function () {
+            var info = dt.page.info();
+            dt.column(0, { search: 'applied', order: 'applied', page: 'applied' }).nodes().each(function (cell, i) {
+                cell.innerHTML = i + 1 + info.start;
+            });
+        });
+    }
+
+
+    $(document).ready(function () {
+
+        loadDataTable();
+    })
+
+</script>

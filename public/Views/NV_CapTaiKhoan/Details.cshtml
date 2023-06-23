@@ -1,0 +1,67 @@
+﻿@model KeKhaiTaiSanThuNhap.Models.NV_CapTaiKhoan
+
+@{
+    ViewBag.Title = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>NV_CapTaiKhoan</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.NguoiGui)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.NguoiGui)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.NgayGui)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.NgayGui)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.TrangThai)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.TrangThai)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.NgayCap)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.NgayCap)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.NguoiCap)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.NguoiCap)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.FileCap)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.FileCap)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.ID }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

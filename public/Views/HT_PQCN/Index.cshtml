@@ -1,0 +1,279 @@
+﻿@model IEnumerable<KeKhaiTaiSanThuNhap.Models.HT_PQCN>
+
+@{
+    ViewBag.Title = "Index";
+
+}
+<style>
+    input[type="checkbox"] {
+        width: 25px;
+        height: 25px;
+    }
+</style>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" class="loading d-none" style="margin: auto; background: none; display: block; shape-rendering: auto; margin-bottom: -65px;" width="80px" height="80px" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid">
+    <circle cx="50" cy="50" r="32" stroke-width="8" stroke="#93dbe9" stroke-dasharray="50.26548245743669 50.26548245743669" fill="none" stroke-linecap="round">
+        <animateTransform attributeName="transform" type="rotate" repeatCount="indefinite" dur="1s" keyTimes="0;1" values="0 50 50;360 50 50"></animateTransform>
+    </circle>
+</svg>
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-left">
+                    <li class="breadcrumb-item"><a href="#">Trang chủ</a></li>
+                    <li class="breadcrumb-item active">Phân quyền</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="content">
+    <div class="row">
+        <div class="col-12">
+            <div class="card elevation-3">
+                @using (Ajax.BeginForm("updateRole", "HT_PQCN", new AjaxOptions { HttpMethod = "POST", OnSuccess = "FnSuccess", OnFailure = "Failure", OnBegin = "FnBegin" }, new { @class = "formDM_CanBo form-horizontal", @id = "formChucDanh" }))
+                {
+                    @Html.AntiForgeryToken()
+                    <div class="card-header">
+                        <div class="form-group row">
+                            <label for="input" class="col-sm-2 col-form-label">Chọn Nhóm Quyền</label>
+                            <div class="col-sm-5">
+                                <select class="form-control" name="MaNhomTaiKhoan" id="MaNhomTaiKhoan" style="width: 100%; height: 100%">
+                                </select>
+                            </div>
+                            <div class="col-sm-3"></div>
+                            <div class="col-sm-2 input-group-append justify-content-end">
+                                <button type="submit" class="btn btn-primary" id="capnhat">
+
+                                    <i class="fas fa-save pr-2 ml-3"></i>Cập Nhật
+                                    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="background: none; display: block; shape-rendering: auto; margin: 0px; padding: 0px; width: 20px; height: 20px; position: absolute;left: 5px;top: 6px;" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid" class="loading_SuaPQ d-none">
+                                        <circle cx="50" cy="50" r="32" stroke-width="8" stroke="#ffffff" stroke-dasharray="50.26548245743669 50.26548245743669" fill="none" stroke-linecap="round">
+                                            <animateTransform attributeName="transform" type="rotate" repeatCount="indefinite" dur="1s" keyTimes="0;1" values="0 50 50;360 50 50"></animateTransform>
+                                        </circle>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- ./card-header -->
+                    <div class="card-body p-0">
+                        <table class="table table-hover">
+                            <tbody>
+                                <tr class="expandable-body">
+                                    <td>
+                                        <div class="p-0 form-group" id="phanquenTable">
+                                            <!-- bảng phân quyền hệ thống -->
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- /.card-body -->
+                
+                }
+            </div>
+                            
+            <!-- /.card -->
+        </div>
+    </div>
+
+</section>
+
+<script>
+    var role = "ADMIN";
+    //Load data dropdownlist Nhóm tài khoản
+    $.get("/HT_PQCN/LoadDataDropdownlistNhomTaiKhoan/", (data) => {
+        $.each(data, (index, value) => {
+            $("#MaNhomTaiKhoan").append(`<option value ="${value.MaTaiKhoan}">${value.TenNhomTaiKhoan}</option>`)
+        })
+    })
+
+    //Khi 
+    $("#MaNhomTaiKhoan").change(function () {
+
+        $.get("/HT_PQCN/loadCheckbox/", { rolee: role }, (data) => {
+           
+            $.each(data, (index, valueCB) => {
+                $(`#trangthai_${valueCB.ID}`).remove();
+            })
+        })
+        role = this.value;
+        $.get("/HT_PQCN/loadCheckbox/", { rolee: role }, (data) => {
+
+            $.each(data, (index, valueCB2) => {
+              if (valueCB2.Ma_Role == role && valueCB2.TrangThai == 0) {
+                    $(`#select_${valueCB2.Ma_Menu}`).append(`
+                    <div class=" pr-5" id="trangthai_${valueCB2.ID}" style="display: flex; align-items: center;">
+                        <input type="checkbox" id="cb_${valueCB2.ID}" name="TrangThai[]" class="form-control" value="${valueCB2.ID}">
+                        <label for="" class="m-0 ml-1">
+                            ${valueCB2.TenChucNang}
+                        </label>
+                    </div>
+                `)
+                } else if (valueCB2.Ma_Role == role && valueCB2.TrangThai == 1) {
+                    $(`#select_${valueCB2.Ma_Menu}`).append(`
+                    <div class=" pr-5" id="trangthai_${valueCB2.ID}" style="display: flex; align-items: center;">
+                        <input type="checkbox" id="cb_${valueCB2.ID}" name="TrangThai[]" checked  class="form-control" value="${valueCB2.ID}">
+                        <label for="" class="m-0 ml-1">
+                            ${valueCB2.TenChucNang}
+                        </label>
+                    </div>
+                `)
+                }
+            })
+
+        })
+    })
+
+    //Khi 
+    //$("#changeCheckbox").click(() => {
+    //    $("#trangthai_82").remove();
+    //})
+
+    // Load 3 menu hệ thống
+    $.get("/HT_PQCN/loadData/", (data) => {
+        $.each(data.Menu, (index, value) => {
+var loaiMenu = '';
+if (value.MenuNameAlias == '' && value.IsGroup == 0) {
+    if (value.MenuName == 'HỆ THỐNG') {
+        loaiMenu = "HT"
+                } else if (value.MenuName == 'DANH MỤC') {
+        loaiMenu = "DM"
+                } else if (value.MenuName == 'NGHIỆP VỤ') {
+        loaiMenu = "NV"
+                }
+                $("#phanquenTable").append(`
+                    <table class="table table-hover">
+                        <tbody>
+                            <tr data-widget="expandable-table" aria-expanded="false">
+                                <td>
+                                    <button type="button" class="btn btn-primary p-0">
+                                        <i class="expandable-table-caret fas fa-caret-right fa-fw"></i>
+                                    </button>
+                                    <strong class="text-primary">${value.MenuName}</strong>
+                                </td>
+                            </tr>
+                            <tr class="expandable-body">
+                                <td>
+                                    <div class="p-0" >
+                                        <table class="table table-hover" id="ChucNang_${loaiMenu}">
+                                        </table>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                `)
+            }
+        })
+
+        //Load menu của từng hệ thống
+        $.each(data.Menu, (index, value2) => {
+          if (value2.MenuNameAlias != '') {
+              if (value2.Module == 'SY' && value2.IsVisible == 1) {
+                    $("#ChucNang_HT").append(`
+                            <tbody>
+                                <tr>
+                                    <td><strong class="text-primary">${value2.MenuName}</strong></td>
+                                    <td>
+                                        <div class="form-group clearfix" style="display: flex; flex-wrap: wrap" id="select_${value2.ID}">
+
+
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                    `)
+                } else if (value2.Module == 'DM') {
+                    $("#ChucNang_DM").append(`
+                        <tbody>
+                            <tr>
+                                <td><strong class="text-primary">${value2.MenuName}</strong></td>
+                                <td>
+                                    <div class="form-group clearfix" style="display: flex; flex-wrap: wrap"  id="select_${value2.ID}">
+
+
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    `)
+                } else if (value2.Module == 'NV' && value2.IsVisible == 1) {
+                    $("#ChucNang_NV").append(`
+                        <tbody>
+                            <tr>
+                                <td><strong class="text-primary">${value2.MenuName}</strong></td>
+                                <td>
+                                    <div class="form-group clearfix" style="display: flex; flex-wrap: wrap"  id="select_${value2.ID}">
+
+
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    `)
+                }
+
+            }   
+        })
+
+        // Load chức năng của từng menu
+        $.each(data.PQCN, (index, value3) => {
+              if (value3.Ma_Role == role && value3.TrangThai == 0) {
+                $(`#select_${value3.Ma_Menu}`).append(`
+                <div class="pr-5" id="trangthai_${value3.ID}" style="display: flex; align-items: center;">
+                    <input  type="checkbox" id="cb_${value3.ID}" name="TrangThai[]"  class="form-control"   value="${value3.ID}">
+                    <label for="" class="m-0 ml-1">
+                        ${value3.TenChucNang}
+                    </label>
+                </div>
+                `)
+            } else if (value3.Ma_Role == role && value3.TrangThai == 1){
+                $(`#select_${value3.Ma_Menu}`).append(`
+                <div class=" pr-5" id="trangthai_${value3.ID}" style="display: flex; align-items: center;"  >
+                    <input type="checkbox" id="cb_${value3.ID}" name="TrangThai[]" checked  class="form-control"  value="${value3.ID}">
+                    <label for="" class="m-0 ml-1 ">
+                        ${value3.TenChucNang}
+                    </label>
+                </div>
+                `)
+            }
+        })
+    })
+
+    function FnBegin() {
+        $('.loading_SuaPQ').removeClass('d-none');
+    }
+
+    function FnSuccess(data) {
+        $('.loading_SuaPQ').addClass('d-none');
+        $('.closeform').click();
+
+        Swal.fire({
+            icon: 'success',
+            title: 'Thành Công',
+            text: `${data} đã được thêm thành công`,
+            timer: 2000,
+            showConfirmButton: false,
+        })
+        dt.draw();
+    }
+
+    function Failure(data) {
+        $('.loading_SuaPQ').addClass('d-none');
+        Swal.fire({
+            icon: 'error',
+            title: 'Có lỗi xảy ra',
+            text: 'Thêm mới bệnh nhân không thành công',
+            timer: 2000,
+            showConfirmButton: false,
+
+        })
+    }
+
+
+    
+
+</script>

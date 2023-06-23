@@ -1,0 +1,368 @@
+﻿
+@{
+    ViewBag.Title = "CongKhaiKetLuan";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-left">
+                    <li class="breadcrumb-item"><a href="@Url.Action("Index","Home")">Trang chủ</a></li>
+                    <li class="breadcrumb-item active">Danh Sách công khai kết luận</li>
+                    <li class="breadcrumb-item">Chi tiết công khai kết luận</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="card text_ui_right_cus Card-control">
+                    <div class="row line_header" style="padding-bottom: 1%;padding-left: 2%;padding-right: 2%;padding-top: 1%;">
+                        <div class="col-md-6 title_ngtao clsTitleFrom" style="text-align: left; ">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label class="label-info">Tên Kế Hoạch: </label><span> Kế hoạch năm 2022</span>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="label-info">Năm kế hoạch: </label><span> 2022</span>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="label-info">Căn cứ quyết định số: </label><span> QD-1523156</span>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="label-info">Ngày ra quyết định: </label><span> 13/01/2022</span>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="label-info">Thời hạn xác minh: </label><span> 45 ngày</span>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="label-info">Tiến độ hiện tại: </label><span> Công khai kết luận</span>
+                                </div>
+                                <div class="col-md-12">
+                                    <label class="label-info">Ngày kết luận xác minh: </label><span> 25/01/2022</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 title_ngtao clsTitleFrom" style="text-align: right; ">
+                            <button class="btn btn-primary-custom clsLuuThongTin" id="btnLuuThongTin"><i class="fas fa-edit"></i> Lưu thông tin công khai</button>
+                            <button class="btn btn-primary-custom clsCongKhaiKetLuan" id="btnCongKhaiKetLuan"><i class="fas fa-paper-plane"></i> Công khai kết luận</button>
+                        </div>
+                    </div>
+                    <div style="padding-bottom: 1%; padding-left:2%; padding-right:2%;" class="row">
+                        <div class="col-md-12" style=" padding-top: 1%; padding-bottom: 1%; padding-left: 2%; padding-right: 2%; border-radius: 10px; box-shadow: 0 5px 20px 0 rgb(0 0 0 / 15%); margin-top: 10px;">
+                            <div class="row">
+                                <div class="col-4">
+                                    <div class="form-group">
+                                        <label>Cơ quan/đơn vị</label>
+                                        <select class="form-control" name="CoQuan" id="CoQuan" style="width: 100%; height: 100%">
+                                            <option selected>Chọn</option>
+                                            <option>Cơ quan A</option>
+                                            <option>Cơ quan B</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-2">
+                                    <div class="form-group">
+                                        <label>Năm kê khai</label>
+                                        <input type="text" class="form-control" placeholder="Nhập năm kê khai" id="NamKeKhai" name="NamKeKhai">
+                                    </div>
+                                </div>
+                                <div class="col-2">
+                                    <div class="form-group">
+                                        <label>Ngày công khai</label>
+                                        <input type="datetime-local" class="form-control" id="NgayCongKhai" name="NgayCongKhai">
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="form-group">
+                                        <label>Hình thức công khai</label>
+                                        <select class="form-control" name="HinhThucCongKhai" id="HinhThucCongKhai" style="width: 100%; height: 100%">
+                                            <option selected>Chọn</option>
+                                            <option value="HTNY">Niêm yết</option>
+                                            <option value="HTCBTCH">Công bố tại cuộc họp</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="form-group">
+                                        <label>Địa điểm công khai</label>
+                                        <textarea type="text" class="form-control" id="DiaDiemCongKhai" name="DiaDiemCongKhai"></textarea>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="form-group">
+                                        <label>Nội dung công khai</label>
+                                        <textarea type="text" class="form-control" id="NoiDungCongKhai" name="NoiDungCongKhai"></textarea>
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div style="padding-bottom: 1%; padding-left:2%; padding-right:2%;" class="row">
+                                        <div class="col-md-12" style="text-align: left; padding-top: 10px;">
+                                            <label class="Showheader-title">
+                                                <label class="mt-0 header-title header-title-Edit" data-toggle="collapse" data-target="#collapseDanhSachBanKeKhaiDaKetLuanDuocChon" aria-expanded="false" aria-controls="collapseDanhSachBanKeKhaiDaKetLuanDuocChon">
+                                                    <i class="far fa-caret-square-down"></i>
+                                                    <span class="TitleForm clsShow cursor-pointer">Danh sách bản kê khai đã kết luận được chọn công khai</span>
+                                                </label>
+                                            </label>
+                                        </div>
+                                        <div class="col-md-12 collapse" id="collapseDanhSachBanKeKhaiDaKetLuanDuocChon">
+                                            <div class="row" style="margin-top:10px;">
+                                                <div class="col-md-12" style="text-align: left; padding-top: 10px;">
+                                                    <table id="example1" class="table table-bordered table-striped dataTable no-footer" role="grid" aria-describedby="example1_info">
+                                                        <thead>
+                                                            <tr role="row">
+                                                                <th class="text-center" style="width: 3%;">STT</th>
+                                                                <th style="width: 20%;">Cán bộ</th>
+                                                                <th style="width: 20%;">Loại kê khai</th>
+                                                                <th style="width: 20%;">Kết luận kê khai</th>
+                                                                <th style="width: 20%;">Kết luận giải trình</th>
+                                                                <th style="width: 10%;">Xử lý vi phạm</th>
+                                                                <th style="width: 10%;"></th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr role="row" class="odd shown">
+                                                                <td class=" text-center">1</td>
+                                                                <td>Cán bộ A</td>
+                                                                <td>Kê khai hằng năm</td>
+                                                                <td>Nội dung kết luận về tính trung thực của việc kê khai tài sản thu nhập</td>
+                                                                <td>Nội dung kết luận về tính trung thực của việc giải trình tài sản thu nhập tăng thêm</td>
+                                                                <td>Có vi phạm</td>
+                                                                <td style="text-align:center;"><span class="btnDelete btn btn-outline-danger btn-sm delete"><i class="fas fa-trash"></i></span></td>
+                                                            </tr>
+                                                            <tr role="row" class="even">
+                                                                <td class=" text-center">2</td>
+                                                                <td>Cán bộ B</td>
+                                                                <td>Kê khai hằng năm</td>
+                                                                <td>Nội dung kết luận về tính trung thực của việc kê khai tài sản thu nhập</td>
+                                                                <td>Nội dung kết luận về tính trung thực của việc giải trình tài sản thu nhập tăng thêm</td>
+                                                                <td>Không vi phạm</td>
+                                                                <td style="text-align:center;"><span class="btnDelete btn btn-outline-danger btn-sm delete"><i class="fas fa-trash"></i></span></td>
+                                                            </tr>
+                                                            <tr role="row" class="odd">
+                                                                <td class=" text-center">3</td>
+                                                                <td>Cán bộ C</td>
+                                                                <td>Kê khai hằng năm</td>
+                                                                <td>Nội dung kết luận về tính trung thực của việc kê khai tài sản thu nhập</td>
+                                                                <td>Nội dung kết luận về tính trung thực của việc giải trình tài sản thu nhập tăng thêm</td>
+                                                                <td>Có vi phạm</td>
+                                                                <td style="text-align:center;"><span class="btnDelete btn btn-outline-danger btn-sm delete"><i class="fas fa-trash"></i></span></td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div style="padding-bottom: 1%; padding-left:2%; padding-right:2%;" class="row">
+                                        <div class="col-md-12" style="text-align: left; padding-top: 10px;">
+                                            <label class="Showheader-title">
+                                                <label class="mt-0 header-title header-title-Edit" data-toggle="collapse" data-target="#collapseDanhSachBanKeKhaiDaKetLuanChon" aria-expanded="false" aria-controls="collapseDanhSachBanKeKhaiDaKetLuanChon">
+                                                    <i class="far fa-caret-square-down"></i>
+                                                    <span class="TitleForm clsShow cursor-pointer">Chọn bản kê khai đã kết luận</span>
+                                                </label>
+                                            </label>
+                                        </div>
+                                        <div class="col-md-12 collapse" id="collapseDanhSachBanKeKhaiDaKetLuanChon">
+                                            <div class="row" style="margin-top:10px;">
+                                                <div class="col-md-12" style="text-align: left;">
+                                                    <div class="row">
+                                                        <div class="col-4">
+                                                            <div class="form-group">
+                                                                <label>Cán bộ kê khai</label>
+                                                                <select class="form-control" name="searchCanBo" id="searchCanBo" style="width: 100%; height: 100%">
+                                                                    <option selected>Chọn</option>
+                                                                    <option>Cán bộ A</option>
+                                                                    <option>Cán bộ B</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-4">
+                                                            <div class="form-group">
+                                                                <label>Chức vụ cán bộ</label>
+                                                                <select class="form-control" name="searchChucVu" id="searchChucVu" style="width: 100%; height: 100%">
+                                                                    <option selected>Chọn</option>
+                                                                    <option>Chủ tịch UBND</option>
+                                                                    <option>Nhân viên</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-3">
+                                                            <div class="form-group">
+                                                                <label>Loại kê khai</label>
+                                                                <select class="form-control" name="searchChucVu" id="searchChucVu" style="width: 100%; height: 100%">
+                                                                    <option selected>Chọn</option>
+                                                                    <option>Kê khai hàng năm</option>
+                                                                    <option>Kê Khai bổ sung</option>
+                                                                    <option>Kê Khai lần đầu</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-1">
+                                                            <div class="form-group">
+                                                                <label>&#xa0;</label>
+                                                                <button class="btn btn-primary-custom form-control clsSearchBanKeKhai" id="btnSearchBanKeKhai"><i class="fas fa-search"></i> Tìm kiếm</button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-12" style="text-align: left; padding-top: 10px;">
+                                                    <table id="example1" class="table table-bordered table-striped dataTable no-footer" role="grid" aria-describedby="example1_info">
+                                                        <thead>
+                                                            <tr role="row">
+                                                                <th class="text-center" style="width: 3%;">STT</th>
+                                                                <th style="width: 25%;">Cán bộ</th>
+                                                                <th style="width: 20%;">Chức vụ</th>
+                                                                <th style="width: 20%;">Loại kê khai</th>
+                                                                <th style="width: 10%;">Năm</th>
+                                                                <th style="width: 15%;">Ngày kê khai</th>
+                                                                <th style="width: 10%;"></th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr role="row" class="odd shown">
+                                                                <td class=" text-center">1</td>
+                                                                <td>Cán bộ A</td>
+                                                                <td>Chủ tịch UBND</td>
+                                                                <td>Kê khai bổ sung</td>
+                                                                <td>2022</td>
+                                                                <td>12/01/2022</td>
+                                                                <td>
+                                                                    <a class="btn btn-outline-info btn-sm">
+                                                                        <i class="fa fa-arrow-alt-circle-up"></i>
+                                                                        Thêm
+                                                                    </a>
+                                                                </td>
+                                                            </tr>
+                                                            <tr role="row" class="even">
+                                                                <td class=" text-center">2</td>
+                                                                <td>Cán bộ B</td>
+                                                                <td>Chủ tịch UBND</td>
+                                                                <td>Kê khai bổ sung</td>
+                                                                <td>2022</td>
+                                                                <td>12/01/2022</td>
+                                                                <td>
+                                                                    <a class="btn btn-outline-info btn-sm">
+                                                                        <i class="fa fa-arrow-alt-circle-up"></i>
+                                                                        Thêm
+                                                                    </a>
+                                                                </td>
+                                                            </tr>
+                                                            <tr role="row" class="odd">
+                                                                <td class=" text-center">3</td>
+                                                                <td>Cán bộ C</td>
+                                                                <td>Chủ tịch UBND</td>
+                                                                <td>Kê khai bổ sung</td>
+                                                                <td>2022</td>
+                                                                <td>12/01/2022</td>
+                                                                <td>
+                                                                    <a class="btn btn-outline-info btn-sm">
+                                                                        <i class="fa fa-arrow-alt-circle-up"></i>
+                                                                        Thêm
+                                                                    </a>
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12" style=" padding-top: 1%; padding-bottom: 1%; padding-left: 2%; padding-right: 2%; border-radius: 10px; box-shadow: 0 5px 20px 0 rgb(0 0 0 / 15%); margin-top: 10px;">
+                            <div class="row">
+                                <div class="col-12">
+                                    <div style="padding-bottom: 1%; padding-left:2%; padding-right:2%;" class="row">
+                                        <div class="col-md-12" style="text-align: left; padding-top: 10px;">
+                                            <label class="Showheader-title">
+                                                <label style=" font-size: 20px;" class="mt-0 header-title header-title-Edit" data-toggle="collapse" data-target="#collapseDanhSachCacCuocCongKhai" aria-expanded="false" aria-controls="collapseDanhSachCacCuocCongKhai">
+                                                    <i style="color: green;" class="far fa-caret-square-down"></i>
+                                                    <span class="TitleForm clsShow cursor-pointer" style="color: green; text-transform: uppercase;">Danh sách các cuộc công khai kết luận</span>
+                                                </label>
+                                            </label>
+                                        </div>
+                                        <div class="col-md-12 collapse show" id="collapseDanhSachCacCuocCongKhai">
+                                            <div class="row" style="margin-top:10px;">
+                                                <div class="col-md-12" style="text-align: left; padding-top: 10px;">
+                                                    <table id="example1" class="table table-bordered table-striped dataTable no-footer" role="grid" aria-describedby="example1_info">
+                                                        <thead>
+                                                            <tr role="row">
+                                                                <th class="text-center" style="width: 3%;">STT</th>
+                                                                <th style="width: 15%;">Cơ quan</th>
+                                                                <th style="width: 20%;">Ngày công khai</th>
+                                                                <th style="width: 12%;">Hình thức công khai</th>
+                                                                <th style="width: 20%;">Địa điểm công khai</th>
+                                                                <th style="width: 20%;">Nội dung công khai</th>
+                                                                <th style="width: 10%;"></th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr role="row" class="odd shown">
+                                                                <td class=" text-center">1</td>
+                                                                <td>Cán bộ A</td>
+                                                                <td>11 giờ 30 phút Ngày 20 tháng 01 năm 2022</td>
+                                                                <td>Công khai tại cuộc hợp</td>
+                                                                <td>Nội dung địa điểm công khai</td>
+                                                                <td>Nội dung công khai</td>
+                                                                <td style="text-align:center;"><a class="btn btn-outline-info btn-sm">
+                                                                        <i class="fa fa-arrow-alt-circle-up"></i>
+                                                                        Xem chi tiết
+                                                                    </a>
+                                                                </td>
+                                                            </tr>
+                                                            <tr role="row" class="even">
+                                                                <td class=" text-center">2</td>
+                                                                <td>Cán bộ B</td>
+                                                                <td>11 giờ 30 phút Ngày 20 tháng 01 năm 2022</td>
+                                                                <td>Công khai tại cuộc hợp</td>
+                                                                <td>Nội dung địa điểm công khai</td>
+                                                                <td>Nội dung công khai</td>
+                                                                <td style="text-align:center;">
+                                                                    <a class="btn btn-outline-info btn-sm">
+                                                                        <i class="fa fa-arrow-alt-circle-up"></i>
+                                                                        Xem chi tiết
+                                                                    </a>
+                                                                </td>
+                                                            </tr>
+                                                            <tr role="row" class="odd">
+                                                                <td class=" text-center">3</td>
+                                                                <td>Cán bộ C</td>
+                                                                <td>11 giờ 30 phút Ngày 20 tháng 01 năm 2022</td>
+                                                                <td>Công khai tại cuộc hợp</td>
+                                                                <td>Nội dung địa điểm công khai</td>
+                                                                <td>Nội dung công khai</td>
+                                                                <td style="text-align:center;">
+                                                                    <a class="btn btn-outline-info btn-sm">
+                                                                        <i class="fa fa-arrow-alt-circle-up"></i>
+                                                                        Xem chi tiết
+                                                                    </a>
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+</section>
+
+

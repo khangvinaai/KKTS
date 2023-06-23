@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="690a76c7e97b474f8aae8904245bfc4d" Name="Diagram1">
+        <EntityTypeShape EntityType="KSTNModel.DM_CanBo" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="KSTNModel.DM_CanBo_ThanNhan" Width="1.5" PointX="2.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="KSTNModel.DM_ChucVu_ChucDanh" Width="1.5" PointX="4.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="KSTNModel.DM_CoQuanDonVi" Width="1.5" PointX="4.75" PointY="3.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="KSTNModel.DM_LinhVuc_KeKhai" Width="1.5" PointX="0.75" PointY="5.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="KSTNModel.DM_Loai_CoQuan_DonVi" Width="1.5" PointX="6.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="KSTNModel.DM_Loai_KeKhai" Width="1.5" PointX="6.75" PointY="3.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="KSTNModel.DM_PhuongXa" Width="1.5" PointX="6.75" PointY="6.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="KSTNModel.DM_QuanHuyen" Width="1.5" PointX="2.75" PointY="7.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="KSTNModel.DM_QuocGia" Width="1.5" PointX="8.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="KSTNModel.DM_TienDo" Width="1.5" PointX="8.75" PointY="3.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="KSTNModel.DM_TinhThanh" Width="1.5" PointX="8.75" PointY="7.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="KSTNModel.HT_ChucNang" Width="1.5" PointX="4.75" PointY="9.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="KSTNModel.HT_DanhSachMenu" Width="1.5" PointX="10.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="KSTNModel.HT_NhomTaiKhoan" Width="1.5" PointX="0.75" PointY="10.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="KSTNModel.HT_PhanQuyen" Width="1.5" PointX="10.75" PointY="5.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="KSTNModel.HT_PQCN" Width="1.5" PointX="6.75" PointY="10.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="KSTNModel.HT_TaiKhoan" Width="1.5" PointX="8.75" PointY="10.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="KSTNModel.HT_ThongBao" Width="1.5" PointX="10.75" PointY="10.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="KSTNModel.NV_BaoCaoKetQua" Width="1.5" PointX="12.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="KSTNModel.NV_BaoCaoKetQua_ChiTiet" Width="1.5" PointX="2.75" PointY="12.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="KSTNModel.NV_BaoCaoKetQua_KienNghiViPham" Width="1.5" PointX="12.75" PointY="4.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="KSTNModel.NV_BaoCaoKetQua_VanBan" Width="1.5" PointX="12.75" PointY="8.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="KSTNModel.NV_CapTaiKhoan" Width="1.5" PointX="12.75" PointY="12.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="KSTNModel.NV_CapTaiKhoan_ChiTiet" Width="1.5" PointX="4.75" PointY="13.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="KSTNModel.NV_CongKhaiBanKeKhai" Width="1.5" PointX="14.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="KSTNModel.NV_CongKhaiBanKeKhai_ChiTiet" Width="1.5" PointX="14.75" PointY="5.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="KSTNModel.NV_CongKhaiKetLuan" Width="1.5" PointX="14.75" PointY="8.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="KSTNModel.NV_CongKhaiKetLuan_ChiTiet" Width="1.5" PointX="14.75" PointY="13.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="KSTNModel.NV_GiaoNhanBanKeKhai" Width="1.5" PointX="6.75" PointY="15.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="KSTNModel.NV_GiaoNhanBanKeKhai_ChiTiet" Width="1.5" PointX="8.75" PointY="15.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="KSTNModel.NV_KeKhai_BienDongTaiSan" Width="1.5" PointX="16.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="KSTNModel.NV_KeKhai_CongTrinh" Width="1.5" PointX="16.75" PointY="4.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="KSTNModel.NV_KeKhai_NhaO" Width="1.5" PointX="16.75" PointY="8.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="KSTNModel.NV_KeKhai_QuyenSuDungDat" Width="1.5" PointX="10.75" PointY="16.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="KSTNModel.NV_KeKhai_TaiKhoanNuocNgoai" Width="1.5" PointX="16.75" PointY="12.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="KSTNModel.NV_KeKhai_TaiSanGanVoiDat" Width="1.5" PointX="12.75" PointY="16.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="KSTNModel.NV_KeKhai_TaiSanKhac" Width="1.5" PointX="14.75" PointY="16.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="KSTNModel.NV_KeKhai_TaiSanNuocNgoai" Width="1.5" PointX="16.75" PointY="15.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="KSTNModel.NV_KeKhai_TaiSanPhieu" Width="1.5" PointX="0.75" PointY="17.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="KSTNModel.NV_KeKhai_TaiSanTrangSuc" Width="1.5" PointX="2.75" PointY="17.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="KSTNModel.NV_KeKhai_Tien" Width="1.5" PointX="18.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="KSTNModel.NV_KeKhai_TongThuNhap" Width="1.5" PointX="18.75" PointY="3.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="KSTNModel.Nv_KeKhai_TSTN" Width="1.5" PointX="18.75" PointY="6.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="KSTNModel.NV_KetLuanXacMinh" Width="1.5" PointX="18.75" PointY="10.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="KSTNModel.NV_KetLuanXacMinh_ChiTiet" Width="1.5" PointX="18.75" PointY="14.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="KSTNModel.NV_KetLuanXacMinh_XuLyViPham" Width="1.5" PointX="16.75" PointY="18.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="KSTNModel.NV_LapKeHoachKeKhai" Width="1.5" PointX="18.75" PointY="17.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="KSTNModel.NV_LapKeHoachKeKhai_DanhSachKeKhaiBoSung" Width="1.5" PointX="12.75" PointY="19.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="KSTNModel.NV_LapKeHoachKeKhai_DanhSachKeKhaiBoSung_ChiTiet" Width="1.5" PointX="20.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="KSTNModel.NV_LapKeHoachKeKhai_DanhSachKeKhaiHangNam" Width="1.5" PointX="0.75" PointY="20.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="KSTNModel.NV_LapKeHoachKeKhai_DanhSachKeKhaiHangNam_ChiTiet" Width="1.5" PointX="2.75" PointY="20.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="KSTNModel.NV_LapKeHoachXacMinh" Width="1.5" PointX="20.75" PointY="3.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="KSTNModel.NV_LapKeHoachXacMinh_ChiTiet" Width="1.5" PointX="20.75" PointY="8.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="KSTNModel.NV_LapKeHoachXacMinh_DonViPhoiHop" Width="1.5" PointX="8.75" PointY="20.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="KSTNModel.NV_LapKeHoachXacMinh_ThanhVienToXacMinh" Width="1.5" PointX="20.75" PointY="12.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="KSTNModel.NV_LapKeHoachXacMinh_ToXacMinh" Width="1.5" PointX="20.75" PointY="16.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="KSTNModel.NV_TienHanhXacMinh_DeNghi" Width="1.5" PointX="20.75" PointY="19.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="KSTNModel.NV_TienHanhXacMinh_DeNghiChiTiet" Width="1.5" PointX="22.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="KSTNModel.sysdiagram" Width="1.5" PointX="22.75" PointY="3.75" IsExpanded="true" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

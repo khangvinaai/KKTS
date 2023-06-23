@@ -1,0 +1,269 @@
+﻿@{
+    ViewBag.Title = "Nghiệp Vụ Lập Kế Hoạch Xác Minh";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-left">
+                    <li class="breadcrumb-item"><a href="@Url.Action("Index","Home")">Trang chủ</a></li>
+                    <li class="breadcrumb-item active">Nghiệp Vụ Lập Kế Hoạch Xác Minh</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="card elevation-2">
+                    <div class="card-tools">
+                        <div class="input-group input-group-sm row">
+                            <input type="text" name="table_search" class="form-control float-right mr-1" placeholder="Tìm..." id="Filter">
+                            <div class="input-group-append mr-3">
+                                <button type="submit" class="btn btn-default" id="search_btn">
+                                    <i class="fas fa-search text-primary"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <table class="table table-hover text-nowrap table-bordered" id="dataTable" style="width: 100%">
+                        <thead class="bg-primary">
+                            <tr>
+                                <th width="5%">STT</th>
+                                <th width="40%">Tên Danh Sách</th>
+                                <th width="10%">Ngày Lập Danh Sách</th>
+                                <th width="10%">Danh Sách Năm</th>
+                                <th width="10%">Trạng Thái</th>
+                                <th width="5%"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                    <div class="card-footer clearfix" style="height: 51px; width: 100%">
+                        <ul class="pagination pagination-sm m-0 float-right">
+                        </ul>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="modal fade" id="addKHXM-sh">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="lap-ke-hoach-title"></h4>
+                <button type="button" class="close closeform" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                @using (Ajax.BeginForm("Create", "NV_LapKeHoachXacMinh", new AjaxOptions { HttpMethod = "POST", OnSuccess = "FnSuccess_KHXM", OnFailure = "Failure_KHXM", OnBegin = "FnBegin_KHXM" }, new { @class = "NV_Create form-horizontal", @id = "formChucDanh", enctype = "multipart/form-data" }))
+                {
+                    @Html.AntiForgeryToken()
+                    <input type="text" class="form-control" id="ID_DanhSachCanBo" name="ID_DanhSachCanBo" hidden value="">
+                    <div class="card-body row">
+
+                        <div class="col-12 d-flex" style="margin-top: -20px; margin-bottom: 12px;">
+                            <hr style="width: 20%" />
+                            <span style="font-size: 17px;">Thông Tin Chung Kế Hoạch Xác Minh Tài Sản, Thu Nhập</span>
+                            <hr style="width: 20%" />
+                        </div>
+
+                        <div class="col-4">
+                            <div class="form-group">
+                                <label for="cnsh">Số Kế Hoạch<span style="color: red"> *</span></label>
+                                <input type="text" class="form-control" id="SoKeHoach" name="SoKeHoach">
+                                <input type="text" class="form-control" id="ID_KeHoach" name="ID_KeHoach" hidden value="0">
+                            </div>
+                        </div>
+
+                        <div class="col-4">
+                            <div class="form-group">
+                                <label for="cnsh">Ngày Lập Kế Hoạch<span style="color: red"> *</span></label>
+                                <input type="date" class="form-control" id="NgayLapKeHoach" name="NgayLapKeHoach" step="1" min="0" value="@DateTime.Today.ToString("yyyy-MM-dd")">
+                            </div>
+                        </div>
+                        <div class="col-4" style=" margin-top: -6px;">
+                            <div class="form-group">
+                                <label for="cnsh" class="col-sm-12 col-form-label">File Kế Hoạch<span style="color: red">*</span></label>
+                                <input type="file" style="padding: 3px;" class="form-control" id="FileKeHoach" name="FileKeHoach">
+                                <div id="DaDinhKem"></div>
+                            </div>
+                        </div>
+
+                        <div class="col-12">
+                            <div class="form-group">
+                                <label for="cnsh" class="col-sm-12 col-form-label">Nội Dung Kế Hoạch<span style="color: red">*</span></label>
+                                <textarea class="form-control" id="NoiDungKeHoach" name="NoiDungKeHoach" rows="5" ></textarea>
+                            </div>
+                        </div>
+
+                        
+                        <div class="col-12">
+                            <div class="card elevation-2" style="padding: 10px;">
+                                <div class="text-center p-2" style="width: 100%; font-size: 16px;" id="downloadDSCBXM">
+                                    Danh Sách Các Đơn Vị Thuộc Thẩm Quyền Kiểm Soát Của Thanh Tra Tỉnh (Ngẫu Nhiên 20%)
+                                </div>
+                                <table class="table table-hover text-nowrap table-bordered" id="dataTable_DSCQ" style="width: 100%">
+                                    <thead class="bg-primary">
+                                        <tr>
+                                            <th style="width: 3%">STT</th>
+                                            <th style="width: 40%">Tên Loại Cơ Quan</th>
+                                            <th style="width: 42%">Tên Cơ Quan Đơn Vị</th>
+                                            <th style="width: 15%">Số Lượng Xác Minh</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    </tbody>
+                                </table>
+                                <div class="card-footer clearfix" style="height: 51px; width: 100%">
+                                    <ul class="pagination pagination-sm m-0 float-right">
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                     
+                    </div>
+                    <div class="modal-footer justify-content-between">
+                        <button type="button" class="btn btn-danger closeform" data-dismiss="modal" style="width: 105px">
+                            Đóng
+                        </button>
+                        <button type="submit" class="btn btn-primary" style="position: relative; width: 105px;">
+                            <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="background: none; display: block; shape-rendering: auto; margin: 0px; padding: 0px; width: 20px; height: 20px; position: absolute;left: 5px;top: 6px;" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid" class="loading_newchucvu d-none">
+                                <circle cx="50" cy="50" r="32" stroke-width="8" stroke="#ffffff" stroke-dasharray="50.26548245743669 50.26548245743669" fill="none" stroke-linecap="round">
+                                    <animateTransform attributeName="transform" type="rotate" repeatCount="indefinite" dur="1s" keyTimes="0;1" values="0 50 50;360 50 50"></animateTransform>
+                                </circle>
+                            </svg>
+                            Lưu Dữ Liệu
+                        </button>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="KHXM-sh">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Chi Tiết Kế Hoạch Xác Minh Tài Sản, Thu Nhập</h4>
+                <button type="button" class="close closeform" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <input type="text" class="form-control" id="ID_DanhSachCanBo" name="ID_DanhSachCanBo" hidden value="">
+                <div class="card-body row">
+
+                    <div class="col-12 d-flex" style="margin-top: -20px; margin-bottom: 12px;">
+                        <hr style="width: 20%" />
+                        <span style="font-size: 17px;">Thông Tin Chung Kế Hoạch Xác Minh Tài Sản, Thu Nhập</span>
+                        <hr style="width: 20%" />
+                    </div>
+
+                    <div class="col-4">
+                        <div class="form-group">
+                            <label for="cnsh">Số Kế Hoạch</label>
+                            <input type="text" class="form-control" id="SoKeHoach_xct" name="SoKeHoach">
+                        </div>
+                    </div>
+
+                    <div class="col-4">
+                        <div class="form-group">
+                            <label for="cnsh">Ngày Lập Kế Hoạch<span style="color: red"> *</span></label>
+                            <input type="date" class="form-control" id="NgayLapKeHoach_xct" name="NgayLapKeHoach" step="1" min="0" value="@DateTime.Today.ToString("yyyy-MM-dd")">
+                        </div>
+                    </div>
+                    <div class="col-4" style=" margin-top: -6px;">
+                        <div class="form-group">
+                            <label for="cnsh" class="col-sm-12 col-form-label">File Kế Hoạch</label>
+                            <div id="DaDinhKem_xct"></div>
+                        </div>
+                    </div>
+
+                    <div class="col-12">
+                        <div class="form-group">
+                            <label for="cnsh" class="col-sm-12 col-form-label">Nội Dung Kế Hoạch</label>
+                            <textarea class="form-control" id="NoiDungKeHoach_xct" name="NoiDungKeHoach" rows="5"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="col-12 d-flex" style="margin-bottom: 12px;">
+                        <hr style="width: 20%" />
+                        <span style="font-size: 17px;">Thông Tin Chung Chi Tiết Kế Hoạch Xác Minh Tài Sản, Thu Nhập</span>
+                        <hr style="width: 20%" />
+                    </div>
+
+                    <div class="col-12">
+                        <div class="card elevation-2" style="padding: 10px;">
+                            <div class="text-center p-2" style="width: 100%; font-size: 16px;" id="downloadDSCBXM">
+                                Danh Sách Các Đơn Vị Thuộc Thẩm Quyền Kiểm Soát Của Thanh Tra Tỉnh (Ngẫu Nhiên 20%)
+                            </div>
+                            <table class="table table-hover text-nowrap table-bordered" id="dataTable_DSCQ1" style="width: 100%">
+                                <thead class="bg-primary">
+                                    <tr>
+                                        <th style="width: 3%">STT</th>
+                                        <th style="width: 40%">Tên Loại Cơ Quan</th>
+                                        <th style="width: 42%">Tên Cơ Quan Đơn Vị</th>
+                                        <th style="width: 15%">Số Lượng Xác Minh</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                            <div class="card-footer clearfix" style="height: 51px; width: 100%">
+                                <ul class="pagination pagination-sm m-0 float-right">
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-12">
+                        <div class="card elevation-2" style="padding: 10px;">
+                            <div class="text-center p-2" style="width: 100%; font-size: 16px;" id="downloadDSCBXM">
+                                Danh Sách Cán Bộ Được Xác Minh Từ Danh Sách Cơ Quan Trên (Ngẫu Nhiên 10%)
+                            </div>
+                            <table class="table table-hover text-nowrap table-bordered" id="dataTable_DSCQ2" style="width: 100%">
+                                <thead class="bg-primary">
+                                    <tr>
+                                        <th style="width: 5%">STT</th>
+                                        <th style="width: 35%">Họ Tên Cán Bộ</th>
+                                        <th style="width: 40%">Cơ Quan Đơn Vị</th>
+                                        <th style="width: 15%">Chức Vụ, Chức Danh</th>
+                                        <th style="width: 5%"></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                            <div class="card-footer clearfix" style="height: 51px; width: 100%">
+                                <ul class="pagination pagination-sm m-0 float-right">
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger closeform" data-dismiss="modal" style="width: 105px">
+                        Đóng
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="~/Scripts/NghiepVu/NV_LapKeHoachXacMinh.js"></script>
+

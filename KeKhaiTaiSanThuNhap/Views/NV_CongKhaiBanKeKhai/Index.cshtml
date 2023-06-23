@@ -1,0 +1,55 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+}
+
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-left">
+                    <li class="breadcrumb-item"><a href="@Url.Action("Index","Home")">Trang chủ</a></li>
+                    <li class="breadcrumb-item active">Danh Sách Kê Khai Tài Sản Thu Nhập Theo Kế Hoạch</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="card elevation-2" style="overflow-x: scroll; overflow-y: hidden; ">
+
+                    <table class="table table-hover text-nowrap table-bordered" id="dataTable">
+                        <thead class="bg-primary">
+                            <tr>
+                                <th>STT</th>
+                                <th>Tên Kế Hoạch</th>
+                                <th>Kế Hoạch năm</th>
+                                <th>Căn Cứ Quyết Định Số</th>
+                                <th>Nội Dung Xác Minh</th>
+                                <th>Tiến độ kế hoạch</th>
+                                <th>Chức Năng</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                    <div class="card-footer clearfix" style="height: 51px; width: 100%">
+                        <ul class="pagination pagination-sm m-0 float-right">
+                        </ul>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+</section>
+<script src="~/Scripts/NV_CongKhaiBanKeKhai_index.js"></script>
+

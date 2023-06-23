@@ -1,0 +1,968 @@
+﻿
+
+@{
+    ViewBag.Title = "Danh Sách Kế Hoạch Kê Khai Tài Sản Thu Nhập";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    <style>
+        #dataTable_filter input {
+            display: none;
+        }
+
+        .no-footer {
+            border-bottom: none;
+        }
+
+        .is-invalid {
+            color: #E84C3D;
+            margin-top: 5px;
+        }
+
+        .dt-buttons {
+            border-bottom: 1px solid rgba(0,0,0,.125);
+            padding: 8px;
+        }
+
+        .card-tools {
+            position: absolute;
+            right: 10px;
+            top: 11px;
+            z-index: 999;
+        }
+
+        .cn {
+            position: relative;
+        }
+    </style>
+
+}
+
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-left">
+                    <li class="breadcrumb-item"><a href="@Url.Action("Index","Home")">Trang chủ</a></li>
+                    <li class="breadcrumb-item active">Danh Sách Kê Khai Tài Sản Thu Nhập</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="card elevation-2" style="overflow-x: scroll; overflow-y: hidden; ">
+                    <div class="card-tools">
+                        <div class="input-group input-group-sm">
+                            <div class="mr-4 d-flex" style="overflow: auto; white-space: nowrap;">
+                                @*<span style="display: flex; align-items: center; " class="pr-2">Loại Kê Khai</span>*@
+                                <select id="LoaiKeKhai" class="js-example-basic-single js-states form-control select_search">
+                                    <option value="0">TẤT CẢ</option>
+                                </select>
+                            </div>
+                            <div class="mr-4 d-flex" style="overflow: auto; white-space: nowrap;">
+                                @*<span style="display: flex; align-items: center; " class="pr-2">Cơ Quan</span>*@
+                                <select id="CoQuan" class="js-example-basic-single js-states form-control  select_search">
+                                    <option value="0">TẤT CẢ</option>
+                                </select>
+                            </div>
+                            @if (ViewBag.Role == "NTNKK")
+                            {
+                                <div class="mr-4 d-flex" style="overflow: auto; white-space: nowrap;">
+                                    @*<span style="display: flex; align-items: center; " class="pr-2">Cơ Quan</span>*@
+                                    <select id="TrangThai" class="js-example-basic-single js-states form-control  select_search">
+
+                                        <option value="0">TẤT CẢ</option>
+                                        <option value="1">Chưa tiếp nhận</option>
+                                        <option value="2">Đã tiếp nhận</option>
+                                    </select>
+                                </div>
+                            }
+
+                            <div class="mr-4 d-flex" style="overflow: auto; white-space: nowrap;">
+                                @*<span style="display: flex; align-items: center; " class="pr-2">Kế Hoạch Năm</span>*@
+                                <input type="number" name="table_search" class="form-control float-right" min="2017" max="2030" value="@DateTime.Now.Year.ToString()" id="keHoachNam">
+                            </div>
+
+                            <input type="text" name="table_search" class="form-control float-right" placeholder="Tìm ..." id="Filter">
+
+                            <div class="input-group-append mr-3">
+                                <button type="submit" class="btn btn-default" id="search">
+                                    <i class="fas fa-search text-primary"></i>
+                                </button>
+                            </div>
+
+                        </div>
+                    </div>
+                    <table class="table table-hover text-nowrap table-bordered" id="dataTable" style="width: 100%;">
+                        <thead class="bg-primary">
+                            <tr>
+                                <th>STT</th>
+                                <th>Họ Tên Cán Bộ</th>
+                                <th>Tên Kế Hoạch</th>
+                                <th>Tên Loại Kê Khai</th>
+                                <th>Thời gian Bắt Đầu</th>
+                                <th>Thời gian Kết Thúc</th>
+                                <th>Cơ Quan Đơn Vị</th>
+                                <th>Kế Hoạch Năm</th>
+                                <th>Trạng Thái</th>
+                                <th style="width: 5%"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                    <div class="card-footer clearfix" style="height: 51px; width: 100%">
+                        <ul class="pagination pagination-sm m-0 float-right">
+                        </ul>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+</section>
+<div class="modal fade" id="add-dk">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Đính Kèm Bản Kê Khai Có Chữ Ký</h4>
+                <button type="button" class="close closeform" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form action="/NV_TiepNhanKeKhai/DinhKemFile?Length=14" class="NV_Create_DinhKem form-horizontal" data-ajax="true" data-ajax-begin="FnBegin_DinhKem" data-ajax-failure="Failure_DinhKem" data-ajax-method="POST" data-ajax-success="FnSuccess_DinhKem" enctype="multipart/form-data" id="form0" method="post">
+                    @Html.AntiForgeryToken()
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-12 d-flex" style="margin-bottom: 10px;">
+                                <span style="font-size: 17px;"><b>Lưu ý:</b> Đây là bản kê khai đã hoàn tất kiểm tra và scan có chữ ký để gửi đi, vui lòng kiểm tra kỹ.</span>
+                            </div>
+                            <div class="col-12">
+                                <div class="form-group">
+                                    <label>Đính Kèm Bản Kê Khai<span style="color: red"> *</span></label>
+                                    <input class="form-control" type="file" id="FileDinhKem" name="FileDinhKem" style="height: auto; " required>
+                                    <input class="form-control" hidden type="text" id="MaKeKhai" name="MaKeKhai" style="height: auto;">
+                                </div>
+                            </div>
+                            <div class="col-12" id="DaDinhKem">
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer justify-content-between">
+                        <button type="button" class="btn btn-danger closeform" data-dismiss="modal" style="width: 118px">
+                            Đóng
+                        </button>
+                        <button type="submit" class="btn btn-primary" id="submit_dinhkem" style="position: relative; width: 118px;">
+                            <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="background: none; display: block; shape-rendering: auto; margin: 0px; padding: 0px; width: 20px; height: 20px; position: absolute;left: 5px;top: 6px;" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid" class="loading_dk d-none">
+                                <circle cx="50" cy="50" r="32" stroke-width="8" stroke="#ffffff" stroke-dasharray="50.26548245743669 50.26548245743669" fill="none" stroke-linecap="round">
+                                    <animateTransform attributeName="transform" type="rotate" repeatCount="indefinite" dur="1s" keyTimes="0;1" values="0 50 50;360 50 50"></animateTransform>
+                                </circle>
+                            </svg>
+                            Đính Kèm
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@* Modal detail*@
+<div class="modal fade" id="xemchitiet-sh1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Chi Tiết Kế Hoạch Kê Khai</h4>
+                <button type="button" class="close closeform" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-12 d-flex">
+                            <hr style="width: 20%" />
+                            <span style="font-size: 17px;">Thông Tin Chung Kế Hoạch Kê Khai Tài Sản, Thu Nhập</span>
+                            <hr style="width: 20%" />
+                        </div>
+
+                        <div class="col-12">
+                            <div class="form-group">
+                                <label>Kế Hoạch Năm</label>
+                                <input type="number" min="1900" max="2099" step="1" class="form-control" placeholder="nhập kế hoạch năm" id="KeHoachNam_Detail" name="KeHoachNam">
+                            </div>
+                        </div>
+
+                        <div class="col-12">
+                            <div class="form-group">
+                                <label>Loại Kế Hoạch Kê Khai</label>
+                                <select class="form-control" id="Ma_Loai_KeKhai_Detail" name="Ma_Loai_KeKhai" style="width: 100%; height: 100%;">
+                                    <option value="3">Kê Khai Lần Đầu</option>
+                                    <option value="4">Kê Khai Hằng Năm</option>
+                                    <option value="12">Kê Khai Phục Vụ Công Tác Cán Bộ</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-12">
+                            <div class="form-group">
+                                <label>Tên Kế Hoạch</label>
+                                <input type="text" class="form-control" placeholder="nhập tên kế hoạch kê khai" id="TenKeHoachKeKhai_Detail" name="TenKeHoachKeKhai">
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="form-group">
+                                <label>Thời Gian Bắt Đầu Kê khai</label>
+                                <input type="date" class="form-control" id="ThoiGianBatDau_Detail" name="ThoiGianBatDau">
+                            </div>
+                        </div>
+
+                        <div class="col-6">
+                            <div class="form-group">
+                                <label>Thời Gian Kết Thúc Kê Khai</label>
+                                <input type="date" class="form-control" id="ThoiGianKetThuc_Detail" name="ThoiGianKetThuc">
+                            </div>
+                        </div>
+
+                        <div class="col-6">
+                            <div class="form-group">
+                                <label>Thời Gian Bắt Đầu Công Khai</label>
+                                <input type="date" class="form-control" id="ThoiGianBatDauCongKhai_Detail" name="ThoiGianBatDauCongKhai">
+                            </div>
+                        </div>
+
+                        <div class="col-6">
+                            <div class="form-group">
+                                <label>Thời Gian Kết Thúc Công Khai<span style="color: red"> *</span></label>
+                                <input type="date" class="form-control" id="ThoiGianKetThucCongKhai_Detail" name="ThoiGianKetThucCongKhai">
+                            </div>
+                        </div>
+
+
+                        <div class="col-12">
+                            <div class="form-group">
+                                <label>Tệp Nghị Định Đính Kèm: </label>
+                                <span id="NghiDinh_Detail"></span>
+
+                            </div>
+                        </div>
+
+                        <div class="col-12 row" id="KKTT">
+
+                        </div>
+
+                    </div>
+                </div>
+                <div class="modal-footer justify-content-between">
+                    <button type="button" class="btn btn-danger closeform" data-dismiss="modal" style="width: 105px">
+                        Đóng
+                    </button>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    var t;
+
+    var XEM = false;
+    var XUAT = false;
+    var SUA = false;
+    var THEM = false;
+
+    function FnBegin_DinhKem() {
+        $('.loading_dk').removeClass('d-none');
+        $('#submit_dinhkem').prop('disabled', true);
+    }
+
+    $("#search").click(() => {
+        t.columns(0).search($('#Filter').val());
+        t.draw()
+    })
+
+
+
+    $("#Filter").keypress(function (e) {
+        if (e.keyCode == 13) {
+            t.columns(0).search($('#Filter').val());
+            t.draw();
+        }
+    });
+
+
+    function FnSuccess_DinhKem(data) {
+        $('.loading_dk').addClass('d-none');
+        $('#submit_dinhkem').prop('disabled', false);
+        $('.closeform').click();
+        $('#FileDinhKem').val('');
+        if (data.status == "success") {
+            Swal.fire({
+                icon: data.status,
+                title: 'Thành Công',
+                text: data.message,
+                timer: 2000,
+                showConfirmButton: false,
+            })
+            t.draw();
+        }
+        else {
+            Swal.fire({
+                icon: data.status,
+                title: 'Cảnh Báo',
+                text: data.message,
+                timer: 2000,
+                showConfirmButton: false,
+            })
+            t.draw();
+        }
+
+    }
+
+    function Failure_DinhKem(data) {
+        $('.loading_newcoquan').addClass('d-none');
+        $('#submit_dinhkem').prop('disabled', false);
+        Swal.fire({
+            icon: 'error',
+            title: 'Có lỗi xảy ra',
+            text: 'Lỗi Hệ Thống',
+            timer: 2000,
+            showConfirmButton: false,
+        })
+    }
+
+
+    function viewdetail(obj) {
+        var ele = $(obj);
+        var MaKeHoach = ele.data("model-id");
+        var url = `/NV_LapKeHoachKeKhai/LoadDataDetail`
+        console.log("detail")
+        $.get(url, { id: MaKeHoach }, (data) => {
+
+            var ThoiGianBatDau = moment(data.ThoiGianBatDau).format('YYYY-MM-DD');
+            var ThoiGianKetThuc = moment(data.ThoiGianKetThuc).format('YYYY-MM-DD');
+            var ThoiGianBatDauCongKhai = moment(data.ThoiGianBatDauCongKhai).format('YYYY-MM-DD');
+            var ThoiGianKetThucCongKhai = moment(data.ThoiGianKetThucCongKhai).format('YYYY-MM-DD');
+
+            $('#TenKeHoachKeKhai_Detail').val(data.TenKeHoachKeKhai)
+            $('#KeHoachNam_Detail').val(data.KeHoachNam)
+            $('#ThoiGianBatDau_Detail').val(ThoiGianBatDau)
+            $('#ThoiGianKetThuc_Detail').val(ThoiGianKetThuc)
+            $('#ThoiGianBatDauCongKhai_Detail').val(ThoiGianBatDauCongKhai)
+            $('#ThoiGianKetThucCongKhai_Detail').val(ThoiGianKetThucCongKhai)
+            $('#Ma_Loai_KeKhai_Detail').val(data.Ma_Loai_KeKhai)
+            $('#NghiDinh_Detail').empty();
+            $('#NghiDinhTTT_Detail').empty();
+
+            $('#NghiDinh_Detail').append(`<a href="Content/uploads/${data.NghiDinh}" target="_blank">${data.NghiDinh}</a>`)
+            $('#NghiDinhTTT_Detail').append(`<a href="Content/uploads/${data.NghiDinhTTT}" target="_blank">${data.NghiDinhTTT}</a>`)
+            var kehoachnam = data.KeHoachNam
+            var nguoitao = data.nguoitao
+            $("#KKTT").empty()
+            if ((data.Ma_Loai_KeKhai == 4 || data.Ma_Loai_KeKhai == 5) &&nguoitao != "NDDTTT") {
+                $.post("/NV_LapKeHoachKeKhai/KeHoachKeKhaiThanhTraTinh", { KeHoachNam: data.KeHoachNam, LoaiKeKhai: 4 })
+                    .done(function (data) {
+
+                        if (data.type == "warning") {
+                            min = data.thoigianbatdau;
+                            max = data.thoigianketthuc;
+                            $('#ThoiGianBatDau').attr("min", min);
+                            $('#ThoiGianKetThuc').attr("max", max);
+                            $('#ThoiGianKetThuc').attr("min", min);
+                            $('#ThoiGianBatDau').attr("max", max);
+
+
+
+                            $('#ThoiGianBatDau').val(min);
+                            $('#ThoiGianKetThuc').val(max);
+
+
+                            var row = ` <div class="col-12 d-flex">
+                                            <hr style="width: 20%" />
+                                            <span style="font-size: 17px;">Kế Hoạch Kê Khai Hằng Năm Của Tỉnh Năm ${kehoachnam}</span>
+                                            <hr style="width: 20%" />
+                                        </div>
+                                        <div class="col-6">
+                                            <div class="form-group">
+                                                <label>Thời Gian Bắt Đầu Kê khai<span style="color: red"> *</span></label>
+                                                <input type="date" readonly class="form-control" id="ThoiGianBatDauKKTT" name="ThoiGianBatDauKKTT" value=${data.thoigianbatdau}>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-6">
+                                            <div class="form-group">
+                                                <label>Thời Gian Kết Thúc Kê Khai<span style="color: red"> *</span></label>
+                                                <input type="date" readonly class="form-control" id="ThoiGianKetThucKKTT" name="ThoiGianKetThucKKTT" value=${data.thoigianketthuc}>
+                                            </div>
+                                        </div>
+                                        <div class="col-12">
+                                            <div class="form-group">
+                                                <label>Đính Kèm Tệp<span style="color: red"> *</span></label>
+                                                <span><a href ="/Content/uploads/${data.file}" target="_blank">${data.file}</a></span>
+                                            </div>
+                                        </div>`
+                            $("#KKTT").append(row)
+                        } else {
+
+                        }
+                    })
+            } else if (nguoitao != "NDDTTT") {
+                $.post("/NV_LapKeHoachKeKhai/KeHoachKeKhaiThanhTraTinh", { KeHoachNam: data.KeHoachNam, LoaiKeKhai: data.Ma_Loai_KeKhai })
+                    .done(function (data) {
+                        console.log(data)
+                        if (data.type == "warning") {
+                            min = data.thoigianbatdau;
+                            max = data.thoigianketthuc;
+
+                            $('#ThoiGianBatDau').attr("min", min);
+                            $('#ThoiGianKetThuc').attr("max", max);
+                            $('#ThoiGianKetThuc').attr("min", min);
+                            $('#ThoiGianBatDau').attr("max", max);
+
+
+
+                            $('#ThoiGianBatDau').val(min);
+                            $('#ThoiGianKetThuc').val(max);
+
+
+                            var row = ` <div class="col-12 d-flex">
+                                            <hr style="width: 20%" />
+                                            <span style="font-size: 17px;">Kế Hoạch Kê Khai Lần Đầu của Tỉnh Năm 2021</span>
+                                            <hr style="width: 20%" />
+                                        </div>
+                                        <div class="col-6">
+                                            <div class="form-group">
+                                                <label>Thời Gian Bắt Đầu Kê khai<span style="color: red"> *</span></label>
+                                                <input type="date" readonly class="form-control" id="ThoiGianBatDauKKTT" name="ThoiGianBatDauKKTT" value=${data.thoigianbatdau}>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-6">
+                                            <div class="form-group">
+                                                <label>Thời Gian Kết Thúc Kê Khai<span style="color: red"> *</span></label>
+                                                <input type="date" readonly class="form-control" id="ThoiGianKetThucKKTT" name="ThoiGianKetThucKKTT" value=${data.thoigianketthuc}>
+                                            </div>
+                                        </div>
+                                        <div class="col-12">
+                                            <div class="form-group">
+                                                <label>Đính Kèm Tệp<span style="color: red"> *</span></label>
+                                                <span><a href ="/Content/uploads/${data.file}" target="_blank">${data.file}<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-earmark-arrow-down-fill" viewBox="0 0 16 16">
+  <path d="M9.293 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.707A1 1 0 0 0 13.707 4L10 .293A1 1 0 0 0 9.293 0zM9.5 3.5v-2l3 3h-2a1 1 0 0 1-1-1zm-1 4v3.793l1.146-1.147a.5.5 0 0 1 .708.708l-2 2a.5.5 0 0 1-.708 0l-2-2a.5.5 0 0 1 .708-.708L7.5 11.293V7.5a.5.5 0 0 1 1 0z"/>
+</svg></a></span>
+                                            </div>
+                                        </div>`
+                            $("#KKTT").append(row)
+                        } else {
+
+                        }
+                    })
+            }
+        })
+    }
+
+    function loadDataTable() {
+        t = $("#dataTable").DataTable({
+            "lengthChange": false,
+            "info": false,
+            "ordering": false,
+            "language": {
+
+                "search": "",
+                "info": "Tổng số _TOTAL_ hàng",
+                "infoEmpty": "",
+                "infoFiltered": "",
+                "paginate": {
+                    "next": "»",
+                    "previous": "«"
+                },
+                "processing": `Đang tải dữ liệu`,
+
+                searchPlaceholder: "Tìm...",
+                zeroRecords: "Không tìm thấy kết quả",
+
+            },
+            dom: 'Bfrtip',
+            buttons: [
+                {
+                    text: '<i class="fa fa-file-excel"></i>',
+                    extend: 'excel',
+                    className: 'btn btn-outline-primary btn-sm mt-2 ml-3'
+                },
+                {
+                    text: '<i class="fa fa-file-pdf"></i>',
+                    extend: 'pdf',
+                    className: 'btn btn-outline-primary btn-sm mt-2'
+                },
+                {
+                    text: '<i class="fa fa-print"></i>',
+                    extend: 'print',
+                    className: 'btn btn-outline-primary btn-sm mt-2'
+                }
+            ],
+
+            "serverSide": true,
+            "processing": true,
+            "ajax": {
+                "url": `/NV_TiepNhanKeKhai/LoadData`,
+                "type": "POST",
+                "datatype": "json"
+            },
+            "columnDefs": [
+                { className: "cn", "targets": [9] }
+            ],
+            "columns": [
+                { "data": "MaKeHoachKeKhai" },
+                { "data": "HoTen" },
+                { "data": "TenKeHoachKeKhai" },
+                { "data": "loaiKK" },
+                {
+                    "data": "ThoiGianBatDau", "render": (data, type, row) => {
+                        Number.prototype.padLeft = function (base, chr) {
+                            var len = (String(base || 10).length - String(this).length) + 1;
+                            return len > 0 ? new Array(len).join(chr || '0') + this : this;
+                        }
+
+                        var datemili = data.toString();
+                        var mili = datemili.substring(6, 19);
+                        var d = new Date(parseInt(mili));
+                        var dformat = [d.getDate().padLeft(), (d.getMonth() + 1).padLeft(),
+                        d.getFullYear()].join('/');
+                        return dformat;
+                    }
+                },
+                {
+                    "data": "ThoiGianKetThuc", "render": (data, type, row) => {
+                        Number.prototype.padLeft = function (base, chr) {
+                            var len = (String(base || 10).length - String(this).length) + 1;
+                            return len > 0 ? new Array(len).join(chr || '0') + this : this;
+                        }
+
+                        var datemili = data.toString();
+                        var mili = datemili.substring(6, 19);
+                        var d = new Date(parseInt(mili));
+                        var dformat = [d.getDate().padLeft(), (d.getMonth() + 1).padLeft(),
+                        d.getFullYear()].join('/');
+                        return dformat;
+                    }
+                },
+                { "data": "Ten" },
+                { "data": "KeHoachNam" },
+
+                {
+                    "data": { "FileKiXacNhan": "FileKiXacNhan", "Ma_KeKhai": "Ma_KeKhai", "MaKeHoachKeKhai": "MaKeHoachKeKhai", "TrangThaiKK": "TrangThaiKK", "ThoiGianKetThuc": "ThoiGianKetThuc", "suakk": "suakk", "TrangThaiTiepNhan": "TrangThaiTiepNhan", "NgayTiepNhan": "NgayTiepNhan" }, "render": (data, type, row) => {
+                        var dformat = ""
+                        if (data.NgayTiepNhan != null && data.NgayTiepNhan != "") {
+                            Number.prototype.padLeft = function (base, chr) {
+                                var len = (String(base || 10).length - String(this).length) + 1;
+                                return len > 0 ? new Array(len).join(chr || '0') + this : this;
+                            }
+
+                            var datemili = data.NgayTiepNhan.toString();
+                            var mili = datemili.substring(6, 19);
+                            var d = new Date(parseInt(mili));
+                            dformat = [d.getDate().padLeft(), (d.getMonth() + 1).padLeft(),
+                            d.getFullYear()].join('/');
+                        }
+
+
+
+                        if ((data.FileKiXacNhan == null || data.FileKiXacNhan == "") && data.trangThaiTiepNhan == 1) {
+                            return `<span class="badge badge-danger">Đang tiến Hành Tiếp Nhận</span>`
+                        } else if (data.FileKiXacNhan != null && data.FileKiXacNhan != "" && data.trangThaiTiepNhan == 1) {
+                            return `<span class="badge badge-warning">Đã tiếp nhận ngày ${dformat}</span>`
+                        }
+                        else if (data.FileKiXacNhan != "" && data.trangThaiTiepNhan == 2) {
+                            return `<span class="badge badge-success">Đã tiếp nhận ngày ${dformat}</span>`
+                        }
+                    }
+                },
+                {
+                    "data": { "FileDinhKem":"FileDinhKem", "FileKiXacNhan": "FileKiXacNhan", "Ma_KeKhai": "Ma_KeKhai", "MaKeHoachKeKhai": "MaKeHoachKeKhai", "TrangThaiKK": "TrangThaiKK", "ThoiGianKetThuc": "ThoiGianKetThuc", "TrangThaiTiepNhan": "TrangThaiTiepNhan" }, "render": (data, type, row) => {
+
+                        var Role = "@ViewBag.Role";
+                        if (data.FileKiXacNhan == "" && data.trangThaiTiepNhan == 1) {
+                            var row_bankekhai = ``
+
+                            if (THEM) {
+                                row_bankekhai = `<a class="dropdown-item" target="_blank" href ="/Content/uploads/${data.FileDinhKem}">
+                                                Tải Bản Kê Khai
+                                            </a>
+                                            `
+                            }
+                            if (row_bankekhai != ``) {
+                                return `<div class="dropleft">
+                                        <button class="btn btn-outline-info btn-sm" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="padding: 4px 13px;">
+                                        <i class="fa-solid fa-ellipsis-vertical"></i>
+                                        </button>
+                                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                            <a class="dropdown-item" data-model-id="${data.MaKeHoachKeKhai}" data-toggle="modal" data-target="#xemchitiet-sh1" onclick="viewdetail(this)" >
+                                                Xem Kế Hoạch Kê Khai
+                                            </a>
+                                            ${row_bankekhai}
+                                           <a class="dropdown-item" data-model-id="${data.Ma_KeKhai}" data-toggle="modal" data-target="#add-dk"  onclick="DinhKemFile(this)">
+                                               Đính Kèm Bản Kê Khai Có Chữ Ký
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>`
+                            }
+
+                            return `<div class="dropleft">
+                                    <button class="btn btn-outline-info btn-sm disabled" disabled type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="padding: 4px 13px;">
+                                    <i class="fa-solid fa-ellipsis-vertical"></i>
+                                    </button>
+                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                    ${row_bankekhai}
+                                    </div>
+                                </div>`
+
+
+                        } else if (data.FileKiXacNhan != "" && data.trangThaiTiepNhan == 1) {
+                            var row_bankekhai = ``
+
+                            if (THEM) {
+                                row_bankekhai = `<a class="dropdown-item" target="_blank" href ="/Content/uploads/${data.FileDinhKem}">
+                                                    Tải Bản Kê Khai
+                                                </a>
+
+                                                `
+                            }
+                            if (row_bankekhai != ``) {
+
+                                return `<div class="dropleft">
+                                        <button class="btn btn-outline-info btn-sm" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="padding: 4px 13px;">
+                                        <i class="fa-solid fa-ellipsis-vertical"></i>
+                                        </button>
+                                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                            <a class="dropdown-item" data-model-id="${data.MaKeHoachKeKhai}" data-toggle="modal" data-target="#xemchitiet-sh1" onclick="viewdetail(this)" >
+                                                Xem Kế Hoạch Kê Khai
+                                            </a>
+                                            ${row_bankekhai}
+                                           <a class="dropdown-item" data-model-id="${data.Ma_KeKhai}" data-toggle="modal" data-target="#add-dk"  onclick="DinhKemFile(this)">
+                                               Đính Kèm Bản Kê Khai Có Chữ Ký
+                                            </a>
+                                            <a class="dropdown-item" onclick={completeKeKhai(${data.Ma_KeKhai})} >
+                                                Hoàn Thành và Gửi Bản Kê Khai
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>`
+                            }
+
+                            return `<div class="dropleft">
+                                    <button class="btn btn-outline-info btn-sm disabled" disabled type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="padding: 4px 13px;">
+                                    <i class="fa-solid fa-ellipsis-vertical"></i>
+                                    </button>
+                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                    ${row_bankekhai}
+                                    </div>
+                                </div>`
+
+
+                        }
+                        else if (data.FileKiXacNhan != "" && data.trangThaiTiepNhan == 2) {
+                            var row_bankekhai = ``
+
+                            if (THEM) {
+                                console.log(Role)
+                                if (Role == "NDDTTT") {
+
+                                    row_bankekhai = `
+                                                <a class="dropdown-item" target="_blank" href ="/Content/uploads/${data.FileKiXacNhan}">
+                                                    Tải Bản Đã Kí Xác Nhận
+                                                </a>
+                                                `
+                                } else {
+                                    row_bankekhai = `<a class="dropdown-item" target="_blank" href ="/Content/uploads/${data.FileDinhKem}">
+                                                    Tải Bản Kê Khai chưa kí
+                                                </a>
+                                                <a class="dropdown-item" target="_blank" href ="/Content/uploads/${data.FileKiXacNhan}">
+                                                    Tải Bản Đã Kí Xác Nhận
+                                                </a>
+                                                `
+                                }
+
+                            }
+                            if (row_bankekhai != ``) {
+                                return `<div class="dropleft">
+                                        <button class="btn btn-outline-info btn-sm" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="padding: 4px 13px;">
+                                        <i class="fa-solid fa-ellipsis-vertical"></i>
+                                        </button>
+                                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                            <a class="dropdown-item" data-model-id="${data.MaKeHoachKeKhai}" data-toggle="modal" data-target="#xemchitiet-sh1" onclick="viewdetail(this)" >
+                                                Xem Kế Hoạch Kê Khai
+                                            </a>
+                                            ${row_bankekhai}
+
+                                        </div>
+                                    </div>
+                                </div>`
+                            }
+
+                            return `<div class="dropleft">
+                                    <button class="btn btn-outline-info btn-sm disabled" disabled type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="padding: 4px 13px;">
+                                    <i class="fa-solid fa-ellipsis-vertical"></i>
+                                    </button>
+                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                    ${row_bankekhai}
+                                    </div>
+                                </div>`
+
+
+                        }
+
+
+                    }
+                },
+            ]
+        });
+
+        t.on('draw.dt', function () {
+            var info = t.page.info();
+            t.column(0, { search: 'applied', order: 'applied', page: 'applied' }).nodes().each(function (cell, i) {
+                cell.innerHTML = i + 1 + info.start;
+            });
+        });
+
+        if (!XUAT) {
+            t.buttons().disable();
+        }
+    }
+
+
+    function print_bankkCBkk(obj) {
+        var ele = $(obj);
+        var MaKeKhai = ele.data("model-id");
+
+        $.ajax({
+            url: `/NV_KeKhai_TSTN/InBanKeKhaiCanBo?id=${MaKeKhai}`,
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            type: "POST",
+            beforeSend: function () {
+                $(`#btn_download_bankekhai_${MaKeKhai}`).addClass("d-none")
+                $(`#loading_btnPrint_bankkCBkk_${MaKeKhai}`).removeClass("d-none")
+            },
+            success: function (response) {
+                $(`#btn_download_bankekhai_${MaKeKhai}`).removeClass("d-none")
+                $(`#loading_btnPrint_bankkCBkk_${MaKeKhai}`).addClass("d-none")
+                window.open("/ke-khai-tai-san/ban-in/" + response)
+            },
+            error: function (response) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Thất Bại',
+                    text: 'Lỗi hệ thống',
+                    timer: 2000,
+                    showConfirmButton: false,
+                }).then(() => {
+                    $(`#btn_download_bankekhai_${MaKeKhai}`).removeClass("d-none")
+                    $(`#loading_btnPrint_bankkCBkk_${MaKeKhai}`).addClass("d-none")
+                })
+            }
+        });
+
+    }
+
+
+    function DinhKemFile(obj) {
+        var ele = $(obj);
+        var MaKeKhai = ele.data("model-id");
+        $('#MaKeKhai').val(MaKeKhai);
+        $('#DaDinhKem').empty();
+        $.ajax({
+            url: `/NV_KeKhai_TSTN/GetFileDinhKemXacMinh/${MaKeKhai}`,
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            type: "POST",
+            success: function (response) {
+                var row = `<div class="col-12">
+                            <div class="form-group">
+                                <label>Bản Kê Khai Đã Đính Kèm<span style="color: red"> *</span></label>
+                                <span><a target="_blank" href ="/Content/uploads/${response}">${response}</a></span>
+                            </div>
+                        </div>`
+                $('#DaDinhKem').append(row)
+            }
+        })
+    }
+
+    function completeKeKhai(MaKeHoachKeKhai) {
+        swal.fire({
+            title: 'Xác Nhận Hoàn Thành, Gửi Bản Kê Khai',
+            text: "Vui Lòng Kiểm Tra Kỹ, Nếu Gửi Đi Sẽ Không Được Sửa Đổi.",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Có, Hãy Gửi!',
+            cancelButtonText: 'Không, Quay lại!',
+            reverseButtons: true
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    type: "POST",
+                    url: "/NV_TiepNhanKeKhai/completeKeKhai",
+                    data: { MaKeKhai: MaKeHoachKeKhai },
+                    dataType: "json",
+                    success: function (response) {
+                        if (response.status == "success") {
+                            Swal.fire({
+                                icon: response.status,
+                                title: 'Thành Công',
+                                text: response.message,
+                                timer: 2000,
+                                showConfirmButton: false,
+                            })
+                            t.draw();
+                        }
+                        else if (response.status == "warning") {
+                            Swal.fire({
+                                icon: response.status,
+                                title: 'Cảnh Báo',
+                                text: response.message,
+                                timer: 2000,
+                                showConfirmButton: false,
+                            })
+                        } else {
+                            Swal.fire({
+                                icon: response.status,
+                                title: 'Lỗi',
+                                text: response.message,
+                                timer: 2000,
+                                showConfirmButton: false,
+                            })
+                        }
+                    },
+                    error: function (error) {
+                        Swal.fire({
+                            icon: "error",
+                            title: 'Lỗi',
+                            text: "Lỗi Hệ Thống",
+                            timer: 2000,
+                            showConfirmButton: false,
+                        })
+                    }
+                });
+            }
+            else if (result.dismiss === Swal.DismissReason.cancel) {
+
+            }
+        })
+
+    }
+
+
+    async function CheckQuyen() {
+        await $.get("/Home/GetQuyen", { MenuCode: "NV_TiepNhanKeKhai" }, (data) => {
+            if (data.includes("XEM")) {
+                XEM = true;
+            }
+            if (data.includes("THEM")) {
+                THEM = true;
+            }
+            if (data.includes("XUAT")) {
+                XUAT = true;
+            }
+            if (data.includes("SUA")) {
+                SUA = true;
+            }
+        })
+    }
+
+    $("#CoQuan").change(() => {
+        t.columns(0).search($('#Filter').val());
+        t.columns(1).search($("#LoaiKeKhai").val());
+        t.columns(2).search($("#CoQuan").val());
+        t.columns(3).search($("#keHoachNam").val());
+        t.columns(4).search($('#TrangThai').val());
+        t.draw();
+    })
+
+    $("#TrangThai").change(() => {
+        t.columns(0).search($('#Filter').val());
+        t.columns(1).search($("#LoaiKeKhai").val());
+        t.columns(2).search($("#CoQuan").val());
+        t.columns(3).search($("#keHoachNam").val());
+        t.columns(4).search($('#TrangThai').val());
+        t.draw()
+    })
+
+    $("#LoaiKeKhai").change(() => {
+        t.columns(0).search($('#Filter').val());
+        t.columns(1).search($("#LoaiKeKhai").val());
+        t.columns(2).search($("#CoQuan").val());
+        t.columns(3).search($("#keHoachNam").val());
+        t.columns(4).search($('#TrangThai').val());
+        t.draw();
+    })
+
+    $("#keHoachNam").change(() => {
+        t.columns(0).search($('#Filter').val());
+        t.columns(1).search($("#LoaiKeKhai").val());
+        t.columns(2).search($("#CoQuan").val());
+        t.columns(3).search($("#keHoachNam").val());
+        t.draw();
+    })
+
+
+    $(document).ready(async function () {
+        await CheckQuyen();
+        loadDataTable();
+
+        $.get("/DM_CoQuanDonVi/GetCoQuanSearch", data => {
+            $.each(data, (index, item) => {
+                $("#CoQuan").append(`<option value="${item.Ma_CoQuan_DonVi}">${item.TenCoQuan} </option>`)
+            })
+        }).then(() => {
+            $("#CoQuan").select2()
+            t.columns(0).search($('#Filter').val());
+            t.columns(1).search($("#LoaiKeKhai").val());
+            t.columns(2).search($("#CoQuan").val());
+            t.columns(3).search($("#keHoachNam").val());
+            t.draw();
+
+        })
+
+        $.get("/BC_KeHoachThanhTra/GetLoaiKeKhai", data => {
+            $.each(data, (index, item) => {
+                $("#LoaiKeKhai").append(`<option value="${item.Ma_Loai_KeKhai}">${item.Ten_KeKhai} </option>`)
+            })
+        }).then(() => {
+            $("#LoaiKeKhai").select2()
+            t.columns(0).search($('#Filter').val());
+            t.columns(1).search($("#LoaiKeKhai").val());
+            t.columns(2).search($("#CoQuan").val());
+            t.columns(3).search($("#keHoachNam").val());
+            t.draw();
+            console.log($("#LoaiKeKhai").val())
+        })
+
+        $("#search").click(() => {
+            t.columns(0).search($('#Filter').val());
+            t.columns(1).search($("#LoaiKeKhai").val());
+            t.columns(2).search($("#CoQuan").val());
+            t.columns(3).search($("#keHoachNam").val());
+            t.draw()
+        })
+        $("#Filter").keypress(function (e) {
+            if (e.keyCode == 13) {
+                t.columns(0).search($('#Filter').val());
+                t.columns(1).search($("#LoaiKeKhai").val());
+                t.columns(2).search($("#CoQuan").val());
+                t.columns(3).search($("#keHoachNam").val());
+                t.draw();
+            }
+        });
+
+    })
+
+
+</script>

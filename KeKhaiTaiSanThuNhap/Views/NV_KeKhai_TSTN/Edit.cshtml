@@ -1,0 +1,1312 @@
+﻿@using KeKhaiTaiSanThuNhap.Models
+@{
+    ViewBag.Title = "Cập nhật kê khai tài sản và thu nhập";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    <style>
+        #tabs .nav-tabs .nav-item.show .nav-link, .nav-tabs .nav-link.active {
+            color: #38a4f8;
+            background-color: transparent;
+            text-transform: uppercase;
+            border-color: transparent transparent #f3f3f3;
+            border-bottom: transparent;
+            font-weight: 400;
+            border-top: 1px solid #38a4f8 !important;
+            border-left: 1px solid #38a4f8 !important;
+            border-right: 1px solid #38a4f8 !important;
+        }
+
+        .nav-tabs .nav-link {
+            border: 1px solid transparent !IMPORTANT;
+            border-top-left-radius: 0.25rem;
+            border-top-right-radius: 0.25rem;
+        }
+
+        a.active, button.active, a:focus, button:focus, a:hover, button:hover {
+            color: #252525;
+            outline: none !important;
+            text-decoration: none !important;
+        }
+
+        .nav-link {
+            display: block;
+            padding: 0.5rem 1rem;
+        }
+
+        a, button {
+            outline: none !important;
+            text-decoration: none !important;
+            color: #99abb4;
+            transition: all 0.2s ease 0s;
+        }
+
+        .card {
+            background: #ffffff none repeat scroll 0 0;
+            margin: 0;
+            padding: 20px;
+            border: 0 solid #e7e7e7;
+            border-radius: 5px;
+            box-shadow: 0 5px 20px 0 rgb(0 0 0 / 15%);
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            position: relative;
+            display: -ms-flexbox;
+            display: flex;
+            -ms-flex-direction: column;
+            flex-direction: column;
+            min-width: 0;
+            word-wrap: break-word;
+            background-color: #fff;
+            background-clip: border-box;
+            border: 1px solid rgba(0,0,0,.125);
+            border-radius: 0.25rem;
+        }
+
+       
+
+        .card-content-custom {
+            padding-bottom: 1%;
+            padding-left: 2%;
+            padding-right: 2%;
+            border-radius: 10px;
+            width: 100%;
+        }
+
+        td {
+            white-space: normal !important;
+            text-align: justify !important;
+        }
+
+            td:nth-child(1) {
+                text-align: justify;
+            }
+    </style>
+}
+
+
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-left">
+                    <li class="breadcrumb-item"><a href="@Url.Action("Index", "Home")">Trang chủ</a></li>
+                    <li class="breadcrumb-item active"> <a href="@Url.Action("Index", "NV_KeKhai_TSTN")">Kê khai tài sản </a></li>
+                    <li class="breadcrumb-item active">Cập nhật bản kê khai tài sản và thu nhập</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                @using (Ajax.BeginForm("Edit", "NV_KeKhai_TSTN", new AjaxOptions { HttpMethod = "POST", OnSuccess = "FnSuccess", OnFailure = "Failure", OnBegin = "FnBegin" }, new { @class = "form_KeKhai form-horizontal" }))
+                {
+                    <button type="submit" class="btn btn-primary" style="position: absolute; right: 17px; top: 6px;  font-size: 18px; cursor: pointer; z-index: 999">Lưu lại<i class="fa-regular fa-floppy-disk"></i></button>
+                    <div class="card text_ui_right_cus Card-control">
+                        <div class="row line_header">
+                            <div class="col-md-12 title_ngtao clsTitleFrom" style="text-align: center;">
+                                <h3 id="TenBanKeKhai"></h3>
+                            </div>
+                            <div class="col-md-12 title_ngtao clsTitleFrom" style="text-align: left; ">
+                               
+                                <hr />
+                            </div>
+                        </div>
+                        <div style="padding-bottom: 1%; padding-left:2%; padding-right:2%;" class="row">
+                            <div class="col-md-12">
+                                <ul class="nav nav-tabs nav-justified">
+                                    <li id="tab_patient_reception_status_wait" class="nav-item">
+                                        <a class="nav-link active" data-toggle="tab" href="#thongtinchung">Thông tin chung</a>
+                                    </li>
+                                    <li id="tab_patient_reception_status_receive" class="nav-item">
+                                        <a style="cursor:pointer;" data-toggle="tab" href="#QuanSuDungDat" class="nav-link tooltip-history tooltip-right">
+                                            Quyền sử dụng đất
+                                            <div class="tooltip-right-contain">
+                                                <div class="group-item history-view">
+                                                    <div class="don-vi-thanh-tra">
+                                                        <h6>Tài sản phải kê khai là tài sản hiện có thuộc quyền sở hữu, quyền sử dụng của người kê khai, của vợ hoặc chồng và con đẻ, con nuôi (nếu có) chưa thành niên theo quy định của pháp luật.</h6>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </a>
+                                    </li>
+                                    <li id="tab_patient_reception_status_receive" class="nav-item">
+                                        <a class="nav-link" data-toggle="tab" href="#NhaOCongTrinh">Nhà ở/ Cộng trình</a>
+                                    </li>
+                                    <li id="tab_patient_reception_status_receive" class="nav-item">
+                                        <a class="nav-link tooltip-history tooltip-right" data-toggle="tab" href="#TaiSanGanLienVoiDat" style="cursor:pointer;">
+                                            Tài sản gắn liền với đất
+                                            <div class="tooltip-right-contain">
+                                                <div class="group-item history-view">
+                                                    <div class="don-vi-thanh-tra" style="text-align:justify;">
+                                                        <h6>Ghi tổng diện tích (m2) sàn xây dựng của tất cả các tầng của nhà ở riêng lẻ, biệt thự bao gồm cả các tầng hầm, tầng nửa hầm, tầng kỹ thuật, tầng áp mái và tầng mái tum. Nếu là căn hộ thì diện tích được ghi theo giấy chứng nhận quyền sở hữu hoặc hợp đồng mua, hợp đồng thuê của nhà nước.</h6>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </a>
+                                    </li>
+                                    <li id="tab_patient_reception_status_receive" class="nav-item">
+                                        <a class="nav-link" data-toggle="tab" href="#KimLoaiQuyDaQuy">Kim loại quý/ Đá quý</a>
+                                    </li>
+                                    <li id="tab_patient_reception_status_receive" class="nav-item">
+                                        <a class="nav-link" data-toggle="tab" href="#Tien">Tiền</a>
+                                    </li>
+                                    <li id="tab_patient_reception_status_receive" class="nav-item">
+                                        <a class="nav-link" data-toggle="tab" href="#DauTu">Đầu tư</a>
+                                    </li>
+                                    <li id="tab_patient_reception_status_receive" class="nav-item">
+                                        <a class="nav-link tooltip-history tooltip-right" data-toggle="tab" href="#TaiSanKhac" style="cursor:pointer;">
+                                            Tài sản khác
+                                            <div class="tooltip-right-contain">
+                                                <div class="group-item history-view">
+                                                    <div class="don-vi-thanh-tra" style="text-align: justify;">
+                                                        <h6>Các loại tài sản khác như cây cảnh, bàn ghế, tranh ảnh và các loại tài sản khác mà giá trị quy đổi mỗi loại từ 50 triệu đồng trở lên.</h6>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </a>
+                                    </li>
+                                    <li id="tab_patient_reception_status_receive" class="nav-item">
+
+                                        <a data-toggle="tab" href="#TaiSanNuocNgoai" style="cursor:pointer;" class=" nav-link  tooltip-history tooltip-left">
+                                            Tài sản nước ngoài
+                                            <div class="tooltip-left-contain">
+                                                <div class="group-item history-view">
+                                                    <div class="don-vi-thanh-tra" style="text-align: justify;">
+                                                        <h6>Kê khai tài sản ở nước ngoài phải kê khai tất cả loại tài sản nằm ngoài lãnh thổ Việt Nam, tương tự mục 1 đến mục 7 của Phần II và nêu rõ tài sản đang ở nước nào.</h6>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </a>
+
+                                    </li>
+                                    <li id="tab_patient_reception_status_receive" class="nav-item">
+                                        <a class="nav-link tooltip-history tooltip-left" data-toggle="tab" href="#TaiKhoanNuocNgoai" style="cursor:pointer;">
+                                            Tài khoản nước ngoài
+                                            <div class="tooltip-left-contain" style="text-align: justify;">
+                                                <div class="group-item history-view">
+                                                    <div class="don-vi-thanh-tra" style="text-align: justify;">
+                                                        <h6>Kê khai các tài khoản mở tại ngân hàng ở nước ngoài; các tài khoản khác mở ở nước ngoài không phải là tài khoản ngân hàng nhưng có thể thực hiện các giao dịch bằng tiền, tài sản (như tài khoản mở ở các công ty chứng khoán nước ngoài, sàn giao dịch vàng nước ngoài, ví điện tử ở nước ngoài...).</h6>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </a>
+
+                                    </li>
+                                    @if ((bool)ViewBag.CheckLoai)
+                                    {
+                                        <li id="tab_patient_reception_status_receive" class="nav-item">
+
+                                            <a class="nav-link tooltip-history tooltip-left" data-toggle="tab" href="#TongThuNhap" style="cursor:pointer;">
+                                                Tổng thu nhập giữa 2 lần kê khai
+                                                <div class="tooltip-left-contain" style="text-align: justify;">
+                                                    <div class="group-item history-view">
+                                                        <div class="don-vi-thanh-tra" style="text-align: justify;">
+                                                            <h6>Kê khai riêng tổng thu nhập của người kê khai, vợ hoặc chồng, con chưa thành niên. Trong trường hợp có những khoản thu nhập chung mà không thể tách riêng thì ghi tổng thu nhập chung vào phần các khoản thu nhập chung; nếu có thu nhập bằng ngoại tệ, tài sản khác thì quy đổi thành tiền Việt Nam (gồm các khoản lương, phụ cấp, trợ cấp, thưởng, thù lao, cho, tặng, biếu, thừa kế, tiền thu do bán tài sản, thu nhập hưởng lợi từ các khoản đầu tư, phát minh, sáng chế, các khoản thu nhập khác). Đối với kê khai lần đầu thì không phải kê khai tổng thu nhập giữa 02 lần kê khai. Đối với lần kê khai thứ hai trở đi được xác định từ ngày kê khai liền kề trước đó đến ngày trước ngày kê khai.</h6>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                            </a>
+                                        </li>
+                                        <li id="tab_patient_reception_status_receive" class="nav-item">
+                                            <a data-toggle="tab" href="#BienDongTSTN" style="cursor:pointer;" class=" nav-link  tooltip-history tooltip-left">
+                                                Biến động tài sản và thu nhập
+                                                <div class="tooltip-left-contain">
+                                                    <div class="group-item history-view">
+                                                        <div class="don-vi-thanh-tra" style="text-align: justify;">
+                                                            <h6>Kê khai tài sản tăng hoặc giảm tại thời điểm kê khai so với tài sản đã kê khai trước đó và giải trình nguồn gốc của tài sản tăng thêm, nguồn hình thành thu nhập trong kỳ áp dụng với lần kê khai thứ hai trở đi. Nếu không có tăng, giảm tài sản thì ghi rõ là “Không có biến động” ngay sau tên của Mục III.</h6>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </a>
+                                        </li>
+                                        }
+                                    </ul>
+                                <div class="tab-content">
+                                    <div class="tab-pane active" id="thongtinchung">
+                                        <div class="row">
+                                            <div class="card-content-custom">
+                                                <div class="col-md-12" style="text-align: left; padding-top: 10px;">
+                                                    <label class="Showheader-title">
+                                                        <label class="mt-0 header-title header-title-Edit" data-toggle="collapse" data-target="#collapseThongTinCanBo" aria-expanded="false" aria-controls="collapseThongTinCanBo">
+                                                            <i class="far fa-caret-square-down"></i>
+                                                            <span class="TitleForm clsShow cursor-pointer">Thông tin người kê khai</span>
+                                                        </label>
+                                                    </label>
+                                                </div>
+                                                <div class="col-md-12 collapse show" id="collapseThongTinCanBo">
+                                                    <div class="row">
+                                                        <div class="col-5">
+                                                            <div class="form-group">
+                                                                <label>Họ Và Tên</label>
+                                                                <input type="text" class="form-control" id="HoTen" name="HoTen">
+                                                                <input type="text" class="form-control" id="Ma_CanBo" name="Ma_CanBo" hidden>
+                                                                <input name="Ma_Loai_KeKhai" id="Ma_Loai_KeKhai" hidden />
+                                                                <input type="text" class="form-control" hidden id="Nam_KeKhai" name="Nam_KeKhai" value="@DateTime.Now.Year">
+                                                                <input type="text" name="Ma_KeKhai_TSTN" hidden id="Ma_KeKhai_TSTN" value="@ViewBag.Ma_KeKhai_TSTN" />
+                                                                <input type="text" name="MaKeHoachKeKhai" hidden id="MaKeHoachKeKhai" value="@ViewBag.MaKeHoachKeKhai" />
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-2">
+                                                            <div class="form-group">
+                                                                <label>Ngày tháng năm sinh</label>
+                                                                <input type="date" class="form-control" id="DoB" name="DoB">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-5">
+                                                            <div class="form-group">
+                                                                <label>Nơi thường trú</label>
+                                                                <input type="text" class="form-control" id="DiaChiThuongTru" name="DiaChiThuongTru">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-3">
+                                                            <div class="form-group">
+                                                                <label>
+                                                                    Số CMND/CCCD
+                                                                    <sup>
+                                                                        <a style="cursor:pointer;" class="tooltip-history tooltip-right">
+                                                                            (3)
+                                                                            <div class="tooltip-right-contain">
+                                                                                <div class="group-item history-view">
+                                                                                    <div class="don-vi-thanh-tra">
+                                                                                        <h6>Ghi số căn cước công dân. Nếu chưa được cấp thẻ căn cước công dân thì ghi số chứng minh thư (nhân dân/quân nhân/công an) và ghi rõ ngày cấp và nơi cấp.</h6>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </a>
+                                                                    </sup>
+                                                                </label>
+                                                                <input type="text" class="form-control" id="SoCCCD" name="SoCCCD">
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-3">
+                                                            <div class="form-group">
+                                                                <label>Ngày Cấp</label>
+                                                                <input type="date" class="form-control" id="NgayCap" name="NgayCap">
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-3">
+                                                            <div class="form-group">
+                                                                <label>Nơi Cấp</label>
+                                                                <input type="text" class="form-control" id="NoiCap" name="NoiCap">
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-3">
+                                                            <div class="form-group">
+                                                                <label>Cơ Quan</label>
+                                                                <select class="form-control" name="Ma_CoQuan_DonVi" id="Ma_CoQuan_DonVi_edt" style="width: 100%; height: 100%">
+                                                                </select>
+
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-3">
+                                                            <div class="form-group">
+                                                                <label>Chức Vụ</label>
+                                                                <select class="form-control" name="Ma_ChucVu_ChucDanh" id="Ma_ChucVu_ChucDanh_edt" style="width: 100%; height: 100%">
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row" style="margin-top:10px;">
+                                            <div class="card-content-custom">
+                                                <div class="col-md-12" style="text-align: left; padding-top: 10px;">
+                                                    <label class="Showheader-title">
+                                                        <label class="mt-0 header-title header-title-Edit" data-toggle="collapse" data-target="#collapseThanNhan" aria-expanded="false" aria-controls="collapseThanNhan">
+                                                            <i class="far fa-caret-square-down"></i>
+                                                            <span class="TitleForm clsShow cursor-pointer">Vợ hoặc chồng của người kê khai tài sản, thu nhập</span>
+                                                        </label>
+                                                    </label>
+                                                </div>
+                                                <div class="col-md-12 collapse show" id="collapseThanNhan">
+
+
+                                                </div>
+                                            </div>
+
+                                        </div>
+
+                                        <div class="row" style="margin-top:10px;">
+                                            <div class="card-content-custom" style="width: 100%;">
+                                                <div class="col-md-12" style="text-align: left; padding-top: 10px;">
+                                                    <label class="Showheader-title">
+                                                        <label class="mt-0 header-title header-title-Edit" data-toggle="collapse" data-target="#collapseThanNhanCon" aria-expanded="false" aria-controls="collapseThanNhanCon">
+                                                            <i class="far fa-caret-square-down"></i>
+                                                            <span class="TitleForm clsShow cursor-pointer">Con chưa thành niên (con đẻ, con nuôi theo quy định của pháp luật)</span>
+                                                        </label>
+                                                    </label>
+                                                </div>
+                                                <div class="col-md-12 collapse show" id="collapseThanNhanCon">
+
+
+
+                                                </div>
+                                                <div class="row" style="margin-top: 20px; float: right" id="clsAddRow_collapseThanNhan">
+                                                    <div class="col-12">
+                                                        <span class="btn btn-primary clsAddRow"><i class="fas fa-plus-square"></i> Thêm dòng</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+
+
+
+                                        </div>
+
+
+                                    </div>
+                                    <div class="tab-pane" id="QuanSuDungDat">
+
+                                        <div class="row" style="margin-top:10px;">
+                                            <div class="card-content-custom">
+                                                <div class="col-md-12" style="text-align: left; padding-top: 10px;">
+                                                    <label class="Showheader-title">
+                                                        <label class="mt-0 header-title header-title-Edit" data-toggle="collapse" data-target="#collapseDat" aria-expanded="false" aria-controls="collapseDatO">
+                                                            <i class="far fa-caret-square-down"></i>
+                                                            <span class="TitleForm clsShow cursor-pointer">
+                                                                Đất ở
+                                                                <sup>
+                                                                    <a style="cursor:pointer;" class="tooltip-history tooltip-right">
+                                                                        (7)
+                                                                        <div class="tooltip-right-contain" style="text-align: justify;">
+                                                                            <div class="group-item history-view">
+                                                                                <div class="don-vi-thanh-tra" style="text-align: justify;">
+                                                                                    <h6>Đất ở là đất được sử dụng vào mục đích để ở theo quy định của pháp luật về đất đai. Trường hợp thửa đất được sử dụng cho nhiều mục đích khác nhau mà trong đó có đất ở thì kê khai vào mục đất ở.</h6>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </a>
+                                                                </sup>
+                                                            </span>
+                                                        </label>
+                                                    </label>
+                                                </div>
+                                                <div class="col-md-12 collapse show" id="collapseDat">
+                                                    <div class="row" style="margin-top: 20px; float: right;" id="clsAddRow_collapseDat">
+                                                        <div class="col-12">
+                                                            <span class="btn btn-primary clsAddRow"><i class="fas fa-plus-square"></i> Thêm dòng</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                        <div class="row" style="margin-top:10px;">
+                                            <div class="card-content-custom">
+                                                <div class="col-md-12" style="text-align: left; padding-top: 10px;">
+                                                    <label class="Showheader-title">
+                                                        <label class="mt-0 header-title header-title-Edit" data-toggle="collapse" data-target="#collapseCacLoaiDatKhac" aria-expanded="false" aria-controls="collapseCacLoaiDatKhac">
+                                                            <i class="far fa-caret-square-down"></i>
+                                                            <span class="TitleForm clsShow cursor-pointer">Các loại đất khác</span>
+                                                        </label>
+                                                    </label>
+                                                </div>
+                                                <div class="col-md-12 collapse show" id="collapseCacLoaiDatKhac">
+
+                                                    <div class="row" style="margin-top: 20px; float: right;" id="clsAddRow_collapseCacLoaiDatKhac">
+                                                        <div class="col-12">
+                                                            <span class="btn btn-primary clsAddRow"><i class="fas fa-plus-square"></i> Thêm dòng</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+                                    <div class="tab-pane" id="NhaOCongTrinh">
+
+                                        <div class="row" style="margin-top:10px;">
+                                            <div class="card-content-custom">
+                                                <div class="col-md-12" style="text-align: left; padding-top: 10px;">
+                                                    <label class="Showheader-title">
+                                                        <label class="mt-0 header-title header-title-Edit" data-toggle="collapse" data-target="#collapseNhaO" aria-expanded="false" aria-controls="collapseNhaO">
+                                                            <i class="far fa-caret-square-down"></i>
+                                                            <span class="TitleForm clsShow cursor-pointer">Nhà ở</span>
+                                                        </label>
+                                                    </label>
+                                                </div>
+                                                <div class="col-md-12 collapse show" id="collapseNhaO">
+
+
+                                                    <div class="row" style="margin-top: 20px; float: right;" id="clsAddRow_collapseNhaO">
+                                                        <div class="col-12">
+                                                            <span class="btn btn-primary clsAddRow"><i class="fas fa-plus-square"></i> Thêm dòng</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                        <div class="row" style="margin-top:10px;">
+                                            <div class="card-content-custom">
+                                                <div class="col-md-12" style="text-align: left; padding-top: 10px;">
+                                                    <label class="Showheader-title">
+                                                        <label class="mt-0 header-title header-title-Edit" data-toggle="collapse" data-target="#collapseConTrinhXayDungKhac" aria-expanded="false" aria-controls="collapseConTrinhXayDungKhac">
+                                                            <i class="far fa-caret-square-down"></i>
+                                                            <span class="TitleForm clsShow cursor-pointer">Công trình xây dựng khác</span>
+                                                        </label>
+                                                    </label>
+                                                </div>
+                                                <div class="col-md-12 collapse show" id="collapseConTrinhXayDungKhac">
+
+
+                                                    <div class="row" style="margin-top: 20px; float: right;" id="clsAddRow_collapseCongTrinh">
+                                                        <div class="col-12">
+                                                            <span class="btn btn-primary clsAddRow" id="clsAddRow"><i class="fas fa-plus-square"></i> Thêm dòng</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+                                    <div class="tab-pane" id="TaiSanGanLienVoiDat">
+
+                                        <div class="row" style="margin-top:10px;">
+                                            <div class="card-content-custom">
+                                                <div class="col-md-12" style="text-align: left; padding-top: 10px;">
+                                                    <label class="Showheader-title">
+                                                        <label class="mt-0 header-title header-title-Edit" data-toggle="collapse" data-target="#collapseCayLauNam" aria-expanded="false" aria-controls="collapseCayLauNam">
+                                                            <i class="far fa-caret-square-down"></i>
+                                                            <span class="TitleForm clsShow cursor-pointer">Cây lâu năm</span>
+                                                        </label>
+                                                    </label>
+                                                </div>
+                                                <div class="col-md-12 collapse show" id="collapseCayLauNam">
+                                                    <div class="row" style="margin-top: 20px; float: right;" id="clsAddRow_collapseCayLauNam">
+                                                        <div class="col-12">
+                                                            <span class="btn btn-primary clsAddRow" id="clsAddRow"><i class="fas fa-plus-square"></i> Thêm dòng</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                        <div class="row" style="margin-top:10px;">
+                                            <div class="card-content-custom">
+                                                <div class="col-md-12" style="text-align: left; padding-top: 10px;">
+                                                    <label class="Showheader-title">
+                                                        <label class="mt-0 header-title header-title-Edit" data-toggle="collapse" data-target="#collapseRungSanXuat" aria-expanded="false" aria-controls="collapseRungSanXuat">
+                                                            <i class="far fa-caret-square-down"></i>
+                                                            <span class="TitleForm clsShow cursor-pointer">Rừng sản xuất</span>
+                                                        </label>
+                                                    </label>
+                                                </div>
+                                                <div class="col-md-12 collapse show" id="collapseRungSanXuat">
+                                                    <div class="row" style="margin-top: 20px; float: right;" id="clsAddRow_collapseRungSanXuat">
+                                                        <div class="col-12">
+                                                            <span class="btn btn-primary clsAddRow" id="clsAddRow"><i class="fas fa-plus-square"></i> Thêm dòng</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                        <div class="row" style="margin-top:10px;">
+                                            <div class="card-content-custom">
+                                                <div class="col-md-12" style="text-align: left; padding-top: 10px;">
+                                                    <label class="Showheader-title">
+                                                        <label class="mt-0 header-title header-title-Edit" data-toggle="collapse" data-target="#collapseKienTrucKhac" aria-expanded="false" aria-controls="collapseKienTrucKhac">
+                                                            <i class="far fa-caret-square-down"></i>
+                                                            <span class="TitleForm clsShow cursor-pointer">Vật kiến trúc khác gắn liền với đất</span>
+                                                        </label>
+                                                    </label>
+                                                </div>
+                                                <div class="col-md-12 collapse show" id="collapseKienTrucKhac">
+
+
+                                                    <div class="row" style="margin-top: 20px; float: right;" id="clsAddRow_collapseKienTruc">
+                                                        <div class="col-12">
+                                                            <span class="btn btn-primary clsAddRow" id="clsAddRow"><i class="fas fa-plus-square"></i> Thêm dòng</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+                                    <div class="tab-pane" id="KimLoaiQuyDaQuy">
+
+                                        <div class="row" style="margin-top:10px;">
+                                            <div class="card-content-custom">
+                                                <div class="col-md-12" style="text-align: left; padding-top: 10px;">
+                                                    <label class="Showheader-title">
+                                                        <label class="mt-0 header-title header-title-Edit" data-toggle="collapse" data-target="#collapseKimLoaiQuyDaQuy" aria-expanded="false" aria-controls="collapseKimLoaiQuyDaQuy">
+                                                            <i class="far fa-caret-square-down"></i>
+                                                            <span class="TitleForm clsShow cursor-pointer">Vàng, kim cương, bạch kim và các kim loại quý, đá quý khác có tổng giá trị từ 50 triệu đồng trở lên.</span>
+                                                        </label>
+                                                    </label>
+                                                </div>
+                                                <div class="col-md-12 collapse show" id="collapseKimLoaiQuyDaQuy">
+
+
+                                                    <div class="row" style="margin-top: 20px; float: right;" id="clsAddRow_collapseKimLoaiDaQuy">
+                                                        <div class="col-12">
+                                                            <span class="btn btn-primary clsAddRow" id="clsAddRow"><i class="fas fa-plus-square"></i> Thêm dòng</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+                                    <div class="tab-pane" id="Tien">
+
+                                        <div class="row">
+                                            <div class="card-content-custom">
+                                                <div class="col-md-12" style="text-align: left; padding-top: 10px;">
+                                                    <label class="Showheader-title">
+                                                        <label class="mt-0 header-title header-title-Edit" data-toggle="collapse" data-target="#collapseTien" aria-expanded="false" aria-controls="collapseTien">
+                                                            <i class="far fa-caret-square-down"></i>
+                                                            <span class="TitleForm clsShow cursor-pointer">Tiền (tiền Việt Nam, ngoại tệ) gồm tiền mặt, tiền cho vay, tiền trả trước, tiền gửi cá nhân, tổ chức trong nước, tổ chức nước ngoài tại Việt Nam mà tổng giá trị quy đổi từ 50 triệu đồng trở lên.</span>
+                                                        </label>
+                                                    </label>
+                                                </div>
+                                                <div class="col-md-12 collapse show" id="collapseTien">
+
+                                                    <div class="row" style="margin-top: 20px; float: right;" id="clsAddRow_collapseTien">
+                                                        <div class="col-12">
+                                                            <span class="btn btn-primary clsAddRow" id="clsAddRow"><i class="fas fa-plus-square"></i> Thêm dòng</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                    <div class="tab-pane" id="DauTu">
+
+                                        <div class="row">
+                                            <div class="card-content-custom">
+                                                <div class="col-md-12" style="text-align: left; padding-top: 10px;">
+                                                    <label class="Showheader-title">
+                                                        <label class="mt-0 header-title header-title-Edit" data-toggle="collapse" data-target="#collapseCoPhieu" aria-expanded="false" aria-controls="collapseCoPhieu">
+                                                            <i class="far fa-caret-square-down"></i>
+                                                            <span class="TitleForm clsShow cursor-pointer">Cổ phiếu</span>
+                                                        </label>
+                                                    </label>
+                                                </div>
+                                                <div class="col-md-12 collapse show" id="collapseCoPhieu">
+                                                    <div class="row" style="margin-top: 20px; float: right;" id="clsAddRow_collapseCoPhieu">
+                                                        <div class="col-12">
+                                                            <span class="btn btn-primary clsAddRow" id="clsAddRow"><i class="fas fa-plus-square"></i> Thêm dòng</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="card-content-custom">
+                                                <div class="col-md-12" style="text-align: left; padding-top: 10px;">
+                                                    <label class="Showheader-title">
+                                                        <label class="mt-0 header-title header-title-Edit" data-toggle="collapse" data-target="#collapseTraiPhieu" aria-expanded="false" aria-controls="collapseTraiPhieu">
+                                                            <i class="far fa-caret-square-down"></i>
+                                                            <span class="TitleForm clsShow cursor-pointer">Trái phiếu</span>
+                                                        </label>
+                                                    </label>
+                                                </div>
+                                                <div class="col-md-12 collapse show" id="collapseTraiPhieu">
+
+
+                                                    <div class="row" style="margin-top: 20px; float: right;" id="clsAddRow_collapseTraiPhieu">
+                                                        <div class="col-12">
+                                                            <span class="btn btn-primary clsAddRow" id="clsAddRow"><i class="fas fa-plus-square"></i> Thêm dòng</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="card-content-custom">
+                                                <div class="col-md-12" style="text-align: left; padding-top: 10px;">
+                                                    <label class="Showheader-title">
+                                                        <label class="mt-0 header-title header-title-Edit" data-toggle="collapse" data-target="#collapseGopVon" aria-expanded="false" aria-controls="collapseGopVon">
+                                                            <i class="far fa-caret-square-down"></i>
+                                                            <span class="TitleForm clsShow cursor-pointer">Vốn góp</span>
+                                                        </label>
+                                                    </label>
+                                                </div>
+                                                <div class="col-md-12 collapse show" id="collapseGopVon">
+
+
+                                                    <div class="row" style="margin-top: 20px; float: right; " id="clsAddRow_collapseGopVon">
+                                                        <div class="col-12">
+                                                            <span class="btn btn-primary clsAddRow" id="clsAddRow"><i class="fas fa-plus-square"></i> Thêm dòng</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="card-content-custom">
+                                                <div class="col-md-12" style="text-align: left; padding-top: 10px;">
+                                                    <label class="Showheader-title">
+                                                        <label class="mt-0 header-title header-title-Edit" data-toggle="collapse" data-target="#collapseGiayToKhac" aria-expanded="false" aria-controls="collapseGiayToKhac">
+                                                            <i class="far fa-caret-square-down"></i>
+                                                            <span class="TitleForm clsShow cursor-pointer">Các loại giấy tờ có giá khác</span>
+                                                        </label>
+                                                    </label>
+                                                </div>
+                                                <div class="col-md-12 collapse show" id="collapseGiayToKhac">
+
+
+                                                    <div class="row" style="margin-top: 20px; float: right;" id="clsAddRow_collapseGiayToKhac">
+                                                        <div class="col-12">
+                                                            <span class="btn btn-primary clsAddRow" id="clsAddRow"><i class="fas fa-plus-square"></i> Thêm dòng</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                    <div class="tab-pane" id="TaiSanKhac">
+
+                                        <div class="row">
+                                            <div class="card-content-custom">
+                                                <div class="col-md-12" style="text-align: left; padding-top: 10px;">
+                                                    <label class="Showheader-title">
+                                                        <label class="mt-0 header-title header-title-Edit" data-toggle="collapse" data-target="#collapseGiayDangKy" aria-expanded="false" aria-controls="collapseGiayDangKy">
+                                                            <i class="far fa-caret-square-down"></i>
+                                                            <span class="TitleForm clsShow cursor-pointer">Tài sản theo quy định của pháp luật phải đăng ký sử dụng và được cấp giấy đăng ký (tầu bay, tầu thủy, thuyền, máy ủi, máy xúc, ô tô, mô tô, xe gắn máy...)</span>
+                                                        </label>
+                                                    </label>
+                                                </div>
+                                                <div class="col-md-12 collapse show" id="collapseGiayDangKy">
+
+
+                                                    <div class="row" style="margin-top: 20px; float: right;" id="clsAddRow_collapseGiayDangKy">
+                                                        <div class="col-12">
+                                                            <span class="btn btn-primary clsAddRow" id="clsAddRow"><i class="fas fa-plus-square"></i> Thêm dòng</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="card-content-custom">
+                                                <div class="col-md-12" style="text-align: left; padding-top: 10px;">
+                                                    <label class="Showheader-title">
+                                                        <label class="mt-0 header-title header-title-Edit" data-toggle="collapse" data-target="#collapseTaiSanKhac" aria-expanded="false" aria-controls="collapseTaiSanKhac">
+                                                            <i class="far fa-caret-square-down"></i>
+                                                            <span class="TitleForm clsShow cursor-pointer">Tài sản khác (đồ mỹ nghệ, đồ thờ cúng, bàn ghế, cây cảnh, tranh, ảnh, các loại tài sản khác)</span>
+                                                        </label>
+                                                    </label>
+                                                </div>
+                                                <div class="col-md-12 collapse show" id="collapseTaiSanKhac">
+
+
+                                                    <div class="row" style="margin-top: 20px; float: right;" id="clsAddRow_collapseTaiSanKhac">
+                                                        <div class="col-12">
+                                                            <span class="btn btn-primary clsAddRow" id="clsAddRow"><i class="fas fa-plus-square"></i> Thêm dòng</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                    @* tài sản nước ngoài edit *@
+                                    <div class="tab-pane" id="TaiSanNuocNgoai">
+
+                                        <div class="row">
+                                            <div class="card-content-custom">
+                                                <div class="col-md-12" style="text-align: left; padding-top: 10px;">
+                                                    <label class="Showheader-title">
+                                                        <label class="mt-0 header-title header-title-Edit" data-toggle="collapse" data-target="#collapseTaiSanNuocNgoai" aria-expanded="false" aria-controls="collapseTaiSanNuocNgoai">
+                                                            <i class="far fa-caret-square-down"></i>
+                                                            <span class="TitleForm clsShow cursor-pointer">Tàn sản nước ngoài</span>
+                                                        </label>
+                                                    </label>
+                                                </div>
+                                                <div class="col-md-12 collapse show" id="collapseTaiSanNuocNgoai">
+
+                                                    <div class="tab-pane" id="tsnnQuanSuDungDat">
+
+                                                        <div class="row" style="margin-top:10px;">
+                                                            <div class="card-content-custom">
+                                                                <div class="col-md-12" style="text-align: left; padding-top: 10px;">
+                                                                    <label class="Showheader-title">
+                                                                        <label class="mt-0 header-title header-title-Edit" data-toggle="collapse" data-target="#collapsetsnnDat" aria-expanded="false" aria-controls="collapseDatO">
+                                                                            <i class="far fa-caret-square-down"></i>
+                                                                            <span class="TitleForm clsShow cursor-pointer">Đất ở</span>
+                                                                        </label>
+                                                                    </label>
+                                                                </div>
+                                                                <div class="col-md-12 collapse show" id="collapsetsnnDat">
+
+                                                                    <div class="row" style="margin-top: 20px; float: right;" id="clsAddRow_collapsetsnnDat">
+                                                                        <div class="col-12">
+                                                                            <span class="btn btn-primary clsAddRow"><i class="fas fa-plus-square"></i> Thêm dòng</span>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+
+                                                            </div>
+
+                                                        </div>
+                                                        <div class="row" style="margin-top:10px;">
+                                                            <div class="card-content-custom">
+                                                                <div class="col-md-12" style="text-align: left; padding-top: 10px;">
+                                                                    <label class="Showheader-title">
+                                                                        <label class="mt-0 header-title header-title-Edit" data-toggle="collapse" data-target="#collapsetsnnCacLoaiDatKhac" aria-expanded="false" aria-controls="collapsetsnnCacLoaiDatKhac">
+                                                                            <i class="far fa-caret-square-down"></i>
+                                                                            <span class="TitleForm clsShow cursor-pointer">
+                                                                                Các loại đất khác
+                                                                                <sup>
+                                                                                    <a style="cursor:pointer;" class="tooltip-history tooltip-right">
+                                                                                        (13)
+                                                                                        <div class="tooltip-right-contain">
+                                                                                            <div class="group-item history-view">
+                                                                                                <div class="don-vi-thanh-tra" style="text-align:justify;">
+                                                                                                    <h6>Kê khai các loại đất có mục đích sử dụng không phải là đất ở theo quy định của Luật Đất đai.</h6>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </a>
+                                                                                </sup>
+                                                                            </span>
+                                                                        </label>
+                                                                    </label>
+                                                                </div>
+                                                                <div class="col-md-12 collapse show" id="collapsetsnnCacLoaiDatKhac">
+
+                                                                    <div class="row" style="margin-top: 20px; float: right;" id="clsAddRow_collapsetsnnCacLoaiDatKhac">
+                                                                        <div class="col-12">
+                                                                            <span class="btn btn-primary clsAddRow"><i class="fas fa-plus-square"></i> Thêm dòng</span>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                        </div>
+
+                                                    </div>
+                                                    <div class="tab-pane" id="tsnnNhaOCongTrinh">
+
+                                                        <div class="row" style="margin-top:10px;">
+                                                            <div class="card-content-custom">
+                                                                <div class="col-md-12" style="text-align: left; padding-top: 10px;">
+                                                                    <label class="Showheader-title">
+                                                                        <label class="mt-0 header-title header-title-Edit" data-toggle="collapse" data-target="#collapsetsnnNhaO" aria-expanded="false" aria-controls="collapsetsnnNhaO">
+                                                                            <i class="far fa-caret-square-down"></i>
+                                                                            <span class="TitleForm clsShow cursor-pointer">Nhà ở</span>
+                                                                        </label>
+                                                                    </label>
+                                                                </div>
+                                                                <div class="col-md-12 collapse show" id="collapsetsnnNhaO">
+
+                                                                    <div class="row" style="margin-top: 20px; float: right;" id="clsAddRow_collapsetsnnNhaO">
+                                                                        <div class="col-12">
+                                                                            <span class="btn btn-primary clsAddRow"><i class="fas fa-plus-square"></i> Thêm dòng</span>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                        </div>
+                                                        <div class="row" style="margin-top:10px;">
+                                                            <div class="card-content-custom">
+                                                                <div class="col-md-12" style="text-align: left; padding-top: 10px;">
+                                                                    <label class="Showheader-title">
+                                                                        <label class="mt-0 header-title header-title-Edit" data-toggle="collapse" data-target="#collapsetsnnConTrinhXayDungKhac" aria-expanded="false" aria-controls="collapsetsnnConTrinhXayDungKhac">
+                                                                            <i class="far fa-caret-square-down"></i>
+                                                                            <span class="TitleForm clsShow cursor-pointer">
+                                                                                Công trình xây dựng khác
+                                                                                <sup>
+                                                                                    <a style="cursor:pointer;" class="tooltip-history tooltip-right">
+                                                                                        (16)
+                                                                                        <div class="tooltip-right-contain">
+                                                                                            <div class="group-item history-view">
+                                                                                                <div class="don-vi-thanh-tra" style="text-align:justify;">
+                                                                                                    <h6>Công trình xây dựng khác là công trình xây dựng không phải nhà ở.</h6>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </a>
+                                                                                </sup>
+
+                                                                            </span>
+                                                                        </label>
+                                                                    </label>
+                                                                </div>
+                                                                <div class="col-md-12 collapse show" id="collapsetsnnConTrinhXayDungKhac">
+
+
+                                                                    <div class="row" style="margin-top: 20px; float: right;" id="clsAddRow_collapsetsnnCongTrinh">
+                                                                        <div class="col-12">
+                                                                            <span class="btn btn-primary clsAddRow" id="clsAddRow"><i class="fas fa-plus-square"></i> Thêm dòng</span>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                        </div>
+
+                                                    </div>
+                                                    <div class="tab-pane" id="tsnnTaiSanGanLienVoiDat">
+
+                                                        <div class="row" style="margin-top:10px;">
+                                                            <div class="card-content-custom">
+                                                                <div class="col-md-12" style="text-align: left; padding-top: 10px;">
+                                                                    <label class="Showheader-title">
+                                                                        <label class="mt-0 header-title header-title-Edit" data-toggle="collapse" data-target="#collapsetsnnCayLauNam" aria-expanded="false" aria-controls="collapsetsnnCayLauNam">
+                                                                            <i class="far fa-caret-square-down"></i>
+                                                                            <span class="TitleForm clsShow cursor-pointer">
+                                                                                Cây lâu năm
+                                                                                <sup>
+                                                                                    <a style="cursor:pointer;" class="tooltip-history tooltip-right">
+                                                                                        (18)
+                                                                                        <div class="tooltip-right-contain">
+                                                                                            <div class="group-item history-view">
+                                                                                                <div class="don-vi-thanh-tra" style="text-align: justify;">
+                                                                                                    <h6>Cây lâu năm là cây trồng một lần, sinh trưởng và cho thu hoạch trong nhiều năm gồm: cây công nghiệp lâu năm, cây ăn quả lâu năm, cây lâu năm lấy gỗ, cây tạo cảnh, bóng mát. Cây mà thuộc rừng sản xuất thì không ghi vào mục này.</h6>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </a>
+                                                                                </sup>
+                                                                            </span>
+                                                                        </label>
+                                                                    </label>
+                                                                </div>
+                                                                <div class="col-md-12 collapse show" id="collapsetsnnCayLauNam">
+
+                                                                    <div class="row" style="margin-top: 20px; float: right;" id="clsAddRow_collapsetsnnCayLauNam">
+                                                                        <div class="col-12">
+                                                                            <span class="btn btn-primary clsAddRow" id="clsAddRow"><i class="fas fa-plus-square"></i> Thêm dòng</span>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                        </div>
+                                                        <div class="row" style="margin-top:10px;">
+                                                            <div class="card-content-custom">
+                                                                <div class="col-md-12" style="text-align: left; padding-top: 10px;">
+                                                                    <label class="Showheader-title">
+                                                                        <label class="mt-0 header-title header-title-Edit" data-toggle="collapse" data-target="#collapsetsnnRungSanXuat" aria-expanded="false" aria-controls="collapsetsnnRungSanXuat">
+                                                                            <i class="far fa-caret-square-down"></i>
+                                                                            <span class="TitleForm clsShow cursor-pointer">
+                                                                                Rừng sản xuất
+                                                                                <sup>
+                                                                                    <a style="cursor:pointer;" class="tooltip-history tooltip-right">
+                                                                                        (19)
+                                                                                        <div class="tooltip-right-contain">
+                                                                                            <div class="group-item history-view">
+                                                                                                <div class="don-vi-thanh-tra" style="text-align: justify;">
+                                                                                                    <h6>Rừng sản xuất là rừng trồng.</h6>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </a>
+                                                                                </sup>
+                                                                            </span>
+                                                                        </label>
+                                                                    </label>
+                                                                </div>
+                                                                <div class="col-md-12 collapse show" id="collapsetsnnRungSanXuat">
+
+                                                                    <div class="row" style="margin-top: 20px; float: right;" id="clsAddRow_collapsetsnnRungSanXuat">
+                                                                        <div class="col-12">
+                                                                            <span class="btn btn-primary clsAddRow" id="clsAddRow"><i class="fas fa-plus-square"></i> Thêm dòng</span>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                        </div>
+                                                        <div class="row" style="margin-top:10px;">
+                                                            <div class="card-content-custom">
+                                                                <div class="col-md-12" style="text-align: left; padding-top: 10px;">
+                                                                    <label class="Showheader-title">
+                                                                        <label class="mt-0 header-title header-title-Edit" data-toggle="collapse" data-target="#collapsetsnnKienTrucKhac" aria-expanded="false" aria-controls="collapsetsnnKienTrucKhac">
+                                                                            <i class="far fa-caret-square-down"></i>
+                                                                            <span class="TitleForm clsShow cursor-pointer">Vật kiến trúc khác gắn liền với đất</span>
+                                                                        </label>
+                                                                    </label>
+                                                                </div>
+                                                                <div class="col-md-12 collapse show" id="collapsetsnnKienTrucKhac">
+
+                                                                    <div class="row" style="margin-top: 20px; float: right;" id="clsAddRow_collapsetsnnKienTruc">
+                                                                        <div class="col-12">
+                                                                            <span class="btn btn-primary clsAddRow" id="clsAddRow"><i class="fas fa-plus-square"></i> Thêm dòng</span>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                        </div>
+
+                                                    </div>
+                                                    <div class="tab-pane" id="tsnnKimLoaiQuyDaQuy">
+
+                                                        <div class="row" style="margin-top:10px;">
+                                                            <div class="card-content-custom">
+                                                                <div class="col-md-12" style="text-align: left; padding-top: 10px;">
+                                                                    <label class="Showheader-title">
+                                                                        <label class="mt-0 header-title header-title-Edit" data-toggle="collapse" data-target="#collapsetsnnKimLoaiQuyDaQuy" aria-expanded="false" aria-controls="collapsetsnnKimLoaiQuyDaQuy">
+                                                                            <i class="far fa-caret-square-down"></i>
+                                                                            <span class="TitleForm clsShow cursor-pointer">
+                                                                                Vàng, kim cương, bạch kim và các kim loại quý, đá quý khác có tổng giá trị từ 50 triệu đồng trở lên.
+                                                                                <sup>
+                                                                                    <a style="cursor:pointer;" class="tooltip-history tooltip-right">
+                                                                                        (20)
+                                                                                        <div class="tooltip-right-contain">
+                                                                                            <div class="group-item history-view">
+                                                                                                <div class="don-vi-thanh-tra" style="text-align: justify;">
+                                                                                                    <h6>Ghi các loại vàng, kim cương, bạch kim và các kim loại quý, đá quý khác có tổng giá trị từ 50 triệu đồng trở lên.</h6>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </a>
+                                                                                </sup>
+                                                                            </span>
+                                                                        </label>
+                                                                    </label>
+                                                                </div>
+                                                                <div class="col-md-12 collapse show" id="collapsetsnnKimLoaiQuyDaQuy">
+
+                                                                    <div class="row" style="margin-top: 20px; float: right;" id="clsAddRow_collapsetsnnKimLoaiDaQuy">
+                                                                        <div class="col-12">
+                                                                            <span class="btn btn-primary clsAddRow" id="clsAddRow"><i class="fas fa-plus-square"></i> Thêm dòng</span>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                        </div>
+
+                                                    </div>
+                                                    <div class="tab-pane" id="tsnnTien">
+
+                                                        <div class="row">
+                                                            <div class="card-content-custom">
+                                                                <div class="col-md-12" style="text-align: left; padding-top: 10px;">
+                                                                    <label class="Showheader-title">
+                                                                        <label class="mt-0 header-title header-title-Edit" data-toggle="collapse" data-target="#collapsetsnnTien" aria-expanded="false" aria-controls="collapsetsnnTien">
+                                                                            <i class="far fa-caret-square-down"></i>
+                                                                            <span class="TitleForm clsShow cursor-pointer">Tiền (tiền Việt Nam, ngoại tệ) gồm tiền mặt, tiền cho vay, tiền trả trước, tiền gửi cá nhân, tổ chức trong nước, tổ chức nước ngoài tại Việt Nam mà tổng giá trị quy đổi từ 50 triệu đồng trở lên.</span>
+                                                                        </label>
+                                                                    </label>
+                                                                </div>
+                                                                <div class="col-md-12 collapse show" id="collapsetsnnTien">
+
+                                                                    <div class="row" style="margin-top: 20px; float: right;" id="clsAddRow_collapsetsnnTien">
+                                                                        <div class="col-12">
+                                                                            <span class="btn btn-primary clsAddRow" id="clsAddRow"><i class="fas fa-plus-square"></i> Thêm dòng</span>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+                                                    <div class="tab-pane" id="tsnnDauTu">
+
+                                                        <div class="row">
+                                                            <div class="card-content-custom">
+                                                                <div class="col-md-12" style="text-align: left; padding-top: 10px;">
+                                                                    <label class="Showheader-title">
+                                                                        <label class="mt-0 header-title header-title-Edit" data-toggle="collapse" data-target="#collapsetsnnCoPhieu" aria-expanded="false" aria-controls="collapsetsnnCoPhieu">
+                                                                            <i class="far fa-caret-square-down"></i>
+                                                                            <span class="TitleForm clsShow cursor-pointer">Cổ phiếu</span>
+                                                                        </label>
+                                                                    </label>
+                                                                </div>
+                                                                <div class="col-md-12 collapse show" id="collapsetsnnCoPhieu">
+
+
+                                                                    <div class="row" style="margin-top: 20px; float: right;" id="clsAddRow_collapsetsnnCoPhieu">
+                                                                        <div class="col-12">
+                                                                            <span class="btn btn-primary clsAddRow" id="clsAddRow"><i class="fas fa-plus-square"></i> Thêm dòng</span>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="card-content-custom">
+                                                                <div class="col-md-12" style="text-align: left; padding-top: 10px;">
+                                                                    <label class="Showheader-title">
+                                                                        <label class="mt-0 header-title header-title-Edit" data-toggle="collapse" data-target="#collapsetsnnTraiPhieu" aria-expanded="false" aria-controls="collapsetsnnTraiPhieu">
+                                                                            <i class="far fa-caret-square-down"></i>
+                                                                            <span class="TitleForm clsShow cursor-pointer">Trái phiếu</span>
+                                                                        </label>
+                                                                    </label>
+                                                                </div>
+                                                                <div class="col-md-12 collapse show" id="collapsetsnnTraiPhieu">
+                                                                    <div class="row" style="margin-top: 20px; float: right;" id="clsAddRow_collapsetsnnTraiPhieu">
+                                                                        <div class="col-12">
+                                                                            <span class="btn btn-primary clsAddRow" id="clsAddRow"><i class="fas fa-plus-square"></i> Thêm dòng</span>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="card-content-custom">
+                                                                <div class="col-md-12" style="text-align: left; padding-top: 10px;">
+                                                                    <label class="Showheader-title">
+                                                                        <label class="mt-0 header-title header-title-Edit" data-toggle="collapse" data-target="#collapsetsnnGopVon" aria-expanded="false" aria-controls="collapsetsnnGopVon">
+                                                                            <i class="far fa-caret-square-down"></i>
+                                                                            <span class="TitleForm clsShow cursor-pointer">
+                                                                                Vốn góp
+                                                                                <sup>
+                                                                                    <a style="cursor:pointer;" class="tooltip-history tooltip-right">
+                                                                                        (22)
+                                                                                        <div class="tooltip-right-contain">
+                                                                                            <div class="group-item history-view">
+                                                                                                <div class="don-vi-thanh-tra" style="text-align: justify;">
+                                                                                                    <h6>Ghi từng hình thức góp vốn đầu tư kinh doanh, cả trực tiếp và gián tiếp.</h6>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </a>
+                                                                                </sup>
+                                                                            </span>
+                                                                        </label>
+                                                                    </label>
+                                                                </div>
+                                                                <div class="col-md-12 collapse show" id="collapsetsnnGopVon">
+
+                                                                    <div class="row" style="margin-top: 20px; float: right; " id="clsAddRow_collapsetsnnGopVon">
+                                                                        <div class="col-12">
+                                                                            <span class="btn btn-primary clsAddRow" id="clsAddRow"><i class="fas fa-plus-square"></i> Thêm dòng</span>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="card-content-custom">
+                                                                <div class="col-md-12" style="text-align: left; padding-top: 10px;">
+                                                                    <label class="Showheader-title">
+                                                                        <label class="mt-0 header-title header-title-Edit" data-toggle="collapse" data-target="#collapsetsnnGiayToKhac" aria-expanded="false" aria-controls="collapsetsnnGiayToKhac">
+                                                                            <i class="far fa-caret-square-down"></i>
+                                                                            <span class="TitleForm clsShow cursor-pointer">
+                                                                                Các loại giấy tờ có giá khác
+                                                                                <sup>
+                                                                                    <a style="cursor:pointer;" class="tooltip-history tooltip-right">
+                                                                                        (23)
+                                                                                        <div class="tooltip-right-contain">
+                                                                                            <div class="group-item history-view">
+                                                                                                <div class="don-vi-thanh-tra" style="text-align: justify;">
+                                                                                                    <h6>Các loại giấy tờ có giá khác như chứng chỉ quỹ, kỳ phiếu, séc,...</h6>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </a>
+                                                                                </sup>
+                                                                            </span>
+                                                                        </label>
+                                                                    </label>
+                                                                </div>
+                                                                <div class="col-md-12 collapse show" id="collapsetsnnGiayToKhac">
+
+                                                                    <div class="row" style="margin-top: 20px; float: right;" id="clsAddRow_collapsetsnnGiayToKhac">
+                                                                        <div class="col-12">
+                                                                            <span class="btn btn-primary clsAddRow" id="clsAddRow"><i class="fas fa-plus-square"></i> Thêm dòng</span>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+                                                    <div class="tab-pane" id="tsnnTaiSanKhac">
+
+                                                        <div class="row">
+                                                            <div class="card-content-custom">
+                                                                <div class="col-md-12" style="text-align: left; padding-top: 10px;">
+                                                                    <label class="Showheader-title">
+                                                                        <label class="mt-0 header-title header-title-Edit" data-toggle="collapse" data-target="#collapsetsnnGiayDangKy" aria-expanded="false" aria-controls="collapsetsnnGiayDangKy">
+                                                                            <i class="far fa-caret-square-down"></i>
+                                                                            <span class="TitleForm clsShow cursor-pointer">
+                                                                                Tài sản theo quy định của pháp luật phải đăng ký sử dụng và được cấp giấy đăng ký (tầu bay, tầu thủy, thuyền, máy ủi, máy xúc, ô tô, mô tô, xe gắn máy...)
+                                                                                <sup>
+                                                                                    <a style="cursor:pointer;" class="tooltip-history tooltip-right">
+                                                                                        (24)
+                                                                                        <div class="tooltip-right-contain">
+                                                                                            <div class="group-item history-view">
+                                                                                                <div class="don-vi-thanh-tra" style="text-align: justify;">
+                                                                                                    <h6>Ô tô, mô tô, xe gắn máy, xe máy (máy ủi, máy xúc, các loại xe máy khác), tầu thủy, tàu bay, thuyền và những động sản khác mà theo quy định phải đăng ký sử dụng và được cấp giấy đăng ký có giá trị mỗi loại từ 50 triệu đồng trở lên.</h6>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </a>
+                                                                                </sup>
+                                                                            </span>
+                                                                        </label>
+                                                                    </label>
+                                                                </div>
+                                                                <div class="col-md-12 collapse show" id="collapsetsnnGiayDangKy">
+
+                                                                    <div class="row" style="margin-top: 20px; float: right;" id="clsAddRow_collapsetsnnGiayDangKy">
+                                                                        <div class="col-12">
+                                                                            <span class="btn btn-primary clsAddRow" id="clsAddRow"><i class="fas fa-plus-square"></i> Thêm dòng</span>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="card-content-custom">
+                                                                <div class="col-md-12" style="text-align: left; padding-top: 10px;">
+                                                                    <label class="Showheader-title">
+                                                                        <label class="mt-0 header-title header-title-Edit" data-toggle="collapse" data-target="#collapsetsnnTaiSanKhac" aria-expanded="false" aria-controls="collapsetsnnTaiSanKhac">
+                                                                            <i class="far fa-caret-square-down"></i>
+                                                                            <span class="TitleForm clsShow cursor-pointer">
+                                                                                Tài sản khác (đồ mỹ nghệ, đồ thờ cúng, bàn ghế, cây cảnh, tranh, ảnh, các loại tài sản khác)
+                                                                                <sup>
+                                                                                    <a style="cursor:pointer;" class="tooltip-history tooltip-right">
+                                                                                        (25)
+                                                                                        <div class="tooltip-right-contain">
+                                                                                            <div class="group-item history-view">
+                                                                                                <div class="don-vi-thanh-tra" style="text-align: justify;">
+                                                                                                    <h6>Các loại tài sản khác như cây cảnh, bàn ghế, tranh ảnh và các loại tài sản khác mà giá trị quy đổi mỗi loại từ 50 triệu đồng trở lên.</h6>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </a>
+                                                                                </sup>
+                                                                            </span>
+                                                                        </label>
+                                                                    </label>
+                                                                </div>
+                                                                <div class="col-md-12 collapse show" id="collapsetsnnTaiSanKhac">
+
+                                                                    <div class="row" style="margin-top: 20px; float: right;" id="clsAddRow_collapsetsnnTaiSanKhac">
+                                                                        <div class="col-12">
+                                                                            <span class="btn btn-primary clsAddRow" id="clsAddRow"><i class="fas fa-plus-square"></i> Thêm dòng</span>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+                                                    @*<div class="row" style="margin-top: 20px; float: right;" id="clsAddRow_collapseTaiSanNuocNgoai">
+                                        <div class="col-12">
+                                            <span class="btn btn-primary clsAddRow" id="clsAddRow"><i class="fas fa-plus-square"></i> Thêm dòng</span>
+                                        </div>
+                                    </div>*@
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                    @* end tài sản nước ngoài edit *@
+                                    <div class="tab-pane" id="TaiKhoanNuocNgoai">
+
+                                        <div class="row">
+                                            <div class="card-content-custom">
+                                                <div class="col-md-12" style="text-align: left; padding-top: 10px;">
+                                                    <label class="Showheader-title">
+                                                        <label class="mt-0 header-title header-title-Edit" data-toggle="collapse" data-target="#collapseTaiKhoanNuocNgoai" aria-expanded="false" aria-controls="collapseTaiKhoanNuocNgoai">
+                                                            <i class="far fa-caret-square-down"></i>
+                                                            <span class="TitleForm clsShow cursor-pointer">Tài khoản nước ngoài</span>
+                                                        </label>
+                                                    </label>
+                                                </div>
+                                                <div class="col-md-12 collapse show" id="collapseTaiKhoanNuocNgoai">
+
+                                                    <div class="row" style="margin-top: 20px; float: right;" id="clsAddRow_collapseTaiKhoanNuocNgoai">
+                                                        <div class="col-12">
+                                                            <span class="btn btn-primary clsAddRow" id="clsAddRow"><i class="fas fa-plus-square"></i> Thêm dòng</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="tab-pane" id="TongThuNhap">
+
+                                        <div class="row">
+                                            <div class="card-content-custom">
+                                                <div class="col-md-12" style="text-align: left; padding-top: 10px;">
+                                                    <label class="Showheader-title">
+                                                        <label class="mt-0 header-title header-title-Edit" data-toggle="collapse" data-target="#collapseTongThuNhap" aria-expanded="false" aria-controls="collapseTongThuNhap">
+                                                            <i class="far fa-caret-square-down"></i>
+                                                            <span class="TitleForm clsShow cursor-pointer">Tổng thu nhập giữa 2 lần kê khai</span>
+                                                        </label>
+                                                    </label>
+                                                </div>
+                                                <div class="col-md-12 collapse show" id="collapseTongThuNhap">
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="tab-pane" id="BienDongTSTN">
+                                        <div class=" p-3">
+                                            @if (ViewBag.Loai_KeKhai == 4 || ViewBag.Loai_KeKhai == 12)
+                                            {
+                                                <b>
+                                                    BIẾN ĐỘNG TÀI SẢN, THU NHẬP; GIẢI TRÌNH NGUỒN GỐC CỦA TÀI SẢN, THU NHẬP
+                                                    TĂNG THÊM:
+                                                </b>
+                                                <input type="text" class="form-control" name="BienDongTaiSan" id="BienDongTaiSan" value="" />
+                                            }
+                                            else if (ViewBag.Loai_KeKhai == 5)
+                                            {
+                                                <b>
+                                                    BIẾN ĐỘNG TÀI SẢN, THU NHẬP; GIẢI TRÌNH NGUỒN GỐC CỦA TÀI SẢN, THU NHẬP
+                                                    TĂNG THÊM
+                                                </b>
+                                            }
+                                            
+                                            
+                                        </div>
+                                        
+                                        <table id="BienDongTSTN_tb" class="table table-bordered dt-responsive nowrap content_midle_center table-responsive" style="width:100%">
+                                            <thead>
+                                                <tr>
+                                                    <th style="width:55%;" rowspan="2">Loại tài sản, thu nhập</th>
+                                                    <th style="width:20%;" colspan="2">Tăng/Giảm</th>
+                                                    <th style="width:40%;" rowspan="2">Nội dung giải trình nguồn gốc tài sản tăng thêm và tổng thu nhập</th>
+                                                    <th hidden></th>
+                                                </tr>
+                                                <tr>
+                                                    <th>Số lượng tài sản</th>
+                                                    <th>Giá trị tài sản, thu nhập</th>
+                                                </tr>
+
+                                            </thead>
+
+                                        </table>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+
+            </div>
+        </div>
+        <div class="modal fade" id="add-sh2">
+
+        </div>
+    </div>
+</section>
+
+<script src="~/Scripts/NghiepVu/NV_KeKhai_TSTN_Edit.js"></script>
+
+
+

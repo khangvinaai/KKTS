@@ -1,0 +1,491 @@
+﻿
+@{
+    ViewBag.Title = "ThongTinKeHoach";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    <style>
+
+        tr.shown td.details-control {
+            background: url(/Images/bg/details_close.png) no-repeat center center;
+        }
+
+        td.details-control {
+            background: url(/Images/bg/details_open.png) no-repeat center center;
+            cursor: pointer;
+        }
+
+        .BanKeKhai_Box {
+            border: 1px solid #e3e3e3;
+            border-radius: 3px;
+            padding: 15px;
+            margin: 20px;
+            box-shadow: 1px 1px 10px 1px #ccc !important;
+        }
+
+            .BanKeKhai_Box .BanKeKhai_Title {
+                padding-top: 5px;
+                text-transform: uppercase;
+                padding: 5px;
+                border-bottom: 1px solid #E4E5E7;
+                color: #026BF3;
+            }
+
+        .BanKeKhai {
+            padding-top: 10px;
+            border-radius: 3px;
+            margin-left: 20px;
+        }
+
+        #tabs .nav-tabs .nav-item.show .nav-link, .nav-tabs .nav-link.active {
+            color: #38a4f8;
+            background-color: transparent;
+            text-transform: uppercase;
+            border-color: transparent transparent #f3f3f3;
+            border-bottom: transparent;
+            font-weight: 400;
+            border-top: 1px solid #38a4f8 !important;
+            border-left: 1px solid #38a4f8 !important;
+            border-right: 1px solid #38a4f8 !important;
+        }
+
+        .nav-tabs .nav-link {
+            border: 1px solid transparent !IMPORTANT;
+            border-top-left-radius: 0.25rem;
+            border-top-right-radius: 0.25rem;
+        }
+
+
+
+        .nav-link {
+            display: block;
+            padding: 0.5rem 1rem;
+        }
+
+       
+
+        .card {
+            background: #ffffff none repeat scroll 0 0;
+            margin: 0;
+            padding: 20px;
+            border: 0 solid #e7e7e7;
+            border-radius: 5px;
+            box-shadow: 0 5px 20px 0 rgb(0 0 0 / 15%);
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            position: relative;
+            display: -ms-flexbox;
+            display: flex;
+            -ms-flex-direction: column;
+            flex-direction: column;
+            min-width: 0;
+            word-wrap: break-word;
+            background-color: #fff;
+            background-clip: border-box;
+            border: 1px solid rgba(0,0,0,.125);
+            border-radius: 0.25rem;
+        }
+
+      
+
+       
+
+        .card-content-custom {
+            padding-bottom: 1%;
+            padding-left: 2%;
+            padding-right: 2%;
+            border-radius: 10px;
+            width: 100%;
+        }
+
+        #dataTable_filter input {
+            display: none;
+        }
+
+        .no-footer {
+            border-bottom: none;
+        }
+
+        .is-invalid {
+            color: #E84C3D;
+            margin-top: 5px;
+        }
+
+        .dt-buttons {
+            border-bottom: 1px solid rgba(0,0,0,.125);
+            padding: 8px;
+        }
+
+        .card-tools {
+            position: absolute;
+            right: 10px;
+            top: 11px;
+            z-index: 999;
+        }
+    </style>
+}
+
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-left">
+                    <li class="breadcrumb-item"><a href="@Url.Action("Index","Home")">Trang chủ</a></li>
+                    <li class="breadcrumb-item">Yêu cầu giải trình</li>
+                    <li class="breadcrumb-item active">Chi tiết kế hoạch</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="card text_ui_right_cus Card-control">
+                    <div class="row line_header" style="padding-bottom: 1%;padding-left: 2%;padding-right: 2%;padding-top: 1%;">
+                        <div class="col-md-6 title_ngtao clsTitleFrom" style="text-align: left; ">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label class="label-info">Tên Kế Hoạch: </label><span id="tenkehoach"></span>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="label-info">Năm kế hoạch: </label><span id="namkehoach"></span>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="label-info">Căn cứ quyết định số: </label><span id="cancuquyetdinh"></span>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="label-info">Ngày ra quyết định: </label><span id="ngayraquyetdinh"></span>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="label-info">Thời hạn xác minh: </label><span id="thoihanxacminh"></span>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="label-info">Tiến độ hiện tại: </label><span id="tiendohientai"></span>
+                                </div>
+                                <div class="col-md-12">
+                                    <label class="label-info">Nội dung xác minh: </label><span id="noidungxacminh"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 title_ngtao clsTitleFrom" style="text-align: right; ">
+                            <button class="btn btn-primary clsCreateKeKhaiTaiSan" id="btnCreateKeKhaiTaiSan" data-model-id="@ViewBag.ID" onclick="TienHanhXacMinh(this)"><i class="fas fa-edit"></i> Tiến hành xác minh</button>
+                        </div>
+                    </div>
+                    <div style="padding-bottom: 1%; padding-left:2%; padding-right:2%;" class="row">
+                        <table id="example1" class="table table-bordered table-striped dataTable no-footer" role="grid" aria-describedby="example1_info">
+                            <thead>
+                                <tr>
+                                    <th class="details-control sorting_disabled" rowspan="1" colspan="1" aria-label="" style="width: 2%;"></th>
+                                    <th class="text-center sorting_disabled" rowspan="1" colspan="1" aria-label="STT" style="width: 3%;">STT</th>
+                                    <th class="sorting" tabindex="0" aria-controls="example1" rowspan="1" colspan="1" style="width: 15%;">Họ và Tên</th>
+                                    <th class="sorting" tabindex="0" aria-controls="example1" rowspan="1" colspan="1" style="width: 10%;">Ngày sinh</th>
+                                    <th class="sorting" tabindex="0" aria-controls="example1" rowspan="1" colspan="1" style="width: 10%;">CCCD</th>
+                                    <th class="sorting" tabindex="0" aria-controls="example1" rowspan="1" colspan="1" style="width: 30%;">Địa chỉ</th>
+                                    <th class="sorting" tabindex="0" aria-controls="example1" rowspan="1" colspan="1" style="width: 15%;">Cơ quan</th>
+                                    <th class="sorting" tabindex="0" aria-controls="example1" rowspan="1" colspan="1" style="width: 10%;">Chức vụ</th>
+                                    <th class="text-center sorting_disabled" rowspan="1" colspan="1" aria-label="Trạng thái" style="width: 10%;">Trạng thái</th>
+                                    <th class="sorting_disabled" rowspan="1" colspan="1" aria-label="" style="width: 3%;"></th>
+                                </tr>
+
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                        <div class="card-footer clearfix" style="height: 51px; width: 100%; background-color: white;">
+                            <ul class="pagination pagination-sm m-0 float-right">
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <div class="modal fade" id="add-sh1">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Gửi thông báo</h4>
+                        <button type="button" class="close closeform" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">×</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        @using (Ajax.BeginForm("EditGuiThongBao", "NV_YeuCauGiaiTrinh", new AjaxOptions { HttpMethod = "POST", OnSuccess = "FnSuccess_Edit", OnFailure = "Failure_Edit", OnBegin = "FnBegin_Edit" }, new { @class = "formtiendoEdit form-horizontal" }))
+                        {
+                            @Html.AntiForgeryToken()
+                            <div class="card-body">
+                                <div id="sua">
+
+                                </div>
+                                <div class="modal-footer justify-content-between">
+                                    <button type="button" class="btn btn-danger closeform" data-dismiss="modal" style="width: 110px">
+                                        Hủy
+                                    </button>
+                                    <button type="submit" class="btn btn-primary" style="position: relative; width: 110px;">
+                                        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="background: none; display: block; shape-rendering: auto; margin: 0px; padding: 0px; width: 20px; height: 20px; position: absolute;left: 5px;top: 6px;" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid" class="loading_thongtinkehoach d-none">
+                                            <circle cx="50" cy="50" r="32" stroke-width="8" stroke="#ffffff" stroke-dasharray="50.26548245743669 50.26548245743669" fill="none" stroke-linecap="round">
+                                                <animateTransform attributeName="transform" type="rotate" repeatCount="indefinite" dur="1s" keyTimes="0;1" values="0 50 50;360 50 50"></animateTransform>
+                                            </circle>
+                                        </svg>
+                                        Gửi
+                                    </button>
+                                </div>
+
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+<script>
+    var s1 = window.location.href.split("/")
+    var id = s1[s1.length - 1];
+    var oTable; // Datatable
+
+    function loadDataTable() {
+
+        oTable = $("#example1").DataTable({
+            "lengthChange": false,
+            "info": false,
+
+            "language": {
+
+                "search": "",
+                "info": "Tổng số _TOTAL_ hàng",
+                "infoEmpty": "",
+                "infoFiltered": "",
+                "paginate": {
+                    "next": "»",
+                    "previous": "«"
+                },
+                "processing": `Đang tải dữ liệu`,
+
+                searchPlaceholder: "Tìm...",
+                zeroRecords: "Không tìm thấy kết quả",
+
+            },
+
+            "serverSide": true,
+            "processing": true,
+            "ajax": {
+                "url": `/NV_YeuCauGiaiTrinh/LoadData1?id=${s1[s1.length - 1]}`,
+                "type": "POST",
+                "datatype": "json",
+            },
+            "columnDefs": [
+                { className: "details-control", "targets": [0] }
+            ],
+
+            "columns": [
+                {
+                    "data": "ID", "render": function (data, type, row) {
+                        return ` <span class="d-none">${data}</span>`
+                    }
+                },
+                { "data": "ID" },
+                { "data": "HoTenCanBo" },
+                { "data": "NgaySinh" },
+                { "data": "CCCD" },
+                { "data": "DiaChi" },
+                { "data": "TenCoQuan" },
+                { "data": "ChucVu" },
+                {
+                    "data": "KeKhai", "render": function (data, type, row) {
+                        if (data) {
+                            return `<span class="labelGrid label-success">Đã kê khai</span>`
+                        }
+                        else {
+                            return `<span class="labelGrid label-success">Chưa kê khai</span>`
+                        }
+                    }
+                },
+                {
+                    "data": "ID", "render": function (data, type, row) {
+                        return ` <button class="btn btn-outline-info btn-sm" onclick="ThongBao(this)" data-model-id="${data}" data-toggle="modal" data-target="#add-sh1">
+                                    <i class="fa fa-arrow-alt-circle-right"></i>
+                                </button>
+
+                                  `
+
+                    }
+                },
+
+            ]
+
+        });
+
+        oTable.on('draw.dt', function () {
+            var info = oTable.page.info();
+            oTable.column(1, { search: 'applied', order: 'applied', page: 'applied' }).nodes().each(function (cell, i) {
+                cell.innerHTML = i + 1 + info.start;
+            });
+        });
+
+    }
+
+    $('#example1 tbody').on('click', 'td.details-control', function () {
+        var tr = $(this).parents('tr');
+        var row = oTable.row(tr);
+
+        if (row.child.isShown()) {
+
+            row.child.hide();
+            tr.removeClass('shown');
+        }
+        else {
+
+            $.get("/NV_KeKhai_TSTN/GetThongTinKeKhaiCanBo/", { id: row.data().ID }, (data) => {
+                var html = '';
+
+                if (data.length == 0) {
+                    html += `<div class="BanKeKhai_Box"> <div class="BanKeKhai_Title"><b>Chưa có thông tin bản kê khai</b></div>` +
+                        `<div class="BanKeKhai"><strong style="padding: 5px;border: 1px solid #FD9406;border-radius: 2px;background-color: #FFD7A0;color: #ff0200;"><i class="fa fa-book" aria-hidden="true"></i> | Loại kê khai: </strong></div>` +
+                        `<div class="BanKeKhai"><i class="fa fa-book-open" aria-hidden="true"></i> | Lĩnh vực: </div>` +
+                        `<div class="BanKeKhai"><i class="fa fa-calendar" aria-hidden="true"></i> | Ngày kê khai: </div> ` +
+                        `<div class="BanKeKhai"><i class="fa fa-home" aria-hidden="true"></i> | Biến động tài sản: </div> ` +
+                        `</div>`
+                }
+                else {
+                    $.each(data, (index, value) => {
+                        var date = new Date(Number(value.NgayKeKhai.match(/\d+/)[0]));
+
+                    
+                        html += `<div class="BanKeKhai_Box"> <div class="BanKeKhai_Title"><b><a href="/NV_KeKhai_TSTN/Details/${value.MaKeKhai}">Xem Chi Tiết</a></b></div>` +
+                            `<div class="BanKeKhai"><strong style="padding: 5px;border: 1px solid #FD9406;border-radius: 2px;background-color: #FFD7A0;color: #ff0200;"><i class="fa fa-book" aria-hidden="true"></i> | Loại kê khai: ${value.TenLoaiKeKhai}</strong></div>` +
+                            `<div class="BanKeKhai"><i class="fa fa-book-open" aria-hidden="true"></i> | Lĩnh vực: ${value.TenLinhVuc}</div>` +
+                            `<div class="BanKeKhai"><i class="fa fa-calendar" aria-hidden="true"></i> | Ngày kê khai: ${moment(date).format("DD/MM/YYYY")}</div> ` +
+                            `<div class="BanKeKhai"><i class="fa fa-home" aria-hidden="true"></i> | Biến động tài sản: ${(value.BienDongTaiSan) ? "Có biến động tài sản" : "Không có biến động tài sản"}</div> ` +
+                            `</div>`
+                    })
+                }
+                
+                row.child(html).show();
+                tr.addClass('shown');
+            })
+
+           
+        }
+    });
+
+    $(document).ready(function () {
+        loadDataTable();
+
+        $.get("/NV_LapKeHoachXacMinh/GetThongTinKeHoach/", { id: s1[s1.length - 1] }, (data) => {
+            $("#tenkehoach").html(" " + data[0].TenKeHoach)
+            $("#namkehoach").html(" " + data[0].NamKeHoach)
+            $('#cancuquyetdinh').html(" " + data[0].CanCuQuyetDinh)
+
+            var date = new Date(Number(data[0].NgayRaQuyetDinh.match(/\d+/)[0]));
+
+            $('#ngayraquyetdinh').html(" " + moment(date).format("DD/MM/YYYY"))
+            $('#thoihanxacminh').html(" " + data[0].ThoiHanXacMinh + " ngày")
+            $('#tiendohientai').html(" " + data[0].TienDoHienTai)
+            $('#noidungxacminh').html(" " + data[0].NoiDungXacMinh)
+        })
+
+    })
+
+
+    function FnBegin_Edit() {
+        $('.loading_thongtinkehoach').removeClass('d-none');
+    }
+
+    function FnSuccess_Edit(data) {
+        $('.loading_thongtinkehoach').addClass('d-none')
+        $('.closeform').click()
+
+        Swal.fire({
+            icon: 'success',
+            title: 'Thành Công',
+            text: `gửi yêu cầu giải trình thành công`,
+            timer: 2000,
+            showConfirmButton: false,
+        })
+        t.draw();
+    }
+
+    function Failure_Edit(data) {
+        $('.loading_thongtinkehoach').addClass('d-none');
+        Swal.fire({
+            icon: 'error',
+            title: 'Có lỗi',
+            text: `gửi yêu cầu giải trình không thành công`,
+            timer: 2000,
+            showConfirmButton: false,
+        })
+    }
+
+    function ThongBao(obj) {
+        var ele = $(obj);
+        var MaCanBo = ele.data("model-id");
+      
+        $("#sua").empty()
+
+        var row1 = `<div class="form-group row">
+                            <label for="cnsh" class="col-sm-3 col-form-label">Tiêu đề</label>
+                            <div class="col-sm-9">
+                                <input type="hidden" disable="true" class="form-control" id="MaCanBo" name="MaCanBo" value="${MaCanBo}">
+                                <input type="text" class="form-control" id="TieuDe" name="TieuDe" placeholder="nhập tiêu đề">
+                               
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="cnsh" class="col-sm-3 col-form-label">Nội Dung</label>
+                            <div class="col-sm-9">
+                                <textarea type="text" class="form-control" id="NoiDung" name="NoiDung" placeholder="Nhập nội dung"></textarea>
+                            </div>
+                        </div>`
+        $('#sua').prepend(row1); 
+    };
+
+    function TienHanhXacMinh(obj) {
+        var ele = $(obj);
+        var MaKeHoach = ele.data("model-id");
+
+        var url = `/NV_LapKeHoachXacMinh/CapNhatTrangThaiTienHanhXacMinh`
+
+        swal.fire({
+            title: 'Cập nhật tiến độ xác minh',
+            text: "Chuyển trạng thái sang tiến hành xác minh",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Có, Hãy chuyển!',
+            cancelButtonText: 'Không, Quay lại!',
+            reverseButtons: true
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.post(url, { id: MaKeHoach })
+                    .done(function (data) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Thành Công',
+                            text: `Đã cập nhật tiến độ thành công`,
+                            timer: 2000,
+                            showConfirmButton: false,
+                        }).then(() => {window.location.replace("/")})
+                    })
+                    .fail(function (data) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Không thành công',
+                            text: `Cập nhật tiến độ bị lỗi`,
+                            timer: 2000,
+                            showConfirmButton: false,
+
+                        })
+                    });
+            }
+            else if (result.dismiss === Swal.DismissReason.cancel) {
+
+            }
+        })
+    }
+
+ 
+</script>

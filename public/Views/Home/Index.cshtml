@@ -1,0 +1,686 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+    <style>
+        /*--step--*/
+
+        .wizard {
+            margin: auto;
+            background: #fff;
+        }
+
+            .wizard .nav-tabs {
+                position: relative;
+                margin: auto;
+                margin-bottom: 0;
+                border-bottom-color: #e0e0e0;
+            }
+
+            .wizard > div.wizard-inner {
+                position: relative;
+            }
+
+        .wizard-inner ul li a span.disa_step_new {
+            cursor: default;
+            border: 1px solid #cddbf5;
+            color: #cddbf5
+        }
+
+        .wizard-inner ul li a span.round-tab:hover {
+            background: #fff;
+            color: #cddbf5;
+            border: 1px solid #cddbf5
+        }
+
+        .wizard-inner .nav-tabs > li > a:hover {
+            border-color: ivory
+        }
+
+        .connecting-line {
+            height: 2px;
+            background: #e0e0e0;
+            position: absolute;
+            width: 87%;
+            margin: 0 auto;
+            left: 0;
+            right: 0;
+            top: 50%;
+            z-index: 1;
+        }
+
+        .wizard .nav-tabs > li.active > a,
+        .wizard .nav-tabs > li.active > a:hover,
+        .wizard .nav-tabs > li.active > a:focus {
+            color: #555555;
+            cursor: default;
+            border: 0;
+            border-bottom-color: transparent;
+        }
+
+        span.round-tab {
+            width: 40px;
+            height: 40px;
+            line-height: 40px;
+            display: inline-block;
+            border-radius: 50%;
+            background: #fff;
+            border: 1px solid #1c7af5;
+            z-index: 2;
+            position: absolute;
+            left: 0;
+            text-align: center;
+            font-size: 15px;
+            color: #1c7af5
+        }
+
+            span.round-tab i {
+                color: #555555;
+            }
+
+        .wizard li a.active span.round-tab {
+            background: #054fd2;
+            border: 1px solid #054fd2;
+            color: #fff
+        }
+
+            .wizard li a.active span.round-tab i {
+                color: #5bc0de;
+            }
+
+        span.round-tab:hover {
+            color: #fff;
+            border: 1px solid #054fd2;
+            background: #054fd2
+        }
+
+        .wizard .nav-tabs > li {
+            width: 12.4%;
+        }
+
+        .wizard li a:after {
+            content: " ";
+            position: relative;
+            left: 46%;
+            top: -20px;
+            opacity: 0;
+            margin: 0 auto;
+            bottom: 0px;
+            border: 5px solid transparent;
+            border-bottom-color: #5bc0de;
+            transition: 0.1s ease-in-out;
+        }
+
+        .wizard li.active.nav-item:after {
+            content: " ";
+            position: relative;
+            left: 46%;
+            top: -20px;
+            opacity: 1;
+            margin: 0 auto;
+            bottom: 0px;
+            border: 10px solid transparent;
+            border-bottom-color: #5bc0de;
+        }
+
+        .wizard .nav-tabs > li a {
+            width: 40px;
+            height: 40px;
+            margin: 20px auto;
+            border-radius: 100%;
+            padding: 0;
+            position: relative;
+        }
+
+            .wizard .nav-tabs > li a:hover {
+                background: transparent;
+            }
+
+        .wizard .tab-pane {
+            position: relative;
+            padding-top: 50px;
+        }
+
+        .wizard h3 {
+            margin-top: 0;
+        }
+    </style>
+}
+
+
+@{
+    ViewBag.Title = "CongKhaiBanKeKhai";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-left">
+                    <li class="breadcrumb-item"><a href="@Url.Action("Index","Home")">Trang chủ</a></li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="card text_ui_right_cus Card-control">
+                    <div class="row line_header" style="padding-bottom: 1%;padding-left: 2%;padding-right: 2%;padding-top: 1%;">
+                        <div class="col-md-12 title_ngtao clsTitleFrom" style="text-align: center; ">
+                            <label style=" font-size: 20px;" class="mt-0 header-title header-title-Edit">
+                                <span class="TitleForm clsShow cursor-pointer" style="color: green; text-transform: uppercase;" id="title"></span>
+                            </label>
+                        </div>
+                    </div>
+                    <div style="padding-bottom: 1%; padding-left:2%; padding-right:2%;" class="row">
+                        <div class="col-md-12" style=" padding-top: 1%; padding-bottom: 1%; padding-left: 2%; padding-right: 2%; border-radius: 10px; box-shadow: 0 5px 20px 0 rgb(0 0 0 / 15%); margin-top: 10px;">
+                            <div class="wizard" style="border-bottom: 2px solid #564AF9;">
+                                <div class="wizard-inner">
+                                    <div class="connecting-line" style="width:62% !important;top: 40% !important;margin-left: 16%;"></div>
+                                    <ul class="nav nav-tabs step_new" style="left:10%;right:10%;border-bottom:none" role="tablist" id="tiendo">
+                                        <li role="presentation" data-tag="TD1" data-index="0" style="text-align: center;">
+                                            <p id="idTD1" class="Edit-TienDo" style="font-weight: bold; color: rgb(5, 79, 210);">Còn: 45 ngày</p>
+                                            <a href="#step1" data-toggle="tab" aria-controls="step2" role="tab" class="nav-link active">
+                                                <span class="round-tab" title="Tiến độ 1" style="border-width: 3px;">1</span>
+                                            </a>
+                                            <p style="font-weight: bold; color: rgb(5, 79, 210);">Đã ra quyết định<br> xác minh</p>
+                                        </li>
+                                        <li role="presentation" data-tag="TD2" data-index="1" style="text-align: center;">
+                                            <p id="idTD2" class="Edit-TienDo" style="font-weight: normal; color: rgb(153, 153, 153);">&nbsp;</p>
+                                            <a href="#step2" data-toggle="tab" aria-controls="step2" role="tab" class="nav-link disabled">
+                                                <span class="round-tab disa_step_new" title="Tiến độ 2" style="border-width: 1px;">2</span>
+                                            </a>
+                                            <p style="font-weight: normal; color: rgb(153, 153, 153);">Yêu cầu giải trình <br>tài sản và thu nhập</p>
+                                        </li>
+
+                                        <li role="presentation" data-tag="TD3" data-index="2" style="text-align: center;">
+                                            <p id="idTD2" class="Edit-TienDo" style="font-weight: normal; color: rgb(153, 153, 153);">&nbsp;</p>
+                                            <a href="#step4" data-toggle="tab" aria-controls="step3" role="tab" class="nav-link disabled">
+                                                <span class="round-tab disa_step_new" title="Tiến độ 3" style="border-width: 1px;">3</span>
+                                            </a>
+                                            <p style="font-weight: normal; color: rgb(153, 153, 153);">Tiến hành <br>xác minh</p>
+                                        </li>
+
+                                        <li role="presentation" data-tag="TD4" data-index="3" style="text-align: center;">
+                                            <p id="idTD3" class="Edit-TienDo" style="font-weight: normal; color: rgb(153, 153, 153);">&nbsp;</p>
+                                            <a href="#step6" data-toggle="tab" aria-controls="step4" role="tab" class="nav-link disabled">
+                                                <span class="round-tab disa_step_new" title="Tiến độ 4" style="border-width: 1px;">4</span>
+                                            </a>
+                                            <p style="font-weight: normal; color: rgb(153, 153, 153);">Báo cáo kết quả<br> xác minh</p>
+                                        </li>
+
+                                        <li role="presentation" data-tag="TD5" data-index="4" style="text-align: center;">
+                                            <p id="idTD4" class="Edit-TienDo" style="font-weight: normal; color: rgb(153, 153, 153);">&nbsp;</p>
+                                            <a href="#step8" data-toggle="tab" aria-controls="step5" role="tab" class="nav-link disabled">
+                                                <span class="round-tab disa_step_new" title="Tiến độ 5" style="border-width: 1px;">5</span>
+                                            </a>
+                                            <p style="font-weight: normal; color: rgb(153, 153, 153);">Kết luận<br>xác minh</p>
+                                        </li>
+                                        <li role="presentation" data-tag="TD6" data-index="5" style="text-align: center;">
+                                            <p id="idTD5" class="Edit-TienDo" style="font-weight: normal; color: rgb(153, 153, 153);">&nbsp;</p>
+                                            <a href="#step9" data-toggle="tab" aria-controls="step6" role="tab" class="nav-link disabled">
+                                                <span class="round-tab disa_step_new" title="Tiến độ 6" style="border-width: 1px;">6</span>
+                                            </a>
+                                            <p style="font-weight: normal; color: rgb(153, 153, 153);">Công khai kết luận<br> xác minh</p>
+                                        </li>
+                                    </ul>
+                                </div>
+
+                            </div>
+                            <div class="row" style="margin-top:5px;">
+                                <div class="col-md-6">
+                                    <label class="label-info">Tên Kế Hoạch: </label><span id="tenkehoach"></span>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="label-info">Năm kế hoạch: </label><span id="namkehoach"></span>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="label-info">Căn cứ quyết định số: </label><span id="cancuquyetdinh"></span>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="label-info">Ngày ra quyết định: </label><span id="ngayraquyetdinh"></span>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="label-info">Thời hạn xác minh: </label><span id="thoihanxacminh"></span>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="label-info">Nội dung kế hoạch: </label><span id="noidungkehoach"></span>
+                                </div>
+                                <div class="col-md-12" style="text-align: left; padding-top: 10px;">
+                                    <table id="example1" class="table table-bordered table-striped dataTable no-footer" role="grid" aria-describedby="example1_info">
+                                        <thead>
+                                            <tr role="row">
+                                                <th class="text-center" style="width: 3%;">STT</th>
+                                                <th style="width: 27%;">Cán bộ</th>
+                                                <th style="width: 22%;">Chức vụ</th>
+                                                <th style="width: 22%;">Loại kê khai</th>
+                                                <th style="width: 12%;">Năm</th>
+                                                <th style="width: 17%;">Ngày kê khai</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr role="row" class="odd shown">
+                                                <td class=" text-center">1</td>
+                                                <td>Cán bộ A</td>
+                                                <td>Chủ tịch UBND</td>
+                                                <td>Kê khai bổ sung</td>
+                                                <td>2022</td>
+                                                <td>12/01/2022</td>
+                                            </tr>
+                                            <tr role="row" class="even">
+                                                <td class=" text-center">2</td>
+                                                <td>Cán bộ B</td>
+                                                <td>Chủ tịch UBND</td>
+                                                <td>Kê khai bổ sung</td>
+                                                <td>2022</td>
+                                                <td>12/01/2022</td>
+                                            </tr>
+                                            <tr role="row" class="odd">
+                                                <td class=" text-center">3</td>
+                                                <td>Cán bộ C</td>
+                                                <td>Chủ tịch UBND</td>
+                                                <td>Kê khai bổ sung</td>
+                                                <td>2022</td>
+                                                <td>12/01/2022</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12" style=" padding-top: 1%; padding-bottom: 1%; padding-left: 2%; padding-right: 2%; border-radius: 10px; box-shadow: 0 5px 20px 0 rgb(0 0 0 / 15%); margin-top: 10px;">
+                            <div class="col-md-12" style="text-align: left; padding-top: 10px;">
+                                <label class="Showheader-title">
+                                    <label class="mt-0 header-title header-title-Edit" data-toggle="collapse" data-target="#collapseDanhSachCacKeHoachXacMinh" aria-expanded="false" aria-controls="collapseDanhSachCacKeHoachXacMinh">
+                                        <i class="far fa-caret-square-down"></i>
+                                        <span class="TitleForm clsShow cursor-pointer">Danh sách các kế hoạch xác minh tài sản và thu nhập</span>
+                                    </label>
+                                </label>
+                            </div>
+                            <div class="col-md-12 collapse show" id="collapseDanhSachCacKeHoachXacMinh">
+                                <div class="row" style="margin-top:10px;">
+                                    <div class="col-md-12" style="text-align: left; padding-top: 10px;">
+                                        <table id="example1" class="table table-bordered table-striped dataTable no-footer" role="grid" aria-describedby="example1_info">
+                                            <thead>
+                                                <tr role="row">
+                                                    <th class="text-center" style="width: 3%;">STT</th>
+                                                    <th style="width: 20%;">Tên Kế Hoạch</th>
+                                                    <th style="width: 10%;">Kế Hoạch Năm</th>
+                                                    <th style="width: 10%;">Căn Cứ QĐ</th>
+                                                    <th style="width: 25%;">Nội Dung Kế Hoạch</th>
+                                                    <th style="width: 15%;">Tiến Độ</th>
+                                                    <th style="width: 20%;">Trạng Thái</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr role="row" class="odd shown">
+                                                    <td class=" text-center">1</td>
+                                                    <td>Kế hoạch A</td>
+                                                    <td>2019</td>
+                                                    <td>QĐ-2019</td>
+                                                    <td>Nội dung kế hoạch 2019</td>
+                                                    <td>Công khai kết luận</td>
+                                                    <td>Đang công khai kết luận</td>
+                                                </tr>
+                                                <tr role="row" class="even">
+                                                    <td class=" text-center">2</td>
+                                                    <td>Kế hoạch B</td>
+                                                    <td>2020</td>
+                                                    <td>QĐ-2020</td>
+                                                    <td>Nội dung kế hoạch 2020</td>
+                                                    <td>Công khai kết luận</td>
+                                                    <td>Đang công khai kết luận</td>
+                                                </tr>
+                                                <tr role="row" class="odd">
+                                                    <td class=" text-center">3</td>
+                                                    <td>Kế hoạch C</td>
+                                                    <td>2021</td>
+                                                    <td>QĐ-2021</td>
+                                                    <td>Nội dung kế hoạch 2021</td>
+                                                    <td>Công khai kết luận</td>
+                                                    <td>Đang công khai kết luận</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+</section>
+
+<script>
+    $(document).ready(function () {
+        $.get("/NV_LapKeHoachXacMinh/GetThongTinKeHoachTrangChu/", (data) => {
+
+            var row = ``
+
+            $('#title').html(`Tiến độ xác minh tài sản thu nhập năm ${data.KeHoachNam}`)
+            $('#tenkehoach').html(" " + data.TenKeHoachXacMinh)
+            $('#cancuquyetdinh').html(" " + data.CanCuQuyetDinh)
+            $('#thoihanxacminh').html(` ${data.ThoiHanXacMinh} ngày`)
+            $('#namkehoach').html(" " + data.KeHoachNam)
+
+            var date = new Date(Number(data.NgayRaQuyetDinh.match(/\d+/)[0]));
+            var ngayraquyetdinh = moment(date).format("DD/MM/YYYY")
+            $("#ngayraquyetdinh").html(" " + ngayraquyetdinh)
+            $("#noidungkehoach").html(" " + data.NoiDungXacMinh)
+
+
+            var given = moment(ngayraquyetdinh, "DD/MM/YYYY");
+            var current = moment().startOf('day');
+            var thoigian = 0;
+            var tongngay = parseInt(data.ThoiHanXacMinh);
+            var dasudung = parseInt(moment.duration(given.diff(current)).asDays());
+            var conlai = tongngay - dasudung;
+            if (conlai < 0) {
+                thoigian = -1 * conlai
+            }
+            else {
+                thoigian = conlai
+            }
+
+            if (data.TenTienDo == "Chưa Ra Quyết Định") {
+                row = `<li role="presentation" data-tag="TD1" data-index="0" style="text-align: center;">
+                            <p id="idTD1" class="Edit-TienDo" style="font-weight: normal; color: rgb(153, 153, 153);">&nbsp;</p>
+                            <a href="#step1" data-toggle="tab" aria-controls="step1" role="tab" class="nav-link disabled">
+                                <span class="round-tab disa_step_new" title="Tiến độ 1" style="border-width: 1px;">1</span>
+                            </a>
+                            <p style="font-weight: normal; color: rgb(153, 153, 153);">Đã ra quyết định <br>xác minh</p>
+                        </li>
+                        <li role="presentation" data-tag="TD2" data-index="1" style="text-align: center;">
+                            <p id="idTD2" class="Edit-TienDo" style="font-weight: normal; color: rgb(153, 153, 153);">&nbsp;</p>
+                            <a href="#step2" data-toggle="tab" aria-controls="step2" role="tab" class="nav-link disabled">
+                                <span class="round-tab disa_step_new" title="Tiến độ 2" style="border-width: 1px;">2</span>
+                            </a>
+                            <p style="font-weight: normal; color: rgb(153, 153, 153);">Yêu cầu giải trình <br>tài sản và thu nhập</p>
+                        </li>
+
+                        <li role="presentation" data-tag="TD3" data-index="2" style="text-align: center;">
+                            <p id="idTD2" class="Edit-TienDo" style="font-weight: normal; color: rgb(153, 153, 153);">&nbsp;</p>
+                            <a href="#step4" data-toggle="tab" aria-controls="step3" role="tab" class="nav-link disabled">
+                                <span class="round-tab disa_step_new" title="Tiến độ 3" style="border-width: 1px;">3</span>
+                            </a>
+                            <p style="font-weight: normal; color: rgb(153, 153, 153);">Tiến hành <br>xác minh</p>
+                        </li>
+
+                        <li role="presentation" data-tag="TD4" data-index="3" style="text-align: center;">
+                            <p id="idTD3" class="Edit-TienDo" style="font-weight: normal; color: rgb(153, 153, 153);">&nbsp;</p>
+                            <a href="#step6" data-toggle="tab" aria-controls="step4" role="tab" class="nav-link disabled">
+                                <span class="round-tab disa_step_new" title="Tiến độ 4" style="border-width: 1px;">4</span>
+                            </a>
+                            <p style="font-weight: normal; color: rgb(153, 153, 153);">Báo cáo kết quả<br> xác minh</p>
+                        </li>
+
+                        <li role="presentation" data-tag="TD5" data-index="4" style="text-align: center;">
+                            <p id="idTD4" class="Edit-TienDo" style="font-weight: normal; color: rgb(153, 153, 153);">&nbsp;</p>
+                            <a href="#step8" data-toggle="tab" aria-controls="step5" role="tab" class="nav-link disabled">
+                                <span class="round-tab disa_step_new" title="Tiến độ 5" style="border-width: 1px;">5</span>
+                            </a>
+                            <p style="font-weight: normal; color: rgb(153, 153, 153);">Kết luận<br>xác minh</p>
+                        </li>
+                        <li role="presentation" data-tag="TD6" data-index="5" style="text-align: center;">
+                            <p id="idTD5" class="Edit-TienDo" style="font-weight: normal; color: rgb(153, 153, 153);">&nbsp;</p>
+                            <a href="#step9" data-toggle="tab" aria-controls="step6" role="tab" class="nav-link disabled">
+                                <span class="round-tab disa_step_new" title="Tiến độ 6" style="border-width: 1px;">6</span>
+                            </a>
+                            <p style="font-weight: normal; color: rgb(153, 153, 153);">Công khai kết luận<br> xác minh</p>
+                        </li>`
+            }
+
+            else if (data.TenTienDo == "Đã Ra Quyết Định") {
+                row = `<li role="presentation" data-tag="TD1" data-index="0" style="text-align: center;">
+                             <p id="idTD1" class="Edit-TienDo" style="font-weight: bold; color: rgb(5, 79, 210);">Còn: ${thoigian} ngày</p>
+                                <a href="#step1" data-toggle="tab" aria-controls="step2" role="tab" class="nav-link active">
+                                    <span class="round-tab" title="Tiến độ 1" style="border-width: 3px;">1</span>
+                                </a>
+                             <p style="font-weight: bold; color: rgb(5, 79, 210);">Đã ra quyết định<br> xác minh</p>
+                        </li>
+                        <li role="presentation" data-tag="TD2" data-index="1" style="text-align: center;">
+                            <p id="idTD2" class="Edit-TienDo" style="font-weight: normal; color: rgb(153, 153, 153);">&nbsp;</p>
+                            <a href="#step2" data-toggle="tab" aria-controls="step2" role="tab" class="nav-link disabled">
+                                <span class="round-tab disa_step_new" title="Tiến độ 2" style="border-width: 1px;">2</span>
+                            </a>
+                            <p style="font-weight: normal; color: rgb(153, 153, 153);">Yêu cầu giải trình <br>tài sản và thu nhập</p>
+                        </li>
+
+                        <li role="presentation" data-tag="TD3" data-index="2" style="text-align: center;">
+                            <p id="idTD2" class="Edit-TienDo" style="font-weight: normal; color: rgb(153, 153, 153);">&nbsp;</p>
+                            <a href="#step4" data-toggle="tab" aria-controls="step3" role="tab" class="nav-link disabled">
+                                <span class="round-tab disa_step_new" title="Tiến độ 3" style="border-width: 1px;">3</span>
+                            </a>
+                            <p style="font-weight: normal; color: rgb(153, 153, 153);">Tiến hành <br>xác minh</p>
+                        </li>
+
+                        <li role="presentation" data-tag="TD4" data-index="3" style="text-align: center;">
+                            <p id="idTD3" class="Edit-TienDo" style="font-weight: normal; color: rgb(153, 153, 153);">&nbsp;</p>
+                            <a href="#step6" data-toggle="tab" aria-controls="step4" role="tab" class="nav-link disabled">
+                                <span class="round-tab disa_step_new" title="Tiến độ 4" style="border-width: 1px;">4</span>
+                            </a>
+                            <p style="font-weight: normal; color: rgb(153, 153, 153);">Báo cáo kết quả<br> xác minh</p>
+                        </li>
+
+                        <li role="presentation" data-tag="TD5" data-index="4" style="text-align: center;">
+                            <p id="idTD4" class="Edit-TienDo" style="font-weight: normal; color: rgb(153, 153, 153);">&nbsp;</p>
+                            <a href="#step8" data-toggle="tab" aria-controls="step5" role="tab" class="nav-link disabled">
+                                <span class="round-tab disa_step_new" title="Tiến độ 5" style="border-width: 1px;">5</span>
+                            </a>
+                            <p style="font-weight: normal; color: rgb(153, 153, 153);">Kết luận<br>xác minh</p>
+                        </li>
+                        <li role="presentation" data-tag="TD6" data-index="5" style="text-align: center;">
+                            <p id="idTD5" class="Edit-TienDo" style="font-weight: normal; color: rgb(153, 153, 153);">&nbsp;</p>
+                            <a href="#step9" data-toggle="tab" aria-controls="step6" role="tab" class="nav-link disabled">
+                                <span class="round-tab disa_step_new" title="Tiến độ 6" style="border-width: 1px;">6</span>
+                            </a>
+                            <p style="font-weight: normal; color: rgb(153, 153, 153);">Công khai kết luận<br> xác minh</p>
+                        </li>`
+            }
+
+            else if (data.TenTienDo == "Yêu Cầu Giải Trình") {
+                row = `<li role="presentation" data-tag="TD1" data-index="0" style="text-align: center;">
+                        <p style="font-weight: normal; color: rgb(153, 153, 153);">&nbsp;</p>
+                        <a href="#step1" data-toggle="tab" aria-controls="step1" role="tab" class="nav-link disabled">
+                            <span class="round-tab" title="Tiến độ 1" style="background: rgb(255, 255, 255); color: rgb(51, 177, 20); border: 1px solid rgb(51, 177, 20);"><i class="fa fas fa-check" style="color: #33b114;"></i></span>
+                        </a>
+                        <p style="font-weight: normal; color: rgb(153, 153, 153);">Đã ra quyết định<br> xác minh</p>
+                    </li>
+                    <li role="presentation" data-tag="TD2" data-index="1" style="text-align: center;">
+                        <p id="idTD1" class="Edit-TienDo" style="font-weight: bold; color: rgb(5, 79, 210);">Còn: ${thoigian} ngày</p>
+                        <a href="#step2" data-toggle="tab" aria-controls="step2" role="tab" class="nav-link active">
+                            <span class="round-tab" title="Tiến độ 2" style="border-width: 3px;">2</span>
+                        </a>
+                        <p style="font-weight: bold; color: rgb(5, 79, 210);">Yêu cầu giải trình<br> tài sản và thu nhập</p>
+                    </li>
+
+                    <li role="presentation" data-tag="TD3" data-index="2" style="text-align: center;">
+                        <p id="idTD2" class="Edit-TienDo" style="font-weight: normal; color: rgb(153, 153, 153);">&nbsp;</p>
+                        <a href="#step4" data-toggle="tab" aria-controls="step3" role="tab" class="nav-link disabled">
+                            <span class="round-tab disa_step_new" title="Tiến độ 3" style="border-width: 1px;">3</span>
+                        </a>
+                        <p style="font-weight: normal; color: rgb(153, 153, 153);">Tiến hành <br>xác minh</p>
+                    </li>
+
+                    <li role="presentation" data-tag="TD4" data-index="3" style="text-align: center;">
+                        <p id="idTD3" class="Edit-TienDo" style="font-weight: normal; color: rgb(153, 153, 153);">&nbsp;</p>
+                        <a href="#step6" data-toggle="tab" aria-controls="step4" role="tab" class="nav-link disabled">
+                            <span class="round-tab disa_step_new" title="Tiến độ 4" style="border-width: 1px;">4</span>
+                        </a>
+                        <p style="font-weight: normal; color: rgb(153, 153, 153);">Báo cáo kết quả<br> xác minh</p>
+                    </li>
+
+                    <li role="presentation" data-tag="TD5" data-index="4" style="text-align: center;">
+                        <p id="idTD4" class="Edit-TienDo" style="font-weight: normal; color: rgb(153, 153, 153);">&nbsp;</p>
+                        <a href="#step8" data-toggle="tab" aria-controls="step5" role="tab" class="nav-link disabled">
+                            <span class="round-tab disa_step_new" title="Tiến độ 5" style="border-width: 1px;">5</span>
+                        </a>
+                        <p style="font-weight: normal; color: rgb(153, 153, 153);">Kết luận<br>xác minh</p>
+                    </li>
+                    <li role="presentation" data-tag="TD6" data-index="5" style="text-align: center;">
+                        <p id="idTD5" class="Edit-TienDo" style="font-weight: normal; color: rgb(153, 153, 153);">&nbsp;</p>
+                        <a href="#step9" data-toggle="tab" aria-controls="step6" role="tab" class="nav-link disabled">
+                            <span class="round-tab disa_step_new" title="Tiến độ 6" style="border-width: 1px;">6</span>
+                        </a>
+                        <p style="font-weight: normal; color: rgb(153, 153, 153);">Công khai kết luận<br> xác minh</p>
+                    </li>`
+            }
+
+            else if (data.TenTienDo == "Tiến Hành Xác Minh") {
+                row = `<li role="presentation" data-tag="TD1" data-index="0" style="text-align: center;">
+                        <p style="font-weight: normal; color: rgb(153, 153, 153);">&nbsp;</p>
+                        <a href="#step1" data-toggle="tab" aria-controls="step1" role="tab" class="nav-link disabled">
+                            <span class="round-tab" title="Tiến độ 1" style="background: rgb(255, 255, 255); color: rgb(51, 177, 20); border: 1px solid rgb(51, 177, 20);"><i class="fa fas fa-check" style="color: #33b114;"></i></span>
+                        </a>
+                        <p style="font-weight: normal; color: rgb(153, 153, 153);">Đã ra quyết định<br> xác minh</p>
+                    </li>
+                    <li role="presentation" data-tag="TD2" data-index="2" style="text-align: center;">
+                         <p style="font-weight: normal; color: rgb(153, 153, 153);">&nbsp;</p>
+                        <a href="#step2" data-toggle="tab" aria-controls="step2" role="tab" class="nav-link disabled">
+                            <span class="round-tab" title="Tiến độ 2" style="background: rgb(255, 255, 255); color: rgb(51, 177, 20); border: 1px solid rgb(51, 177, 20);"><i class="fa fas fa-check" style="color: #33b114;"></i></span>
+                        </a>
+                        <p style="font-weight: normal; color: rgb(153, 153, 153);">Yêu cầu giải trình<br> tài sản và thu nhập</p>
+                    </li>
+
+                    <li role="presentation" data-tag="TD3" data-index="3" style="text-align: center;">
+                       <p id="idTD3" class="Edit-TienDo" style="font-weight: bold; color: rgb(5, 79, 210);">Còn: ${thoigian} ngày</p>
+                        <a href="#step3" data-toggle="tab" aria-controls="step3" role="tab" class="nav-link active">
+                            <span class="round-tab" title="Tiến độ 3" style="border-width: 3px;">3</span>
+                        </a>
+                        <p style="font-weight: bold; color: rgb(5, 79, 210);">Tiến hành<br> xác minh</p>
+                    </li>
+
+                    <li role="presentation" data-tag="TD4" data-index="3" style="text-align: center;">
+                        <p id="idTD3" class="Edit-TienDo" style="font-weight: normal; color: rgb(153, 153, 153);">&nbsp;</p>
+                        <a href="#step6" data-toggle="tab" aria-controls="step4" role="tab" class="nav-link disabled">
+                            <span class="round-tab disa_step_new" title="Tiến độ 4" style="border-width: 1px;">4</span>
+                        </a>
+                        <p style="font-weight: normal; color: rgb(153, 153, 153);">Báo cáo kết quả<br> xác minh</p>
+                    </li>
+
+                    <li role="presentation" data-tag="TD5" data-index="4" style="text-align: center;">
+                        <p id="idTD4" class="Edit-TienDo" style="font-weight: normal; color: rgb(153, 153, 153);">&nbsp;</p>
+                        <a href="#step8" data-toggle="tab" aria-controls="step5" role="tab" class="nav-link disabled">
+                            <span class="round-tab disa_step_new" title="Tiến độ 5" style="border-width: 1px;">5</span>
+                        </a>
+                        <p style="font-weight: normal; color: rgb(153, 153, 153);">Kết luận<br>xác minh</p>
+                    </li>
+                    <li role="presentation" data-tag="TD6" data-index="5" style="text-align: center;">
+                        <p id="idTD5" class="Edit-TienDo" style="font-weight: normal; color: rgb(153, 153, 153);">&nbsp;</p>
+                        <a href="#step9" data-toggle="tab" aria-controls="step6" role="tab" class="nav-link disabled">
+                            <span class="round-tab disa_step_new" title="Tiến độ 6" style="border-width: 1px;">6</span>
+                        </a>
+                        <p style="font-weight: normal; color: rgb(153, 153, 153);">Công khai kết luận<br> xác minh</p>
+                    </li>`
+            }
+
+            else if (data.TenTienDo == "Báo Cáo Kết Quả") {
+                row = `<li role="presentation" data-tag="TD1" data-index="0" style="text-align: center;">
+                        <p style="font-weight: normal; color: rgb(153, 153, 153);">&nbsp;</p>
+                        <a href="#step1" data-toggle="tab" aria-controls="step1" role="tab" class="nav-link disabled">
+                            <span class="round-tab" title="Tiến độ 1" style="background: rgb(255, 255, 255); color: rgb(51, 177, 20); border: 1px solid rgb(51, 177, 20);"><i class="fa fas fa-check" style="color: #33b114;"></i></span>
+                        </a>
+                        <p style="font-weight: normal; color: rgb(153, 153, 153);">Đã ra quyết định<br> xác minh</p>
+                    </li>
+                    <li role="presentation" data-tag="TD2" data-index="2" style="text-align: center;">
+                         <p style="font-weight: normal; color: rgb(153, 153, 153);">&nbsp;</p>
+                        <a href="#step2" data-toggle="tab" aria-controls="step2" role="tab" class="nav-link disabled">
+                            <span class="round-tab" title="Tiến độ 2" style="background: rgb(255, 255, 255); color: rgb(51, 177, 20); border: 1px solid rgb(51, 177, 20);"><i class="fa fas fa-check" style="color: #33b114;"></i></span>
+                        </a>
+                        <p style="font-weight: normal; color: rgb(153, 153, 153);">Yêu cầu giải trình<br> tài sản và thu nhập</p>
+                    </li>
+
+                    <li role="presentation" data-tag="TD3" data-index="3" style="text-align: center;">
+                        <p style="font-weight: normal; color: rgb(153, 153, 153);">&nbsp;</p>
+                        <a href="#step3" data-toggle="tab" aria-controls="step3" role="tab" class="nav-link disabled">
+                            <span class="round-tab" title="Tiến độ32" style="background: rgb(255, 255, 255); color: rgb(51, 177, 20); border: 1px solid rgb(51, 177, 20);"><i class="fa fas fa-check" style="color: #33b114;"></i></span>
+                        </a>
+                        <p style="font-weight: normal; color: rgb(153, 153, 153);">Tiến hành<br> xác minh</p>
+                    </li>
+
+                    <li role="presentation" data-tag="TD4" data-index="4" style="text-align: center;">
+                         <p id="idTD4" class="Edit-TienDo" style="font-weight: bold; color: rgb(5, 79, 210);">Còn: ${thoigian} ngày</p>
+                        <a href="#step4" data-toggle="tab" aria-controls="step3" role="tab" class="nav-link active">
+                            <span class="round-tab" title="Tiến độ 4" style="border-width: 3px;">4</span>
+                        </a>
+                        <p style="font-weight: bold; color: rgb(5, 79, 210);">Báo cáo kết quả<br> xác minh</p>
+                    </li>
+
+                    <li role="presentation" data-tag="TD5" data-index="4" style="text-align: center;">
+                        <p id="idTD4" class="Edit-TienDo" style="font-weight: normal; color: rgb(153, 153, 153);">&nbsp;</p>
+                        <a href="#step8" data-toggle="tab" aria-controls="step5" role="tab" class="nav-link disabled">
+                            <span class="round-tab disa_step_new" title="Tiến độ 5" style="border-width: 1px;">5</span>
+                        </a>
+                        <p style="font-weight: normal; color: rgb(153, 153, 153);">Kết luận<br>xác minh</p>
+                    </li>
+                    <li role="presentation" data-tag="TD6" data-index="5" style="text-align: center;">
+                        <p id="idTD5" class="Edit-TienDo" style="font-weight: normal; color: rgb(153, 153, 153);">&nbsp;</p>
+                        <a href="#step9" data-toggle="tab" aria-controls="step6" role="tab" class="nav-link disabled">
+                            <span class="round-tab disa_step_new" title="Tiến độ 6" style="border-width: 1px;">6</span>
+                        </a>
+                        <p style="font-weight: normal; color: rgb(153, 153, 153);">Công khai kết luận<br> xác minh</p>
+                    </li>`
+            }
+
+            else if (data.TenTienDo == "Báo Cáo Kết Quả") {
+                row = `<li role="presentation" data-tag="TD1" data-index="0" style="text-align: center;">
+                        <p style="font-weight: normal; color: rgb(153, 153, 153);">&nbsp;</p>
+                        <a href="#step1" data-toggle="tab" aria-controls="step1" role="tab" class="nav-link disabled">
+                            <span class="round-tab" title="Tiến độ 1" style="background: rgb(255, 255, 255); color: rgb(51, 177, 20); border: 1px solid rgb(51, 177, 20);"><i class="fa fas fa-check" style="color: #33b114;"></i></span>
+                        </a>
+                        <p style="font-weight: normal; color: rgb(153, 153, 153);">Đã ra quyết định<br> xác minh</p>
+                    </li>
+                    <li role="presentation" data-tag="TD2" data-index="2" style="text-align: center;">
+                         <p style="font-weight: normal; color: rgb(153, 153, 153);">&nbsp;</p>
+                        <a href="#step2" data-toggle="tab" aria-controls="step2" role="tab" class="nav-link disabled">
+                            <span class="round-tab" title="Tiến độ 2" style="background: rgb(255, 255, 255); color: rgb(51, 177, 20); border: 1px solid rgb(51, 177, 20);"><i class="fa fas fa-check" style="color: #33b114;"></i></span>
+                        </a>
+                        <p style="font-weight: normal; color: rgb(153, 153, 153);">Yêu cầu giải trình<br> tài sản và thu nhập</p>
+                    </li>
+
+                    <li role="presentation" data-tag="TD3" data-index="3" style="text-align: center;">
+                        <p style="font-weight: normal; color: rgb(153, 153, 153);">&nbsp;</p>
+                        <a href="#step3" data-toggle="tab" aria-controls="step3" role="tab" class="nav-link disabled">
+                            <span class="round-tab" title="Tiến độ32" style="background: rgb(255, 255, 255); color: rgb(51, 177, 20); border: 1px solid rgb(51, 177, 20);"><i class="fa fas fa-check" style="color: #33b114;"></i></span>
+                        </a>
+                        <p style="font-weight: normal; color: rgb(153, 153, 153);">Tiến hành<br> xác minh</p>
+                    </li>
+
+                    <li role="presentation" data-tag="TD4" data-index="4" style="text-align: center;">
+                         <p id="idTD4" class="Edit-TienDo" style="font-weight: bold; color: rgb(5, 79, 210);">Còn: ${thoigian} ngày</p>
+                        <a href="#step4" data-toggle="tab" aria-controls="step3" role="tab" class="nav-link active">
+                            <span class="round-tab" title="Tiến độ 4" style="border-width: 3px;">4</span>
+                        </a>
+                        <p style="font-weight: bold; color: rgb(5, 79, 210);">Báo cáo kết quả<br> xác minh</p>
+                    </li>
+
+                    <li role="presentation" data-tag="TD5" data-index="4" style="text-align: center;">
+                        <p id="idTD4" class="Edit-TienDo" style="font-weight: normal; color: rgb(153, 153, 153);">&nbsp;</p>
+                        <a href="#step8" data-toggle="tab" aria-controls="step5" role="tab" class="nav-link disabled">
+                            <span class="round-tab disa_step_new" title="Tiến độ 5" style="border-width: 1px;">5</span>
+                        </a>
+                        <p style="font-weight: normal; color: rgb(153, 153, 153);">Kết luận<br>xác minh</p>
+                    </li>
+                    <li role="presentation" data-tag="TD6" data-index="5" style="text-align: center;">
+                        <p id="idTD5" class="Edit-TienDo" style="font-weight: normal; color: rgb(153, 153, 153);">&nbsp;</p>
+                        <a href="#step9" data-toggle="tab" aria-controls="step6" role="tab" class="nav-link disabled">
+                            <span class="round-tab disa_step_new" title="Tiến độ 6" style="border-width: 1px;">6</span>
+                        </a>
+                        <p style="font-weight: normal; color: rgb(153, 153, 153);">Công khai kết luận<br> xác minh</p>
+                    </li>`
+            }
+
+            $('#tiendo').empty()
+            $('#tiendo').append(row)
+
+        })
+    })
+</script>
+
+

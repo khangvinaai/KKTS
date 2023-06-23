@@ -1,0 +1,35 @@
+﻿@model KeKhaiTaiSanThuNhap.Models.NV_CapTaiKhoan_ChiTiet
+
+@{
+    ViewBag.Title = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>NV_CapTaiKhoan_ChiTiet</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.ID_CapTaiKhoan)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ID_CapTaiKhoan)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Ma_CanBo)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Ma_CanBo)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.ID }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

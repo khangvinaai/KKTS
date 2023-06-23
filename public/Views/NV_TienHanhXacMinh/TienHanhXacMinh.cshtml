@@ -1,0 +1,2117 @@
+﻿
+@{
+    ViewBag.Title = "TienHanhXacMinh";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    <style>
+        tr.shown td.details-control {
+            background: url(/Images/bg/details_close.png) no-repeat center center;
+        }
+
+        td.details-control {
+            background: url(/Images/bg/details_open.png) no-repeat center center;
+            cursor: pointer;
+        }
+
+        .BanKeKhai_Box {
+            border: 1px solid #e3e3e3;
+            border-radius: 3px;
+            padding: 15px;
+            margin: 20px;
+            box-shadow: 1px 1px 10px 1px #ccc !important;
+        }
+
+            .BanKeKhai_Box .BanKeKhai_Title {
+                padding-top: 5px;
+                text-transform: uppercase;
+                padding: 5px;
+                border-bottom: 1px solid #E4E5E7;
+                color: #026BF3;
+            }
+
+        .BanKeKhai {
+            padding-top: 10px;
+            border-radius: 3px;
+            margin-left: 20px;
+        }
+
+        #tabs .nav-tabs .nav-item.show .nav-link, .nav-tabs .nav-link.active {
+            color: #38a4f8;
+            background-color: transparent;
+            text-transform: uppercase;
+            border-color: transparent transparent #f3f3f3;
+            border-bottom: transparent;
+            font-weight: 400;
+            border-top: 1px solid #38a4f8 !important;
+            border-left: 1px solid #38a4f8 !important;
+            border-right: 1px solid #38a4f8 !important;
+        }
+
+        .nav-tabs .nav-link {
+            border: 1px solid transparent !IMPORTANT;
+            border-top-left-radius: 0.25rem;
+            border-top-right-radius: 0.25rem;
+        }
+
+        a.active, button.active, a:focus, button:focus, a:hover, button:hover {
+            color: #252525;
+            outline: none !important;
+            text-decoration: none !important;
+        }
+
+        .nav-link {
+            display: block;
+            padding: 0.5rem 1rem;
+        }
+
+        a, button {
+            outline: none !important;
+            text-decoration: none !important;
+            color: #99abb4;
+            transition: all 0.2s ease 0s;
+        }
+
+        .card {
+            background: #ffffff none repeat scroll 0 0;
+            margin: 0;
+            padding: 20px;
+            border: 0 solid #e7e7e7;
+            border-radius: 5px;
+            box-shadow: 0 5px 20px 0 rgb(0 0 0 / 15%);
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            position: relative;
+            display: -ms-flexbox;
+            display: flex;
+            -ms-flex-direction: column;
+            flex-direction: column;
+            min-width: 0;
+            word-wrap: break-word;
+            background-color: #fff;
+            background-clip: border-box;
+            border: 1px solid rgba(0,0,0,.125);
+            border-radius: 0.25rem;
+        }
+
+        .card-content-custom {
+            padding-bottom: 1%;
+            padding-left: 2%;
+            padding-right: 2%;
+            border-radius: 10px;
+            width: 100%;
+        }
+
+        .BanKeKhai-Word {
+            font-family: 'Times New Roman';
+            font-size: 12pt
+        }
+
+        p {
+            margin: 0pt
+        }
+
+        table {
+            margin-top: 0pt;
+            margin-bottom: 0pt
+        }
+
+        .Footer {
+            font-size: 12pt
+        }
+
+        .Header {
+            font-size: 12pt
+        }
+
+        span.FooterChar {
+            font-size: 12pt
+        }
+
+        span.HeaderChar {
+            font-size: 12pt
+        }
+    </style>
+
+    
+}
+
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-left">
+                    <li class="breadcrumb-item"><a href="@Url.Action("Index", "Home")">Trang chủ</a></li>
+                    <li class="breadcrumb-item">Thực hiện xác minh</li>
+                    <li class="breadcrumb-item active">Chi tiết kế hoạch</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="card text_ui_right_cus Card-control">
+                    <div class="row line_header" style="padding-bottom: 1%;padding-left: 2%;padding-right: 2%;padding-top: 1%;">
+                        <div class="col-md-6 title_ngtao clsTitleFrom" style="text-align: left; ">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label class="label-info">Tên Kế Hoạch: </label><span id="tenkehoach"></span>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="label-info">Năm kế hoạch: </label><span id="namkehoach"></span>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="label-info">Căn cứ quyết định số: </label><span id="cancuquyetdinh"></span>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="label-info">Ngày ra quyết định: </label><span id="ngayraquyetdinh"></span>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="label-info">Thời hạn xác minh: </label><span id="thoihanxacminh"></span>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="label-info">Tiến độ hiện tại: </label><span id="tiendohientai"></span>
+                                </div>
+                                <div class="col-md-12">
+                                    <label class="label-info">Nội dung xác minh: </label><span id="noidungxacminh"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 title_ngtao clsTitleFrom" style="text-align: right; ">
+                            <button class="btn btn-primary" id="btnCreateKeKhaiTaiSan" onclick="KetThucXacMinh(this)"><i class="fas fa-edit"></i> Kết thúc xác minh</button>
+                        </div>
+                    </div>
+                    <div style="padding-bottom: 1%; padding-left:2%; padding-right:2%;" class="row">
+                        <div class="col-md-12">
+                            <ul class="nav nav-tabs nav-justified">
+                                <li id="tab_patient_reception_status_wait" class="nav-item">
+                                    <a class="nav-link active" data-toggle="tab" href="#denghixacminh" id="tab_DeNghiXacMinh">Đề nghị xác minh</a>
+                                </li>
+                                <li id="tab_patient_reception_status_receive" class="nav-item">
+                                    <a class="nav-link" data-toggle="tab" href="#danhsachdenghi" id="tab_DanhSachDeNghi">Danh sách đề nghị</a>
+                                </li>
+                            </ul>
+                            <div class="tab-content">
+                                <div class="tab-pane active" id="denghixacminh">
+                                    <div class="row">
+                                        <div class="col-md-12" style="text-align: left; padding-top: 10px;">
+                                            <table id="example1" class="table table-bordered table-striped dataTable no-footer" role="grid" aria-describedby="example1_info" style="width:100%">
+                                                <thead>
+                                                    <tr>
+                                                        <th class="details-control sorting_disabled" rowspan="1" colspan="1" aria-label="" style="width: 2%;"></th>
+                                                        <th class="text-center sorting_disabled" rowspan="1" colspan="1" aria-label="STT" style="width: 3%;">STT</th>
+                                                        <th class="sorting" tabindex="0" aria-controls="example1" rowspan="1" colspan="1" style="width: 15%;">Họ và Tên</th>
+                                                        <th class="sorting" tabindex="0" aria-controls="example1" rowspan="1" colspan="1" style="width: 10%;">Ngày sinh</th>
+                                                        <th class="sorting" tabindex="0" aria-controls="example1" rowspan="1" colspan="1" style="width: 10%;">CCCD</th>
+                                                        <th class="sorting" tabindex="0" aria-controls="example1" rowspan="1" colspan="1" style="width: 30%;">Địa chỉ</th>
+                                                        <th class="sorting" tabindex="0" aria-controls="example1" rowspan="1" colspan="1" style="width: 15%;">Cơ quan</th>
+                                                        <th class="sorting" tabindex="0" aria-controls="example1" rowspan="1" colspan="1" style="width: 10%;">Chức vụ</th>
+                                                        <th class="text-center sorting_disabled" rowspan="1" colspan="1" aria-label="Trạng thái" style="width: 10%;">Trạng thái</th>
+                                                        <th class="sorting_disabled" rowspan="1" colspan="1" aria-label="" style="width: 3%;"></th>
+                                                    </tr>
+
+                                                </thead>
+                                                <tbody>
+                                                </tbody>
+                                            </table>
+                                            <div class="card-footer clearfix" style="height: 51px; width: 100%; background-color: white;">
+                                                <ul class="pagination pagination-sm m-0 float-right">
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="tab-pane" id="danhsachdenghi">
+
+                                    <div class="row" style="margin-top:10px;">
+                                        <div class="col-md-12" style="text-align: left; padding-top: 10px;">
+                                            <table id="example2" class="table table-bordered table-striped dataTable no-footer" role="grid" aria-describedby="example2_info" style="width:100%">
+                                                <thead>
+                                                    <tr role="row">
+                                                        <th class="text-center" style="width: 5%;">STT</th>
+                                                        <th style="width: 25%;">Mục tiêu đề nghị</th>
+                                                        <th style="width: 10%;">Cán bộ</th>
+                                                        <th style="width: 30%;">Nội dung đề nghị</th>
+                                                        <th style="width: 10%;">Đơn vị phối hợp</th>
+                                                        <th class="text-center" style="width: 10%;">Trạng thái</th>
+                                                        <th class="text-center" style="width: 10%;"></th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                </tbody>
+                                            </table>
+                                            <div class="card-footer clearfix" style="height: 51px; width: 100%; background-color: white;">
+                                                <ul class="pagination pagination-sm m-0 float-right">
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <div class="row card">
+            <div class="col-md-12" style="text-align: left; padding-top: 10px;">
+                <label class="Showheader-title">
+                    <label class="mt-0 header-title header-title-Edit" data-toggle="collapse" data-target="#collapseThongTinBanKeKhai" aria-expanded="false" aria-controls="collapseThongTinBanKeKhai">
+                        <i class="far fa-caret-square-down"></i>
+                        <span class="TitleForm clsShow cursor-pointer">Thông tin bản kê khai</span>
+                    </label>
+                </label>
+            </div>
+            <div class="col-md-12 collapse" id="collapseThongTinBanKeKhai">
+                <div>
+                    <div style="padding-bottom: 1%; padding-left:2%; padding-right:2%;" class="row">
+                        <div class="col-md-12">
+                            <ul class="nav nav-tabs nav-justified">
+                                <li id="tab_patient_reception_status_wait" class="nav-item">
+                                    <a class="nav-link active" data-toggle="tab" href="#banin">Bản In</a>
+                                </li>
+                                <li id="tab_patient_reception_status_wait" class="nav-item">
+                                    <a class="nav-link" data-toggle="tab" href="#thongtinchung">Thông tin chung</a>
+                                </li>
+                                <li id="tab_patient_reception_status_receive" class="nav-item">
+                                    <a class="nav-link" data-toggle="tab" href="#QuanSuDungDat">Quyền sử dụng đất</a>
+                                </li>
+                                <li id="tab_patient_reception_status_receive" class="nav-item">
+                                    <a class="nav-link" data-toggle="tab" href="#NhaOCongTrinh">Nhà ở/ Cộng trình</a>
+                                </li>
+                                <li id="tab_patient_reception_status_receive" class="nav-item">
+                                    <a class="nav-link" data-toggle="tab" href="#TaiSanGanLienVoiDat">Tài sản gắn liền với đất</a>
+                                </li>
+                                <li id="tab_patient_reception_status_receive" class="nav-item">
+                                    <a class="nav-link" data-toggle="tab" href="#KimLoaiQuyDaQuy">Kim loại quý/ Đá quý</a>
+                                </li>
+                                <li id="tab_patient_reception_status_receive" class="nav-item">
+                                    <a class="nav-link" data-toggle="tab" href="#Tien">Tiền</a>
+                                </li>
+                                <li id="tab_patient_reception_status_receive" class="nav-item">
+                                    <a class="nav-link" data-toggle="tab" href="#DauTu">Đầu tư</a>
+                                </li>
+                                <li id="tab_patient_reception_status_receive" class="nav-item">
+                                    <a class="nav-link" data-toggle="tab" href="#TaiSanKhac">Tài sản khác</a>
+                                </li>
+                                <li id="tab_patient_reception_status_receive" class="nav-item">
+                                    <a class="nav-link" data-toggle="tab" href="#TaiSanNuocNgoai">Tài sản nước ngoài</a>
+                                </li>
+                                <li id="tab_patient_reception_status_receive" class="nav-item">
+                                    <a class="nav-link" data-toggle="tab" href="#TaiKhoanNuocNgoai">Tài khoản nước ngoài</a>
+                                </li>
+                                <li id="tab_patient_reception_status_receive" class="nav-item">
+                                    <a class="nav-link" data-toggle="tab" href="#TongThuNhap">Tổng thu nhập giữa 2 lần kê khai</a>
+                                </li>
+                                <li id="tab_patient_reception_status_receive" class="nav-item">
+                                    <a class="nav-link" data-toggle="tab" href="#BienDongTSTN">Biến động tài sản và thu nhập</a>
+                                </li>
+                            </ul>
+                            <div class="tab-content">
+                                <div id="banin" class="tab-pane active">
+                                    <div class="row">
+                                        <div class="card-content-custom">
+                                            <div class="col-md-12" style="text-align: left; padding-top: 10px;">
+                                                <div class="BanInKeKhai">
+                                                    <div class="BanKeKhai-Word">
+                                                        <p style="margin-top:6pt; margin-bottom:14pt; text-align:center">
+                                                            <span style="font-weight:bold">PHỤ LỤC I</span>
+                                                        </p>
+                                                        <p style="margin-top:6pt; margin-bottom:14pt; text-align:center">
+                                                            <span>
+                                                                MẪU BẢN KÊ KHAI VÀ HƯỚNG DẪN VIỆC KÊ KHAI
+                                                                TÀI SẢN, THU NHẬP LẦN ĐẦU, KÊ KHAI HẰNG NĂM, KÊ KHAI PHỤC VỤ CÔNG TÁC CÁN BỘ
+                                                            </span><br /><span style="font-style:italic">
+                                                                (Kèm theo Nghị định số 130/2020/NĐ-CP ngày 30 tháng 10 năm 2020 của Chính
+                                                                phủ)
+                                                            </span>
+                                                        </p>
+                                                        <table cellspacing="0" cellpadding="0" style="width:100%; border-collapse:collapse">
+                                                            <tr>
+                                                                <td style="width:156.6pt; padding-right:5.4pt; padding-left:5.4pt; vertical-align:top">
+                                                                    <p style="margin-top:6pt; text-align:center; background-color:#ffffff">
+                                                                        <span style="font-weight:bold">TÊN CƠ QUAN ĐƠN VỊ</span><br /><span style="font-weight:bold">-------</span>
+                                                                    </p>
+                                                                </td>
+                                                                <td style="width:156.6pt; padding-right:5.4pt; padding-left:5.4pt; vertical-align:top">
+                                                                    <p style="margin-top:6pt; text-align:center; background-color:#ffffff">
+                                                                        <span style="font-weight:bold">CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM</span><br /><span style="font-weight:bold">Độc lập - Tự do - Hạnh phúc </span><br /><span style="font-weight:bold">---------------</span>
+                                                                    </p>
+                                                                </td>
+                                                            </tr>
+                                                        </table>
+                                                        <p style="margin-top:6pt; margin-bottom:14pt"><span>&#xa0;</span></p>
+                                                        <p style="margin-top:6pt; margin-bottom:14pt; text-align:center">
+                                                            <span style="font-weight:bold;">
+                                                                BẢN KÊ KHAI TÀI
+                                                                SẢN, THU NHẬP <span id="BanIn_TenKeKhai">.....</span>
+                                                            </span><span style="font-size:8pt; font-weight:bold; vertical-align:super">
+                                                                (1)
+                                                            </span><br /><span style="font-weight:bold; -aw-import:spaces">
+                                                                &#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;
+                                                            </span><span style="font-weight:bold" id="BanIn_NgayKeKhai">(Ngày..... tháng..... năm..... )</span><span style="font-size:8pt; font-weight:bold; vertical-align:super">(2) Ngày hoàn thành việc kê khai</span>
+                                                        </p>
+                                                        <p style="margin-top:6pt; margin-bottom:14pt; text-align:justify; font-size:14pt">
+                                                            <span style="font-size:9.33pt; vertical-align:super">
+                                                                (1) Người có nghĩa vụ kê khai tài sản, thu nhập ghi rõ
+                                                                phương thức kê khai theo quy định tại Điều 36 của Luật Phòng, chống tham nhũng (kê khai lần đầu hay kê
+                                                                khai hằng năm, kê khai phục vụ công tác cán bộ). Kê khai lần đầu thì không phải kê khai Mục III “Biến
+                                                                động tài sản, thu nhập; giải trình nguồn gốc của tài sản, thu nhập tăng thêm”, không tự ý thay đổi tên
+                                                                gọi, thứ tự các nội dung quy định tại mẫu này. Người kê khai phải ký ở từng trang và ký, ghi rõ họ tên ở
+                                                                trang cuối cùng của bản kê khai.
+                                                            </span><span style="font-size:9.33pt; text-decoration:underline; vertical-align:super">
+                                                                Người kê khai phải lập 02 bản
+                                                                kê khai để bàn giao cho cơ quan, tổ chức, đơn vị quản lý mình
+                                                            </span><span style="font-size:9.33pt; vertical-align:super">
+                                                                (01 bản bàn giao cho Cơ quan kiểm soát tài sản, thu
+                                                                nhập, 01 bản để phục vụ công tác quản lý của cơ quan, tổ chức, đơn vị và hoạt động công khai bản kê
+                                                                khai). Người của cơ quan, tổ chức, đơn vị quản lý người có nghĩa vụ kê khai khi tiếp nhận bản kê khai
+                                                                phải kiểm tra tính đầy đủ của các nội dung phải kê khai. Sau đó ký và ghi rõ họ tên, ngày tháng năm nhận
+                                                                bản kê khai.
+                                                            </span>
+                                                        </p>
+                                                        <p style="margin-top:6pt; margin-bottom:14pt"><span style="font-weight:bold">I. THÔNG TIN CHUNG</span></p>
+                                                        <p style="margin-top:6pt; margin-bottom:14pt">
+                                                            <span style="font-weight:bold">
+                                                                1. Người kê khai tài sản, thu
+                                                                nhập
+                                                            </span>
+                                                        </p>
+                                                        <p style="margin-top:6pt; margin-bottom:14pt">
+                                                            <span>
+                                                                - Họ và tên: <span id="BanIn_HoTen">........................................................</span> Ngày tháng năm sinh: <span id="BanIn_DoB">.............................</span>
+                                                            </span>
+                                                        </p>
+                                                        <p style="margin-top:6pt; margin-bottom:14pt">
+                                                            <span>
+                                                                - Chức vụ/chức danh công tác: <span id="BanIn_TenChucDanh">............................................................................................</span>
+                                                            </span>
+                                                        </p>
+                                                        <p style="margin-top:6pt; margin-bottom:14pt">
+                                                            <span>
+                                                                - Cơ quan/đơn vị công tác: <span id="BanIn_TenDonVi">...................................................................................................</span>
+                                                            </span>
+                                                        </p>
+                                                        <p style="margin-top:6pt; margin-bottom:14pt">
+                                                            <span>
+                                                                - Nơi thường trú: <span id="BanIn_NoiThuongTru">...................................................................................................................</span>
+                                                            </span>
+                                                        </p>
+                                                        <p style="margin-top:6pt; margin-bottom:14pt">
+                                                            <span>
+                                                                - Số căn cước công dân hoặc giấy chứng minh nhân
+                                                                dân
+                                                            </span><span style="font-size:8pt; vertical-align:super">(3)</span><span>
+                                                                :
+                                                                <span id="BanIn_CMND">..........................................</span> ngày cấp: <span id="BanIn_NgayCap">..............................</span> nơi cấp: 
+                                                                <span id="BanIn_NoiCap">..........................................</span>
+                                                            </span>
+                                                        </p>
+                                                        <p style="margin-top:6pt; margin-bottom:14pt" id="BanIn_VoHoacChong">
+                                                            <span style="font-weight:bold">
+                                                                2. Vợ hoặc chồng của người kê khai
+                                                                tài sản, thu nhập
+                                                            </span>
+                                                        </p>
+                                                        <p style="margin-top:6pt; margin-bottom:14pt" class="BanIn_Remove">
+                                                            <span>
+                                                                - Họ và
+                                                                tên:...................................................................... Ngày tháng năm sinh:
+                                                                .................
+                                                            </span>
+                                                        </p>
+                                                        <p style="margin-top:6pt; margin-bottom:14pt" class="BanIn_Remove">
+                                                            <span>
+                                                                - Nghề nghiệp:
+                                                                ......................................................................................................................
+                                                            </span>
+                                                        </p>
+                                                        <p style="margin-top:6pt; margin-bottom:14pt" class="BanIn_Remove">
+                                                            <span>- Nơi làm việc</span><span style="font-size:8pt; vertical-align:super">(4)</span><span>
+                                                                :
+                                                                ....................................................................................................................
+                                                            </span>
+                                                        </p>
+                                                        <p style="margin-top:6pt; margin-bottom:14pt" class="BanIn_Remove">
+                                                            <span>
+                                                                - Nơi thường trú:
+                                                                ...................................................................................................................
+                                                            </span>
+                                                        </p>
+                                                        <p style="margin-top:6pt; margin-bottom:14pt" class="BanIn_Remove">
+                                                            <span>
+                                                                - Số căn cước công dân hoặc giấy chứng minh nhân dân:
+                                                                .......................................................... ngày cấp...................................
+                                                                nơi cấp ...............................................
+                                                            </span>
+                                                        </p>
+                                                        <p style="margin-top:6pt; margin-bottom:14pt">
+                                                            <span style="font-weight:bold">
+                                                                3. Con chưa thành niên (con đẻ, con
+                                                                nuôi theo quy định của pháp luật)
+                                                            </span>
+                                                        </p>
+                                                        <p style="margin-top:6pt; margin-bottom:14pt"><span style="font-weight:bold">3.1. Con thứ nhất:</span></p>
+                                                        <p style="margin-top:6pt; margin-bottom:14pt">
+                                                            <span>
+                                                                - Họ và
+                                                                tên:.............................................................. Ngày tháng năm sinh:
+                                                                ..........................
+                                                            </span>
+                                                        </p>
+                                                        <p style="margin-top:6pt; margin-bottom:14pt">
+                                                            <span>
+                                                                - Nơi thường trú:
+                                                                ....................................................................................................................
+                                                            </span>
+                                                        </p>
+                                                        <p style="margin-top:6pt; margin-bottom:14pt">
+                                                            <span>
+                                                                - Số căn cước công dân hoặc giấy chứng minh nhân dân:
+                                                                ............................................................ ngày
+                                                                cấp.............................................. nơi cấp
+                                                                ..............................................
+                                                            </span>
+                                                        </p>
+                                                        <p style="margin-top:6pt; margin-bottom:14pt">
+                                                            <span style="font-weight:bold">
+                                                                3.2. Con thứ hai (trở
+                                                                lên):
+                                                            </span><span> Kê khai tương tự như con thứ nhất.</span>
+                                                        </p>
+                                                        <p style="margin-top:6pt; margin-bottom:14pt">
+                                                            <span style="font-weight:bold">
+                                                                II. THÔNG TIN MÔ TẢ VỀ TÀI
+                                                                SẢN
+                                                            </span><span style="font-size:8pt; font-weight:bold; vertical-align:super">(5) </span><span style="font-size:8pt; vertical-align:super">
+                                                                Tài sản phải kê khai là tài sản hiện có thuộc quyền sở hữu,
+                                                                quyền sử dụng của người kê khai, của vợ hoặc chồng và con đẻ, con nuôi (nếu có) chưa thành niên theo quy
+                                                                định của pháp luật.
+                                                            </span>
+                                                        </p>
+                                                        <p style="margin-top:6pt; margin-bottom:14pt">
+                                                            <span style="font-weight:bold">
+                                                                1. Quyền sử dụng thực tế đối với
+                                                                đất
+                                                            </span><span style="font-size:8pt; vertical-align:super">
+                                                                (6) Quyền sử dụng thực tế đối với đất là
+                                                                trên thực tế người kê khai có quyền sử dụng đối với thửa đất bao gồm đất đã được cấp hoặc chưa được cấp
+                                                                giấy chứng nhận quyền sử dụng đất.
+                                                            </span>
+                                                        </p>
+                                                        <p style="margin-top:6pt; margin-bottom:14pt">
+                                                            <span style="font-weight:bold">1.1. Đất ở</span><span>
+                                                            </span><span style="font-size:8pt; vertical-align:super">(7)</span><span> </span><span style="font-size:8pt; vertical-align:super">
+                                                                Đất ở là đất được sử dụng vào mục đích để ở theo quy định
+                                                                của pháp luật về đất đai. Trường hợp thửa đất được sử dụng cho nhiều mục đích khác nhau mà trong đó có
+                                                                đất ở thì kê khai vào mục đất ở
+                                                            </span><span>:</span>
+                                                        </p>
+                                                        <p style="margin-top:6pt; margin-bottom:14pt"><span style="font-weight:bold">1.1.1. Thửa thứ nhất:</span></p>
+                                                        <p style="margin-top:6pt; margin-bottom:14pt">
+                                                            <span>- Địa chỉ</span><span style="font-size:8pt; vertical-align:super">(8)</span><span> </span><span style="font-size:8pt; vertical-align:super">
+                                                                Ghi cụ thể số nhà (nếu có), ngõ, ngách, khu phố, thôn, xóm,
+                                                                bản; xã, phường, thị trấn; quận, huyện, thị xã, thành phố thuộc tỉnh; tỉnh, thành phố trực thuộc trung
+                                                                ương
+                                                            </span><span>
+                                                                :
+                                                                ..........................................................................................................................................................
+                                                            </span>
+                                                        </p>
+                                                        <p style="margin-top:6pt; margin-bottom:14pt">
+                                                            <span>- Diện tích</span><span style="font-size:8pt; vertical-align:super">(9)</span><span> </span><span style="font-size:8pt; vertical-align:super">
+                                                                Ghi diện tích đất (m2) theo giấy chứng nhận quyền sử dụng
+                                                                đất hoặc diện tích đo thực tế (nếu chưa có giấy chứng nhận quyền sử dụng đất)
+                                                            </span><span>
+                                                                :
+                                                                .................................................................................................................................
+                                                            </span>
+                                                        </p>
+                                                        <p style="margin-top:6pt; margin-bottom:14pt">
+                                                            <span>- Giá trị</span><span style="font-size:8pt; vertical-align:super">(10)</span><span> </span><span style="font-size:8pt; vertical-align:super">
+                                                                Giá trị là giá gốc tính bằng tiền Việt Nam, cụ thể: Trường
+                                                                hợp tài sản có được do mua, chuyển nhượng thì ghi số tiền thực tế phải trả khi mua hoặc nhận chuyển
+                                                                nhượng cộng với các khoản thuế, phí khác (nếu có); trường hợp tài sản có được do tự xây dựng, chế tạo,
+                                                                tôn tạo thì ghi tổng chi phí đã chi trả để hoàn thành việc xây dựng, chế tạo, tôn tạo cộng với phí, lệ
+                                                                phí (nếu có) tại thời điểm hình thành tài sản; trường hợp tài sản được cho, tặng, thừa kế thì ghi theo
+                                                                giá thị trường tại thời điểm được cho, tặng, thừa kế cộng với các khoản thuế, phí khác (nếu có) và ghi
+                                                                “giá trị ước tính”; trường hợp không thể ước tính giá trị tài sản vì các lý do như tài sản sử dụng đã
+                                                                quá lâu hoặc không có giao dịch đối với tài sản tương tự thì ghi “không xác định được giá trị” và ghi rõ
+                                                                lý do
+                                                            </span><span>
+                                                                :
+                                                                ..............................................................................................................................
+                                                            </span>
+                                                        </p>
+                                                        <p style="margin-top:6pt; margin-bottom:14pt">
+                                                            <span>- Giấy chứng nhận quyền sử dụng</span><span style="font-size:8pt; vertical-align:super">(11)</span><span> </span><span style="font-size:8pt; vertical-align:super">
+                                                                Nếu thửa đất đã được cấp giấy chứng nhận quyền sử dụng đất
+                                                                thì ghi số giấy chứng nhận quyền sử dụng đất và tên người được cấp hoặc tên người đại diện (nếu là giấy
+                                                                chứng nhận quyền sử dụng đất chung của nhiều người); nếu thửa đất chưa được cấp giấy chứng nhận quyền sử
+                                                                dụng đất thì ghi “chưa được cấp giấy chứng nhận quyền sử dụng đất”:
+                                                            </span><span>
+                                                                ...................................................................................
+                                                            </span>
+                                                        </p>
+                                                        <p style="margin-top:6pt; margin-bottom:14pt">
+                                                            <span>- Thông tin khác (nếu có)</span><span style="font-size:8pt; vertical-align:super">(12)</span><span> </span><span style="font-size:8pt; vertical-align:super">
+                                                                Ghi cụ thể về tình trạng thực tế quản lý, sử dụng (ví dụ như
+                                                                người kê khai đứng tên đăng ký quyền sử dụng, quyền sở hữu nhưng thực tế là của người khác); tình trạng
+                                                                chuyển nhượng, sang tên và hiện trạng sử dụng như cho thuê, cho mượn,...
+                                                            </span><span>
+                                                                :
+                                                                ..................................................................................................
+                                                            </span>
+                                                        </p>
+                                                        <p style="margin-top:6pt; margin-bottom:14pt">
+                                                            <span style="font-weight:bold">
+                                                                1.1.2. Thửa thứ 2 (trở
+                                                                lên):
+                                                            </span><span> Kê khai tương tự như thửa thứ nhất.</span>
+                                                        </p>
+                                                        <p style="margin-top:6pt; margin-bottom:14pt">
+                                                            <span style="font-weight:bold">1.2. Các loại đất khác </span><span style="font-size:8pt; vertical-align:super">(13)</span><span> </span><span style="font-size:8pt; vertical-align:super">
+                                                                Kê khai các loại đất có mục đích sử dụng không phải là đất ở
+                                                                theo quy định của Luật Đất đai:
+                                                            </span>
+                                                        </p>
+                                                        <p style="margin-top:6pt; margin-bottom:14pt"><span style="font-weight:bold">1.2.1. Thửa thứ nhất:</span></p>
+                                                        <p style="margin-top:6pt; margin-bottom:14pt">
+                                                            <span>
+                                                                - Loại đất:................................ Địa chỉ:
+                                                                ..................................................................................
+                                                            </span>
+                                                        </p>
+                                                        <p style="margin-top:6pt; margin-bottom:14pt">
+                                                            <span>
+                                                                - Diện tích:
+                                                                ..............................................................................................................................
+                                                            </span>
+                                                        </p>
+                                                        <p style="margin-top:6pt; margin-bottom:14pt">
+                                                            <span>- Giá trị</span><span style="font-size:8pt; vertical-align:super">(10)</span><span>
+                                                                :
+                                                                .............................................................................................................................
+                                                            </span>
+                                                        </p>
+                                                        <p style="margin-top:6pt; margin-bottom:14pt">
+                                                            <span>
+                                                                - Giấy chứng nhận quyền sử dụng:
+                                                                ......................................................................................
+                                                            </span>
+                                                        </p>
+                                                        <p style="margin-top:6pt; margin-bottom:14pt">
+                                                            <span>
+                                                                - Thông tin khác (nếu có):
+                                                                .....................................................................................................
+                                                            </span>
+                                                        </p>
+                                                        <p style="margin-top:6pt; margin-bottom:14pt">
+                                                            <span style="font-weight:bold">
+                                                                1.2.2. Thửa thứ 2 (trở
+                                                                lên)
+                                                            </span><span>: Kê khai tương tự như thửa thứ nhất.</span>
+                                                        </p>
+                                                        <p style="margin-top:6pt; margin-bottom:14pt">
+                                                            <span style="font-weight:bold">
+                                                                2. Nhà ở, công trình xây
+                                                                dựng:
+                                                            </span>
+                                                        </p>
+                                                        <p style="margin-top:6pt; margin-bottom:14pt"><span style="font-weight:bold">2.1. Nhà ở:</span></p>
+                                                        <p style="margin-top:6pt; margin-bottom:14pt">
+                                                            <span style="font-weight:bold">2.1.1. Nhà thứ nhất</span><span>
+                                                                :
+                                                                ...............................................................................................................
+                                                            </span>
+                                                        </p>
+                                                        <p style="margin-top:6pt; margin-bottom:14pt">
+                                                            <span>
+                                                                - Địa chỉ:
+                                                                .................................................................................................................................
+                                                            </span>
+                                                        </p>
+                                                        <p style="margin-top:6pt; margin-bottom:14pt">
+                                                            <span>- Loại nhà</span><span style="font-size:8pt; vertical-align:super">
+                                                                (14) Ghi “căn hộ” nếu là căn hộ trong nhà tập thể, chung cư;
+                                                                ghi “nhà ở riêng lẻ” nếu là nhà được xây dựng trên thửa đất riêng biệt
+                                                            </span><span>
+                                                                :
+                                                                ..........................................................................................................................
+                                                            </span>
+                                                        </p>
+                                                        <p style="margin-top:6pt; margin-bottom:14pt">
+                                                            <span>- Diện tích sử dụng </span><span style="font-size:8pt; vertical-align:super">(15)</span><span> </span><span style="font-size:8pt; vertical-align:super">
+                                                                Ghi tổng diện tích (m2) sàn xây dựng của tất cả các tầng của
+                                                                nhà ở riêng lẻ, biệt thự bao gồm cả các tầng hầm, tầng nửa hầm, tầng kỹ thuật, tầng áp mái và tầng mái
+                                                                tum. Nếu là căn hộ thì diện tích được ghi theo giấy chứng nhận quyền sở hữu hoặc hợp đồng mua, hợp đồng
+                                                                thuê của nhà nước.:
+                                                            </span><span>
+                                                                ..........................................................................................................
+                                                            </span>
+                                                        </p>
+                                                        <p style="margin-top:6pt; margin-bottom:14pt">
+                                                            <span>- Giá trị</span><span style="font-size:8pt; vertical-align:super">(10)</span><span> </span><span style="font-size:8pt; vertical-align:super">
+                                                                Giá trị là giá gốc tính bằng tiền Việt Nam, cụ thể: Trường
+                                                                hợp tài sản có được do mua, chuyển nhượng thì ghi số tiền thực tế phải trả khi mua hoặc nhận chuyển
+                                                                nhượng cộng với các khoản thuế, phí khác (nếu có); trường hợp tài sản có được do tự xây dựng, chế tạo,
+                                                                tôn tạo thì ghi tổng chi phí đã chi trả để hoàn thành việc xây dựng, chế tạo, tôn tạo cộng với phí, lệ
+                                                                phí (nếu có) tại thời điểm hình thành tài sản; trường hợp tài sản được cho, tặng, thừa kế thì ghi theo
+                                                                giá thị trường tại thời điểm được cho, tặng, thừa kế cộng với các khoản thuế, phí khác (nếu có) và ghi
+                                                                “giá trị ước tính”; trường hợp không thể ước tính giá trị tài sản vì các lý do như tài sản sử dụng đã
+                                                                quá lâu hoặc không có giao dịch đối với tài sản tương tự thì ghi “không xác định được giá trị” và ghi rõ
+                                                                lý do
+                                                            </span><span>
+                                                                :
+                                                                ..............................................................................................................................
+                                                            </span>
+                                                        </p>
+                                                        <p style="margin-top:6pt; margin-bottom:14pt">
+                                                            <span>
+                                                                - Giấy chứng nhận quyền sở hữu:
+                                                                .........................................................................................
+                                                            </span>
+                                                        </p>
+                                                        <p style="margin-top:6pt; margin-bottom:14pt">
+                                                            <span>
+                                                                - Thông tin khác (nếu có):
+                                                                ......................................................................................................
+                                                            </span>
+                                                        </p>
+                                                        <p style="margin-top:6pt; margin-bottom:14pt">
+                                                            <span style="font-weight:bold">
+                                                                2.1.2. Nhà thứ 2 (trở
+                                                                lên)
+                                                            </span><span>: Kê khai tương tự như nhà thứ nhất.</span>
+                                                        </p>
+                                                        <p style="margin-top:6pt; margin-bottom:14pt">
+                                                            <span style="font-weight:bold">
+                                                                2.2. Công trình xây dựng
+                                                                khác
+                                                            </span><span style="font-size:8pt; vertical-align:super">(16)</span><span> </span><span style="font-size:8pt; vertical-align:super">
+                                                                Công trình xây dựng khác là công trình xây dựng không phải
+                                                                nhà ở
+                                                            </span><span>:</span>
+                                                        </p>
+                                                        <p style="margin-top:6pt; margin-bottom:14pt">
+                                                            <span style="font-weight:bold">
+                                                                2.2.1. Công trình thứ
+                                                                nhất
+                                                            </span><span>:</span>
+                                                        </p>
+                                                        <p style="margin-top:6pt; margin-bottom:14pt">
+                                                            <span>
+                                                                - Tên công trình:........................................
+                                                                Địa chỉ: ...............................................................
+                                                            </span>
+                                                        </p>
+                                                        <p style="margin-top:6pt; margin-bottom:14pt">
+                                                            <span>
+                                                                - Loại công
+                                                                trình:............................................ Cấp công trình:
+                                                                ..............................................
+                                                            </span>
+                                                        </p>
+                                                        <p style="margin-top:6pt; margin-bottom:14pt">
+                                                            <span>
+                                                                - Diện tích:
+                                                                .............................................................................................................................
+                                                            </span>
+                                                        </p>
+                                                        <p style="margin-top:6pt; margin-bottom:14pt">
+                                                            <span>- Giá trị </span><span style="font-size:8pt; vertical-align:super">(10)</span><span>
+                                                                :
+                                                                .............................................................................................................................
+                                                            </span>
+                                                        </p>
+                                                        <p style="margin-top:6pt; margin-bottom:14pt">
+                                                            <span>
+                                                                - Giấy chứng nhận quyền sở hữu:
+                                                                .........................................................................................
+                                                            </span>
+                                                        </p>
+                                                        <p style="margin-top:6pt; margin-bottom:14pt">
+                                                            <span>
+                                                                - Thông tin khác (nếu có):
+                                                                ......................................................................................................
+                                                            </span>
+                                                        </p>
+                                                        <p style="margin-top:6pt; margin-bottom:14pt">
+                                                            <span style="font-weight:bold">
+                                                                2.2.2. Công trình thứ 2 (trở
+                                                                lên)
+                                                            </span><span>: Kê khai tương tự như công trình thứ nhất.</span>
+                                                        </p>
+                                                        <p style="margin-top:6pt; margin-bottom:14pt">
+                                                            <span style="font-weight:bold">
+                                                                3. Tài sản khác gắn liền với
+                                                                đất
+                                                            </span><span style="font-size:8pt; font-weight:bold; vertical-align:super">(17)</span><span>
+                                                            </span><span style="font-size:8pt; vertical-align:super">
+                                                                Kê khai những tài sản gắn liền với đất mà có tổng
+                                                                giá trị mỗi loại ước tính từ 50 triệu trở lên
+                                                            </span><span style="font-weight:bold">:</span>
+                                                        </p>
+                                                        <p style="margin-top:6pt; margin-bottom:14pt">
+                                                            <span style="font-weight:bold">3.1. Cây lâu năm</span><span style="font-size:8pt; vertical-align:super">(18)</span><span> </span><span style="font-size:8pt; vertical-align:super">
+                                                                Cây lâu năm là cây trồng một lần, sinh trưởng và cho thu
+                                                                hoạch trong nhiều năm gồm: cây công nghiệp lâu năm, cây ăn quả lâu năm, cây lâu năm lấy gỗ, cây tạo
+                                                                cảnh, bóng mát. Cây mà thuộc rừng sản xuất thì không ghi vào mục này:
+                                                            </span>
+                                                        </p>
+                                                        <p style="margin-top:6pt; margin-bottom:14pt">
+                                                            <span>
+                                                                - Loại cây:.................................. Số
+                                                                lượng:........................... Giá trị
+                                                            </span><span style="font-size:8pt; vertical-align:super">(10)</span><span>: ..................................</span>
+                                                        </p>
+                                                        <p style="margin-top:6pt; margin-bottom:14pt">
+                                                            <span>
+                                                                - Loại cây:.................................. Số
+                                                                lượng:........................... Giá trị
+                                                            </span><span style="font-size:8pt; vertical-align:super">(10)</span><span>: ..................................</span>
+                                                        </p>
+                                                        <p style="margin-top:6pt; margin-bottom:14pt">
+                                                            <span style="font-weight:bold">3.2. Rừng sản xuất</span><span style="font-size:8pt; font-weight:bold; vertical-align:super">(</span><span style="font-size:8pt; vertical-align:super">19)</span><span> </span><span style="font-size:8pt; vertical-align:super">Rừng sản xuất là rừng trồng</span><span>:</span>
+                                                        </p>
+                                                        <p style="margin-top:6pt; margin-bottom:14pt">
+                                                            <span>
+                                                                - Loại rừng:.......................................... Diện
+                                                                tích:................................. Giá trị
+                                                            </span><span style="font-size:8pt; vertical-align:super">(10)</span><span>: ...................</span>
+                                                        </p>
+                                                        <p style="margin-top:6pt; margin-bottom:14pt">
+                                                            <span>
+                                                                - Loại rừng:.......................................... Diện
+                                                                tích:................................. Giá trị
+                                                            </span><span style="font-size:8pt; vertical-align:super">(10)</span><span>: ...................</span>
+                                                        </p>
+                                                        <p style="margin-top:6pt; margin-bottom:14pt">
+                                                            <span style="font-weight:bold">
+                                                                3.3. Vật kiến trúc khác gắn liền
+                                                                với đất
+                                                            </span><span>:</span>
+                                                        </p>
+                                                        <p style="margin-top:6pt; margin-bottom:14pt">
+                                                            <span>
+                                                                - Tên gọi:.................................... Số
+                                                                lượng:............................. Giá trị
+                                                            </span><span style="font-size:8pt; vertical-align:super">(10)</span><span>: ................................</span>
+                                                        </p>
+                                                        <p style="margin-top:6pt; margin-bottom:14pt">
+                                                            <span>
+                                                                - Tên gọi:.................................... Số
+                                                                lượng:............................. Giá trị
+                                                            </span><span style="font-size:8pt; vertical-align:super">(10)</span><span>: ................................</span>
+                                                        </p>
+                                                        <p style="margin-top:6pt; margin-bottom:14pt">
+                                                            <span style="font-weight:bold">
+                                                                4. Vàng, kim cương, bạch kim và các
+                                                                kim loại quý, đá quý khác có tổng giá trị từ 50 triệu đồng trở lên
+                                                            </span><span style="font-size:8pt; vertical-align:super">(20)</span><span> </span><span style="font-size:8pt; vertical-align:super">
+                                                                Ghi các loại vàng, kim cương, bạch kim và các kim loại quý,
+                                                                đá quý khác có tổng giá trị từ 50 triệu đồng trở lên
+                                                            </span>
+                                                        </p>
+                                                        <p style="margin-top:6pt; margin-bottom:14pt">
+                                                            <span style="font-weight:bold">
+                                                                5. Tiền (tiền Việt Nam, ngoại tệ)
+                                                                gồm tiền mặt, tiền cho vay, tiền trả trước, tiền gửi cá nhân, tổ chức trong nước, tổ chức nước ngoài tại
+                                                                Việt Nam mà tổng giá trị quy đổi từ 50 triệu đồng trở lên
+                                                            </span><span style="font-size:8pt; vertical-align:super">(21)</span><span> </span><span style="font-size:8pt; vertical-align:super">
+                                                                Tiền (tiền Việt Nam, ngoại tệ) gồm tiền mặt, tiền cho vay,
+                                                                tiền trả trước, tiền gửi cá nhân, tổ chức trong nước, tổ chức nước ngoài tại Việt Nam mà tổng giá trị
+                                                                quy đổi từ 50 triệu đồng trở lên. Nếu ngoại tệ thì ghi số lượng và số tiền quy đổi ra tiền Việt
+                                                                Nam
+                                                            </span>
+                                                        </p>
+                                                        <p style="margin-top:6pt; margin-bottom:14pt">
+                                                            <span style="font-weight:bold">
+                                                                6. Cổ phiếu, trái phiếu, vốn góp,
+                                                                các loại giấy tờ có giá khác mà tổng giá trị từ 50 triệu đồng trở lên (khai theo từng loại):
+                                                            </span>
+                                                        </p>
+                                                        <p style="margin-top:6pt; margin-bottom:14pt"><span>6.1. Cổ phiếu:</span></p>
+                                                        <p style="margin-top:6pt; margin-bottom:14pt">
+                                                            <span>
+                                                                - Tên cổ phiếu:............................................
+                                                                Số lượng:.......................... Giá trị: .......................
+                                                            </span>
+                                                        </p>
+                                                        <p style="margin-top:6pt; margin-bottom:14pt">
+                                                            <span>
+                                                                - Tên cổ phiếu:............................................
+                                                                Số lượng:.......................... Giá trị: .......................
+                                                            </span>
+                                                        </p>
+                                                        <p style="margin-top:6pt; margin-bottom:14pt"><span>6.2. Trái phiếu:</span></p>
+                                                        <p style="margin-top:6pt; margin-bottom:14pt">
+                                                            <span>
+                                                                - Tên trái phiếu:...........................................
+                                                                Số lượng:........................... Giá trị: ......................
+                                                            </span>
+                                                        </p>
+                                                        <p style="margin-top:6pt; margin-bottom:14pt">
+                                                            <span>
+                                                                - Tên trái phiếu:...........................................
+                                                                Số lượng:........................... Giá trị: ......................
+                                                            </span>
+                                                        </p>
+                                                        <p style="margin-top:6pt; margin-bottom:14pt">
+                                                            <span>6.3. Vốn góp</span><span style="font-size:8pt; vertical-align:super">(22)</span><span> </span><span style="font-size:8pt; vertical-align:super">
+                                                                Ghi từng hình thức góp vốn đầu tư kinh doanh, cả trực tiếp
+                                                                và gián tiếp
+                                                            </span><span>:</span>
+                                                        </p>
+                                                        <p style="margin-top:6pt; margin-bottom:14pt">
+                                                            <span>
+                                                                - Hình thức góp
+                                                                vốn:......................................................... Giá
+                                                                trị:.............................................
+                                                            </span>
+                                                        </p>
+                                                        <p style="margin-top:6pt; margin-bottom:14pt">
+                                                            <span>
+                                                                - Hình thức góp
+                                                                vốn:......................................................... Giá
+                                                                trị:.............................................
+                                                            </span>
+                                                        </p>
+                                                        <p style="margin-top:6pt; margin-bottom:14pt">
+                                                            <span>6.4. Các loại giấy tờ có giá khác</span><span style="font-size:8pt; vertical-align:super">(23)</span><span> </span><span style="font-size:8pt; vertical-align:super">
+                                                                Các loại giấy tờ có giá khác như chứng chỉ quỹ, kỳ phiếu,
+                                                                séc,...
+                                                            </span><span>: </span>
+                                                        </p>
+                                                        <p style="margin-top:6pt; margin-bottom:14pt">
+                                                            <span>
+                                                                - Tên giấy tờ có giá:
+                                                                ............................................................ Giá
+                                                                trị:..........................................
+                                                            </span>
+                                                        </p>
+                                                        <p style="margin-top:6pt; margin-bottom:14pt">
+                                                            <span>
+                                                                - Tên giấy tờ có
+                                                                giá:............................................................. Giá
+                                                                trị:..........................................
+                                                            </span>
+                                                        </p>
+                                                        <p style="margin-top:6pt; margin-bottom:14pt">
+                                                            <span style="font-weight:bold">
+                                                                7. Tài sản khác mà mỗi tài sản có
+                                                                giá trị từ 50 triệu đồng trở lên, bao gồm:
+                                                            </span>
+                                                        </p>
+                                                        <p style="margin-top:6pt; margin-bottom:14pt">
+                                                            <span>
+                                                                7.1. Tài sản theo quy định của pháp luật phải đăng ký sử
+                                                                dụng và được cấp giấy đăng ký (tầu bay, tầu thủy, thuyền, máy ủi, máy xúc, ô tô, mô tô, xe gắn
+                                                                máy...)
+                                                            </span><span style="font-size:8pt; vertical-align:super">(24)</span><span> </span><span style="font-size:8pt; vertical-align:super">
+                                                                Ô tô, mô tô, xe gắn máy, xe máy (máy ủi, máy xúc, các loại
+                                                                xe máy khác), tầu thủy, tàu bay, thuyền và những động sản khác mà theo quy định phải đăng ký sử dụng và
+                                                                được cấp giấy đăng ký có giá trị mỗi loại từ 50 triệu đồng trở lên.
+                                                            </span><span>:</span>
+                                                        </p>
+                                                        <p style="margin-top:6pt; margin-bottom:14pt">
+                                                            <span>
+                                                                - Tên tài sản:................................... Số đăng
+                                                                ký:................................ Giá trị: ..........................
+                                                            </span>
+                                                        </p>
+                                                        <p style="margin-top:6pt; margin-bottom:14pt">
+                                                            <span>
+                                                                - Tên tài sản:................................... Số đăng
+                                                                ký:................................ Giá trị: ..........................
+                                                            </span>
+                                                        </p>
+                                                        <p style="margin-top:6pt; margin-bottom:14pt">
+                                                            <span>
+                                                                7.2. Tài sản khác (đồ mỹ nghệ, đồ thờ cúng, bàn ghế, cây
+                                                                cảnh, tranh, ảnh, các loại tài sản khác)
+                                                            </span><span style="font-size:8pt; vertical-align:super">(25)</span><span> </span><span style="font-size:8pt; vertical-align:super">
+                                                                Các loại tài sản khác như cây cảnh, bàn ghế, tranh ảnh và
+                                                                các loại tài sản khác mà giá trị quy đổi mỗi loại từ 50 triệu đồng trở lên
+                                                            </span><span>:</span>
+                                                        </p>
+                                                        <p style="margin-top:6pt; margin-bottom:14pt">
+                                                            <span>
+                                                                - Tên tài sản:................................. Năm bắt đầu
+                                                                sở hữu:.......................... Giá trị: ...................
+                                                            </span>
+                                                        </p>
+                                                        <p style="margin-top:6pt; margin-bottom:14pt">
+                                                            <span>
+                                                                - Tên tài sản:................................. Năm bắt đầu
+                                                                sở hữu:.......................... Giá trị: ...................
+                                                            </span>
+                                                        </p>
+                                                        <p style="margin-top:6pt; margin-bottom:14pt">
+                                                            <span style="font-weight:bold">8. Tài sản ở nước ngoài</span><span style="font-size:8pt; font-weight:bold; vertical-align:super">(26)</span><span style="font-size:8pt; vertical-align:super">
+                                                                Kê khai tài sản ở nước ngoài phải kê khai tất cả loại tài
+                                                                sản nằm ngoài lãnh thổ Việt Nam, tương tự mục 1 đến mục 7 của Phần II và nêu rõ tài sản đang ở nước
+                                                                nào
+                                                            </span><span style="font-size:8pt; font-weight:bold; vertical-align:super">.</span>
+                                                        </p>
+                                                        <p style="margin-top:6pt; margin-bottom:14pt">
+                                                            <span style="font-weight:bold">
+                                                                9. Tài khoản ở nước
+                                                                ngoài
+                                                            </span><span style="font-size:8pt; font-weight:bold; vertical-align:super">(27)</span><span>
+                                                            </span><span style="font-size:8pt; vertical-align:super">
+                                                                Kê khai các tài khoản mở tại ngân hàng ở nước
+                                                                ngoài; các tài khoản khác mở ở nước ngoài không phải là tài khoản ngân hàng nhưng có thể thực hiện các
+                                                                giao dịch bằng tiền, tài sản (như tài khoản mở ở các công ty chứng khoán nước ngoài, sàn giao dịch vàng
+                                                                nước ngoài, ví điện tử ở nước ngoài...).
+                                                            </span><span style="font-weight:bold">:</span>
+                                                        </p>
+                                                        <p style="margin-top:6pt; margin-bottom:14pt">
+                                                            <span>
+                                                                - Tên chủ tài khoản:
+                                                                ....................................................., số tài khoản:
+                                                                .....................................
+                                                            </span>
+                                                        </p>
+                                                        <p style="margin-top:6pt; margin-bottom:14pt">
+                                                            <span>
+                                                                - Tên ngân hàng, chi nhánh ngân hàng, tổ chức nơi mở tài
+                                                                khoản: ........................................
+                                                            </span>
+                                                        </p>
+                                                        <p style="margin-top:6pt; margin-bottom:14pt">
+                                                            <span style="font-weight:bold">
+                                                                10. Tổng thu nhập giữa hai lần kê
+                                                                khai
+                                                            </span><span style="font-size:8pt; font-weight:bold; vertical-align:super">(28)</span><span>
+                                                            </span>
+                                                        </p>
+                                                        <p style="margin-top:6pt; margin-bottom:14pt; text-indent:14.2pt">
+                                                            <span>
+                                                                Kê khai riêng tổng thu nhập của người kê
+                                                                khai, vợ hoặc chồng, con chưa thành niên. Trong trường hợp có những khoản thu nhập chung mà không thể
+                                                                tách riêng thì ghi tổng thu nhập chung vào phần các khoản thu nhập chung; nếu có thu nhập bằng ngoại tệ,
+                                                                tài sản khác thì quy đổi thành tiền Việt Nam (gồm các khoản lương, phụ cấp, trợ cấp, thưởng, thù lao,
+                                                                cho, tặng, biếu, thừa kế, tiền thu do bán tài sản, thu nhập hưởng lợi từ các khoản đầu tư, phát minh,
+                                                                sáng chế, các khoản thu nhập khác).
+                                                            </span>
+                                                        </p>
+                                                        <p style="margin-top:6pt; margin-bottom:14pt; text-indent:14.2pt; text-align:justify">
+                                                            <span>
+                                                                Đối với kê khai lần
+                                                                đầu thì không phải kê khai tổng thu nhập giữa 02 lần kê khai. Đối với lần kê khai thứ hai trở đi được
+                                                                xác định từ ngày kê khai liền kề trước đó đến ngày trước ngày kê khai.
+                                                            </span>
+                                                        </p>
+                                                        <p style="margin-top:6pt; margin-bottom:14pt">
+                                                            <span>
+                                                                - Tổng thu nhập của người kê khai:
+                                                                .........................................................................................
+                                                            </span>
+                                                        </p>
+                                                        <p style="margin-top:6pt; margin-bottom:14pt">
+                                                            <span>
+                                                                - Tổng thu nhập của vợ (hoặc chồng):
+                                                                .....................................................................................
+                                                            </span>
+                                                        </p>
+                                                        <p style="margin-top:6pt; margin-bottom:14pt">
+                                                            <span>
+                                                                - Tổng thu nhập của con chưa thành niên:
+                                                                ..............................................................................
+                                                            </span>
+                                                        </p>
+                                                        <p style="margin-top:6pt; margin-bottom:14pt">
+                                                            <span>
+                                                                - Tổng các khoản thu nhập chung:
+                                                                ..........................................................................................
+                                                            </span>
+                                                        </p>
+                                                        <p style="margin-top:6pt; margin-bottom:14pt">
+                                                            <span style="font-weight:bold">
+                                                                III. BIẾN ĐỘNG TÀI SẢN, THU NHẬP;
+                                                                GIẢI TRÌNH NGUỒN GỐC CỦA TÀI SẢN, THU NHẬP TĂNG THÊM
+                                                            </span><span style="font-size:8pt; font-weight:bold; vertical-align:super">(29)</span><span> </span><span style="font-size:8pt; vertical-align:super">
+                                                                Kê khai tài sản tăng hoặc giảm tại thời điểm kê khai so với
+                                                                tài sản đã kê khai trước đó và giải trình nguồn gốc của tài sản tăng thêm, nguồn hình thành thu nhập
+                                                                trong kỳ áp dụng với lần kê khai thứ hai trở đi. Nếu không có tăng, giảm tài sản thì ghi rõ là “Không có
+                                                                biến động” ngay sau tên của Mục III
+                                                            </span><span style="font-weight:bold; font-style:italic; -aw-import:spaces">&#xa0;</span><span style="font-weight:bold; font-style:italic">
+                                                                (nếu là kê khai tài sản, thu nhập lần đầu thì không phải kê
+                                                                khai Mục này):
+                                                            </span>
+                                                        </p>
+                                                        <table cellspacing="0" cellpadding="0"
+                                                               style="width:106.88%; border:1pt solid #000000; border-collapse:collapse">
+                                                            <thead>
+                                                                <tr>
+                                                                    <td rowspan="2" style="width:43.48%; background-color:#ffffff">
+                                                                        <p style="margin-top:6pt; text-align:center">
+                                                                            <span style="font-weight:bold">
+                                                                                Loại tài sản, thu
+                                                                                nhập
+                                                                            </span>
+                                                                        </p>
+                                                                    </td>
+                                                                    <td colspan="2" style="border-left-style:solid; border-left-width:1pt; background-color:#ffffff">
+                                                                        <p style="margin-top:6pt">
+                                                                            <span style="font-weight:bold">Tăng </span><span style="font-size:8pt; font-weight:bold; vertical-align:super">(30)</span><span>
+                                                                            </span><span style="font-size:8pt; vertical-align:super">
+                                                                                Nếu tài sản tăng thì ghi dấu cộng
+                                                                                (+) và số lượng tài sản tăng vào cột “số lượng tài sản”, ghi giá trị tài sản tăng vào
+                                                                                cột “giá trị tài sản, thu nhập” và giải thích nguyên nhân tăng vào cột “nội dung giải
+                                                                                trình nguồn gốc của tài sản tăng thêm và tổng thu nhập”
+                                                                            </span><span style="font-weight:bold">/ giảm </span><span style="font-size:8pt; font-weight:bold; vertical-align:super">(31)</span><span>
+                                                                            </span><span style="font-size:8pt; vertical-align:super">
+                                                                                Nếu tài sản giảm thì ghi dấu trừ
+                                                                                (-) vào cột “số lượng tài sản”, ghi giá trị tài sản giảm vào cột “giá trị tài sản, thu
+                                                                                nhập” và giải thích nguyên nhân giảm tài sản vào cột “Nội dung giải trình nguồn gốc của
+                                                                                tài sản tăng thêm và tổng thu nhập”
+                                                                            </span>
+                                                                        </p>
+                                                                    </td>
+                                                                    <td style="width:15.46%; border-left-style:solid; border-left-width:1pt; background-color:#ffffff">
+                                                                        <p style="margin-top:6pt; text-align:center">
+                                                                            <span style="font-weight:bold">
+                                                                                Nội dung giải trình
+                                                                                nguồn gốc của tài sản tăng thêm và tổng thu nhập
+                                                                            </span>
+                                                                        </p>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td style="width:18.54%; border-top-style:solid; border-top-width:1pt; border-left-style:solid; border-left-width:1pt; background-color:#ffffff">
+                                                                        <p style="margin-top:6pt; text-align:center">
+                                                                            <span style="font-weight:bold">
+                                                                                Số lượng tài
+                                                                                sản
+                                                                            </span>
+                                                                        </p>
+                                                                    </td>
+                                                                    <td style="width:22.5%; border-top-style:solid; border-top-width:1pt; border-left-style:solid; border-left-width:1pt; background-color:#ffffff">
+                                                                        <p style="margin-top:6pt; text-align:center">
+                                                                            <span style="font-weight:bold">
+                                                                                Giá trị tài sản, thu
+                                                                                nhập
+                                                                            </span>
+                                                                        </p>
+                                                                    </td>
+                                                                    <td style="width:15.46%; border-top-style:solid; border-top-width:1pt; border-left-style:solid; border-left-width:1pt">
+                                                                        <p style="margin-top:6pt; text-align:center"><span style="-aw-import:ignore">&#xa0;</span></p>
+                                                                    </td>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                <tr>
+                                                                    <td style="width:43.48%; border-top-style:solid; border-top-width:1pt; vertical-align:top; background-color:#ffffff">
+                                                                        <p style="margin-top:6pt; margin-bottom:14pt">
+                                                                            <span>1. Quyền sử dụng thực tế đối với đất</span>
+                                                                        </p>
+                                                                        <p style="margin-top:6pt; margin-bottom:14pt"><span>1.1. Đất ở</span></p>
+                                                                        <p style="margin-top:6pt; margin-bottom:14pt"><span>1.2. Các loại đất khác</span></p>
+                                                                        <p style="margin-top:6pt; margin-bottom:14pt"><span>2. Nhà ở, công trình xây dựng</span></p>
+                                                                        <p style="margin-top:6pt; margin-bottom:14pt"><span>2.1. Nhà ở</span></p>
+                                                                        <p style="margin-top:6pt; margin-bottom:14pt"><span>2.2. Công trình xây dựng khác</span></p>
+                                                                        <p style="margin-top:6pt; margin-bottom:14pt"><span>3. Tài sản khác gắn liền với đất</span></p>
+                                                                        <p style="margin-top:6pt; margin-bottom:14pt"><span>3.1. Cây lâu năm, rừng sản xuất</span></p>
+                                                                        <p style="margin-top:6pt; margin-bottom:14pt">
+                                                                            <span>3.2. Vật kiến trúc gắn liền với đất</span>
+                                                                        </p>
+                                                                        <p style="margin-top:6pt; margin-bottom:14pt">
+                                                                            <span>
+                                                                                4. Vàng, kim cương, bạch kim và các kim loại
+                                                                                quý, đá quý khác có tổng giá trị từ 50 triệu đồng trở lên
+                                                                            </span>
+                                                                        </p>
+                                                                        <p style="margin-top:6pt; margin-bottom:14pt">
+                                                                            <span>
+                                                                                5. Tiền (tiền Việt Nam, ngoại tệ) gồm tiền
+                                                                                mặt, tiền cho vay, tiền trả trước, tiền gửi cá nhân, tổ chức trong nước, tổ chức nước
+                                                                                ngoài tại Việt Nam mà tổng giá trị quy đổi từ 50 triệu đồng trở lên.
+                                                                            </span>
+                                                                        </p>
+                                                                        <p style="margin-top:6pt; margin-bottom:14pt">
+                                                                            <span>
+                                                                                6. Cổ phiếu, trái phiếu, vốn góp, các loại
+                                                                                giấy tờ có giá khác mà tổng giá trị từ 50 triệu đồng trở lên (khai theo từng
+                                                                                loại):
+                                                                            </span>
+                                                                        </p>
+                                                                        <p style="margin-top:6pt; margin-bottom:14pt"><span>6.1. Cổ phiếu</span></p>
+                                                                        <p style="margin-top:6pt; margin-bottom:14pt"><span>6.2. Trái phiếu</span></p>
+                                                                        <p style="margin-top:6pt; margin-bottom:14pt"><span>6.3. Vốn góp</span></p>
+                                                                        <p style="margin-top:6pt; margin-bottom:14pt"><span>6.4. Các loại giấy tờ có giá khác</span></p>
+                                                                        <p style="margin-top:6pt; margin-bottom:14pt">
+                                                                            <span>
+                                                                                7. Tài sản khác có giá trị từ 50 triệu đồng
+                                                                                trở lên:
+                                                                            </span>
+                                                                        </p>
+                                                                        <p style="margin-top:6pt; margin-bottom:14pt">
+                                                                            <span>
+                                                                                7.1. Tài sản theo quy định của pháp luật
+                                                                                phải đăng ký sử dụng và được cấp giấy đăng ký (tầu bay, tàu thủy, thuyền, máy ủi, máy
+                                                                                xúc, ô tô, mô tô, xe gắn máy...).
+                                                                            </span>
+                                                                        </p>
+                                                                        <p style="margin-top:6pt; margin-bottom:14pt">
+                                                                            <span>
+                                                                                7.2. Tài sản khác (đồ mỹ nghệ, đồ thờ cúng,
+                                                                                bàn ghế, cây cảnh, tranh ảnh, các loại tài sản khác).
+                                                                            </span>
+                                                                        </p>
+                                                                        <p style="margin-top:6pt; margin-bottom:14pt"><span>8. Tài sản ở nước ngoài.</span></p>
+                                                                        <p style="margin-top:6pt">
+                                                                            <span>9. Tổng thu nhập giữa hai lần kê khai</span><span style="font-size:8pt; vertical-align:super">(32)</span><span> </span><span style="font-size:8pt; vertical-align:super">
+                                                                                Ghi tổng thu nhập giữa 02 lần kê khai vào
+                                                                                cột “giá trị tài sản, thu nhập” và ghi rõ từng khoản thu nhập có được trong kỳ kê
+                                                                                khai
+                                                                            </span><span>.</span>
+                                                                        </p>
+                                                                    </td>
+                                                                    <td style="width:18.54%; border-top-style:solid; border-top-width:1pt; border-left-style:solid; border-left-width:1pt; vertical-align:top; background-color:#ffffff">
+                                                                        <p style="margin-top:6pt"><span>&#xa0;</span></p>
+                                                                    </td>
+                                                                    <td style="width:22.5%; border-top-style:solid; border-top-width:1pt; border-left-style:solid; border-left-width:1pt; vertical-align:top; background-color:#ffffff">
+                                                                        <p style="margin-top:6pt"><span>&#xa0;</span></p>
+                                                                    </td>
+                                                                    <td style="width:15.46%; border-top-style:solid; border-top-width:1pt; border-left-style:solid; border-left-width:1pt; vertical-align:top; background-color:#ffffff">
+                                                                        <p style="margin-top:6pt"><span>&#xa0;</span></p>
+                                                                    </td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                        <p style="margin-top:6pt; margin-bottom:14pt"><span>&#xa0;</span></p>
+                                                        <p style="margin-top:6pt; margin-bottom:6pt">
+                                                            <span style="font-weight:bold">Ví dụ:</span><span> </span><span style="-aw-import:spaces">&#xa0;</span><span>
+                                                                Trong thời kỳ từ 16/12/2019 đến 15/12/2020, ông A bán một
+                                                                thửa đất ở 100 m
+                                                            </span><span style="font-size:8pt; vertical-align:super">2</span><span>
+                                                                ở địa chỉ B, giá
+                                                                trị của thửa đất lúc mua là 500 triệu, thu được 4 tỷ đồng;
+                                                            </span>
+                                                        </p>
+                                                        <p style="margin-top:6pt; margin-bottom:6pt">
+                                                            <span>
+                                                                - ông A sử dụng tiền bán thửa đất trên mua 01 căn hộ 100
+                                                                m
+                                                            </span><span style="font-size:8pt; vertical-align:super">2</span><span>
+                                                                tại chung cư C giá mua 3,5 tỷ
+                                                                đồng và mua một ô-tô Toyota với giá 1 tỷ đồng, đăng ký biển kiểm soát 18E-033.55.
+                                                            </span>
+                                                        </p>
+                                                        <p style="margin-top:6pt; margin-bottom:6pt">
+                                                            <span>
+                                                                - Thu nhập từ lương và các khoản phụ cấp của gia đình ông A
+                                                                là 600 triệu, thu nhập từ các khoản đầu tư là 1 tỷ đồng, sau khi chi tiêu ông A gửi tiết kiệm ở ngân
+                                                                hàng D số tiền 500 triệu.
+                                                            </span>
+                                                        </p>
+                                                        <p style="margin-top:6pt; margin-bottom:6pt"><span style="font-weight:bold">Ông A sẽ ghi như sau:</span></p>
+                                                        <p style="margin-top:6pt; margin-bottom:6pt"><span style="font-weight:bold; -aw-import:ignore">&#xa0;</span></p>
+                                                        <p style="margin-top:6pt; margin-bottom:6pt"><span style="font-weight:bold; -aw-import:ignore">&#xa0;</span></p>
+                                                        <table cellspacing="0" cellpadding="0" style="width:100%; border-collapse:collapse">
+                                                            <thead>
+                                                                <tr>
+                                                                    <td rowspan="2"
+                                                                        style="width:40.96%; border-top-style:solid; border-top-width:1pt; border-left-style:solid; border-left-width:1pt; background-color:#ffffff">
+                                                                        <p style="margin-top:6pt; text-align:center">
+                                                                            <span style="font-weight:bold">
+                                                                                Loại tài sản, thu
+                                                                                nhập
+                                                                            </span>
+                                                                        </p>
+                                                                    </td>
+                                                                    <td colspan="4"
+                                                                        style="border-top-style:solid; border-top-width:1pt; border-left-style:solid; border-left-width:1pt; background-color:#ffffff">
+                                                                        <p style="margin-top:6pt; text-align:center"><span style="font-weight:bold">Tăng/giảm</span></p>
+                                                                    </td>
+                                                                    <td style="width:27.42%; border-top-style:solid; border-top-width:1pt; border-right-style:solid; border-right-width:1pt; border-left-style:solid; border-left-width:1pt; background-color:#ffffff">
+                                                                        <p style="margin-top:6pt; text-align:center">
+                                                                            <span style="font-weight:bold">
+                                                                                Nội dung giải trình
+                                                                                nguồn gốc tài sản tăng thêm và tổng thu nhập
+                                                                            </span>
+                                                                        </p>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td colspan="2"
+                                                                        style="border-top-style:solid; border-top-width:1pt; border-left-style:solid; border-left-width:1pt; background-color:#ffffff">
+                                                                        <p style="margin-top:6pt; text-align:center">
+                                                                            <span style="font-weight:bold">
+                                                                                Số lượng tài
+                                                                                sản
+                                                                            </span>
+                                                                        </p>
+                                                                    </td>
+                                                                    <td colspan="2"
+                                                                        style="border-top-style:solid; border-top-width:1pt; border-left-style:solid; border-left-width:1pt; background-color:#ffffff">
+                                                                        <p style="margin-top:6pt; text-align:center">
+                                                                            <span style="font-weight:bold">
+                                                                                Giá trị tài sản, thu
+                                                                                nhập
+                                                                            </span>
+                                                                        </p>
+                                                                    </td>
+                                                                    <td style="border-top-style:solid; border-top-width:1pt; border-right-style:solid; border-right-width:1pt; border-left-style:solid; border-left-width:1pt">
+                                                                        <p style="margin-top:6pt; text-align:center"><span style="-aw-import:ignore">&#xa0;</span></p>
+                                                                    </td>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                <tr>
+                                                                    <td style="width:40.96%; border-top-style:solid; border-top-width:1pt; border-left-style:solid; border-left-width:1pt; vertical-align:top; background-color:#ffffff">
+                                                                        <p style="margin-top:6pt; margin-bottom:14pt"><span>1. Quyền sử dụng đất </span></p>
+                                                                        <p style="margin-top:6pt; margin-bottom:14pt"><span>1.1/Đất ở </span></p>
+                                                                        <p style="margin-top:6pt"><span>- Bán thửa đất B</span></p>
+                                                                    </td>
+                                                                    <td colspan="2"
+                                                                        style="border-top-style:solid; border-top-width:1pt; border-left-style:solid; border-left-width:1pt; background-color:#ffffff">
+                                                                        <p style="margin-top:6pt">
+                                                                            <span>- 100m</span><span style="font-size:8pt; vertical-align:super">2</span>
+                                                                        </p>
+                                                                    </td>
+                                                                    <td colspan="2"
+                                                                        style="border-top-style:solid; border-top-width:1pt; border-left-style:solid; border-left-width:1pt; background-color:#ffffff">
+                                                                        <p style="margin-top:6pt"><span>500 triệu </span></p>
+                                                                        <p style="margin-top:6pt">
+                                                                            <span style="font-size:8pt; vertical-align:super">
+                                                                                (giá trị của thửa
+                                                                                đất lúc mua là 500 triệu)
+                                                                            </span>
+                                                                        </p>
+                                                                    </td>
+                                                                    <td style="width:27.42%; border-top-style:solid; border-top-width:1pt; border-right-style:solid; border-right-width:1pt; border-left-style:solid; border-left-width:1pt; background-color:#ffffff">
+                                                                        <p style="margin-top:6pt"><span>Giảm do bán</span></p>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td style="width:40.96%; border-top-style:solid; border-top-width:1pt; border-left-style:solid; border-left-width:1pt; vertical-align:top; background-color:#ffffff">
+                                                                        <p style="margin-top:6pt; margin-bottom:14pt"><span>2. Nhà ở, công trình xây dựng </span></p>
+                                                                        <p style="margin-top:6pt; margin-bottom:14pt"><span>2.1. Nhà ở</span></p>
+                                                                        <p style="margin-top:6pt"><span>- Mua căn hộ tại chung cư C</span></p>
+                                                                    </td>
+                                                                    <td colspan="2"
+                                                                        style="border-top-style:solid; border-top-width:1pt; border-left-style:solid; border-left-width:1pt; background-color:#ffffff">
+                                                                        <p style="margin-top:6pt"><span style="-aw-import:ignore">&#xa0;</span></p>
+                                                                    </td>
+                                                                    <td colspan="2"
+                                                                        style="border-top-style:solid; border-top-width:1pt; border-left-style:solid; border-left-width:1pt; background-color:#ffffff">
+                                                                        <p style="margin-top:6pt"><span style="-aw-import:ignore">&#xa0;</span></p>
+                                                                    </td>
+                                                                    <td style="width:27.42%; border-top-style:solid; border-top-width:1pt; border-right-style:solid; border-right-width:1pt; border-left-style:solid; border-left-width:1pt; background-color:#ffffff">
+                                                                        <p style="margin-top:6pt; margin-bottom:14pt"><span>&#xa0;</span></p>
+                                                                        <p style="margin-top:6pt"><span style="-aw-import:ignore">&#xa0;</span></p>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td style="width:40.96%; border-top-style:solid; border-top-width:1pt; border-left-style:solid; border-left-width:1pt; vertical-align:top; background-color:#ffffff">
+                                                                        <p style="margin-top:6pt"><span>3. Tài sản khác gắn liền với đất</span></p>
+                                                                    </td>
+                                                                    <td colspan="2"
+                                                                        style="border-top-style:solid; border-top-width:1pt; border-left-style:solid; border-left-width:1pt; vertical-align:top; background-color:#ffffff">
+                                                                        <p style="margin-top:6pt"><span>&#xa0;</span></p>
+                                                                    </td>
+                                                                    <td colspan="2"
+                                                                        style="border-top-style:solid; border-top-width:1pt; border-left-style:solid; border-left-width:1pt; vertical-align:top; background-color:#ffffff">
+                                                                        <p style="margin-top:6pt"><span>&#xa0;</span></p>
+                                                                    </td>
+                                                                    <td style="width:27.42%; border-top-style:solid; border-top-width:1pt; border-right-style:solid; border-right-width:1pt; border-left-style:solid; border-left-width:1pt; vertical-align:top; background-color:#ffffff">
+                                                                        <p style="margin-top:6pt"><span>&#xa0;</span></p>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td style="width:40.96%; border-top-style:solid; border-top-width:1pt; border-left-style:solid; border-left-width:1pt; vertical-align:top; background-color:#ffffff">
+                                                                        <p style="margin-top:6pt">
+                                                                            <span>
+                                                                                4. Vàng, kim cương, bạch kim và các kim loại quý, đá quý khác có
+                                                                                tổng giá trị từ 50 triệu đồng trở lên.
+                                                                            </span>
+                                                                        </p>
+                                                                    </td>
+                                                                    <td colspan="2"
+                                                                        style="border-top-style:solid; border-top-width:1pt; border-left-style:solid; border-left-width:1pt; vertical-align:top; background-color:#ffffff">
+                                                                        <p style="margin-top:6pt"><span>&#xa0;</span></p>
+                                                                    </td>
+                                                                    <td colspan="2"
+                                                                        style="border-top-style:solid; border-top-width:1pt; border-left-style:solid; border-left-width:1pt; vertical-align:top; background-color:#ffffff">
+                                                                        <p style="margin-top:6pt"><span>&#xa0;</span></p>
+                                                                    </td>
+                                                                    <td style="width:27.42%; border-top-style:solid; border-top-width:1pt; border-right-style:solid; border-right-width:1pt; border-left-style:solid; border-left-width:1pt; vertical-align:top; background-color:#ffffff">
+                                                                        <p style="margin-top:6pt"><span>&#xa0;</span></p>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td style="width:40.96%; border-top-style:solid; border-top-width:1pt; border-left-style:solid; border-left-width:1pt; vertical-align:top; background-color:#ffffff">
+                                                                        <p style="margin-top:6pt; margin-bottom:14pt">
+                                                                            <span>
+                                                                                5. Tiền (tiền Việt Nam, ngoại tệ) gồm tiền
+                                                                                mặt, tiền cho vay, tiền trả trước, tiền gửi cá nhân, tổ chức trong nước, tổ chức nước
+                                                                                ngoài tại Việt Nam mà tổng giá trị quy đổi từ 50 triệu đồng trở lên.
+                                                                            </span>
+                                                                        </p>
+                                                                        <p style="margin-top:6pt"><span>- Gửi tiết kiệm tại ngân hàng D</span></p>
+                                                                    </td>
+                                                                    <td colspan="2"
+                                                                        style="border-top-style:solid; border-top-width:1pt; border-left-style:solid; border-left-width:1pt; background-color:#ffffff">
+                                                                        <p style="margin-top:6pt"><span style="-aw-import:ignore">&#xa0;</span></p>
+                                                                    </td>
+                                                                    <td colspan="2"
+                                                                        style="border-top-style:solid; border-top-width:1pt; border-left-style:solid; border-left-width:1pt; background-color:#ffffff">
+                                                                        <p style="margin-top:6pt"><span style="-aw-import:ignore">&#xa0;</span></p>
+                                                                    </td>
+                                                                    <td style="width:27.42%; border-top-style:solid; border-top-width:1pt; border-right-style:solid; border-right-width:1pt; border-left-style:solid; border-left-width:1pt; background-color:#ffffff">
+                                                                        <p style="margin-top:6pt"><span style="-aw-import:ignore">&#xa0;</span></p>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td style="width:40.96%; border-top-style:solid; border-top-width:1pt; border-left-style:solid; border-left-width:1pt; border-bottom-style:solid; border-bottom-width:1pt; vertical-align:top; background-color:#ffffff">
+                                                                        <p style="margin-top:6pt">
+                                                                            <span>
+                                                                                6. Cổ phiếu, trái phiếu, vốn góp, các loại giấy tờ có giá khác
+                                                                                mà tổng giá trị từ 50 triệu đồng trở lên
+                                                                            </span>
+                                                                        </p>
+                                                                    </td>
+                                                                    <td colspan="2"
+                                                                        style="border-top-style:solid; border-top-width:1pt; border-left-style:solid; border-left-width:1pt; border-bottom-style:solid; border-bottom-width:1pt; vertical-align:top; background-color:#ffffff">
+                                                                        <p style="margin-top:6pt"><span>&#xa0;</span></p>
+                                                                    </td>
+                                                                    <td colspan="2"
+                                                                        style="border-top-style:solid; border-top-width:1pt; border-left-style:solid; border-left-width:1pt; border-bottom-style:solid; border-bottom-width:1pt; vertical-align:top; background-color:#ffffff">
+                                                                        <p style="margin-top:6pt"><span>&#xa0;</span></p>
+                                                                    </td>
+                                                                    <td style="width:27.42%; border-style:solid; border-width:1pt; vertical-align:top; background-color:#ffffff">
+                                                                        <p style="margin-top:6pt"><span>&#xa0;</span></p>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td style="width:40.94%; border-top-style:solid; border-top-width:1pt; border-left-style:solid; border-left-width:1pt; vertical-align:bottom; background-color:#ffffff">
+                                                                        <p style="margin-top:6pt; margin-bottom:14pt">
+                                                                            <span>
+                                                                                7. Tài sản khác có giá trị từ 50 triệu đồng
+                                                                                trở lên, bao gồm:
+                                                                            </span>
+                                                                        </p>
+                                                                        <p style="margin-top:6pt">
+                                                                            <span>
+                                                                                7.1. Tài sản theo quy định của pháp luật phải đăng ký sử dụng và
+                                                                                được cấp giấy đăng ký
+                                                                            </span>
+                                                                        </p>
+                                                                    </td>
+                                                                    <td style="width:14.94%; border-top-style:solid; border-top-width:1pt; border-left-style:solid; border-left-width:1pt; background-color:#ffffff">
+                                                                        <p style="margin-top:6pt"><span style="-aw-import:ignore">&#xa0;</span></p>
+                                                                    </td>
+                                                                    <td colspan="2"
+                                                                        style="border-top-style:solid; border-top-width:1pt; border-left-style:solid; border-left-width:1pt; background-color:#ffffff">
+                                                                        <p style="margin-top:6pt"><span style="-aw-import:ignore">&#xa0;</span></p>
+                                                                    </td>
+                                                                    <td colspan="2"
+                                                                        style="border-top-style:solid; border-top-width:1pt; border-right-style:solid; border-right-width:1pt; border-left-style:solid; border-left-width:1pt; background-color:#ffffff">
+                                                                        <p style="margin-top:6pt"><span style="-aw-import:ignore">&#xa0;</span></p>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td style="width:40.94%; border-top-style:solid; border-top-width:1pt; border-left-style:solid; border-left-width:1pt; vertical-align:bottom; background-color:#ffffff">
+                                                                        <p style="margin-top:6pt"><span>8. Tài sản ở nước ngoài</span></p>
+                                                                    </td>
+                                                                    <td style="width:14.94%; border-top-style:solid; border-top-width:1pt; border-left-style:solid; border-left-width:1pt; vertical-align:top; background-color:#ffffff">
+                                                                        <p style="margin-top:6pt"><span>&#xa0;</span></p>
+                                                                    </td>
+                                                                    <td colspan="2"
+                                                                        style="border-top-style:solid; border-top-width:1pt; border-left-style:solid; border-left-width:1pt; vertical-align:top; background-color:#ffffff">
+                                                                        <p style="margin-top:6pt"><span>&#xa0;</span></p>
+                                                                    </td>
+                                                                    <td colspan="2"
+                                                                        style="border-top-style:solid; border-top-width:1pt; border-right-style:solid; border-right-width:1pt; border-left-style:solid; border-left-width:1pt; vertical-align:top; background-color:#ffffff">
+                                                                        <p style="margin-top:6pt"><span>&#xa0;</span></p>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td style="width:40.94%; border-top-style:solid; border-top-width:1pt; border-left-style:solid; border-left-width:1pt; border-bottom-style:solid; border-bottom-width:1pt; vertical-align:top; background-color:#ffffff">
+                                                                        <p style="margin-top:6pt"><span>9. Tổng thu nhập giữa 02 lần kê khai.</span></p>
+                                                                    </td>
+                                                                    <td style="width:14.94%; border-top-style:solid; border-top-width:1pt; border-left-style:solid; border-left-width:1pt; border-bottom-style:solid; border-bottom-width:1pt; vertical-align:top; background-color:#ffffff">
+                                                                        <p style="margin-top:6pt"><span>&#xa0;</span></p>
+                                                                    </td>
+                                                                    <td colspan="2"
+                                                                        style="border-top-style:solid; border-top-width:1pt; border-left-style:solid; border-left-width:1pt; border-bottom-style:solid; border-bottom-width:1pt; vertical-align:top; background-color:#ffffff">
+                                                                        <p style="margin-top:6pt"><span style="-aw-import:ignore">&#xa0;</span></p>
+                                                                    </td>
+                                                                    <td colspan="2"
+                                                                        style="border-style:solid; border-width:1pt; vertical-align:bottom; background-color:#ffffff">
+                                                                        <p style="margin-top:6pt"><span style="-aw-import:ignore">&#xa0;</span></p>
+                                                                    </td>
+                                                                </tr>
+                                                            </tbody>
+                                                            <tr style="height:0pt">
+                                                                <td style="width:193.05pt"></td>
+                                                                <td style="width:70.4pt"></td>
+                                                                <td style="width:0.3pt"></td>
+                                                                <td style="width:77.85pt"></td>
+                                                                <td style="width:0.45pt"></td>
+                                                                <td style="width:129.2pt"></td>
+                                                            </tr>
+                                                        </table>
+                                                        <p style="margin-top:6pt; margin-bottom:14pt"><span>&#xa0;</span></p>
+                                                        <table cellspacing="0" cellpadding="0" style="border-collapse:collapse">
+                                                            <tr>
+                                                                <td style="width:210.6pt; padding-right:5.4pt; padding-left:5.4pt; vertical-align:top">
+                                                                    <p style="margin-top:6pt; text-align:center; background-color:#ffffff">
+                                                                        <span style="font-style:italic">..... ngày....tháng....năm....</span><br /><span style="font-weight:bold">NGƯỜI NHẬN BẢN KÊ KHAI</span><br /><span style="font-style:italic">(Ký, ghi rõ họ tên, chức vụ/chức danh)</span>
+                                                                    </p>
+                                                                </td>
+                                                                <td style="width:210.6pt; padding-right:5.4pt; padding-left:5.4pt; vertical-align:top">
+                                                                    <p style="margin-top:6pt; text-align:center; background-color:#ffffff">
+                                                                        <span style="font-style:italic">..... ngày....tháng....năm....</span><br /><span style="font-weight:bold">NGƯỜI KÊ KHAI TÀI SẢN</span><br /><span style="font-style:italic">(Ký, ghi rõ họ tên)</span><br /><br /><br /><br /><span style="-aw-import:ignore">&#xa0;</span>
+                                                                    </p>
+                                                                </td>
+                                                            </tr>
+                                                        </table>
+                                                        <p style="margin-top:6pt; margin-bottom:14pt; text-align:center">
+                                                            <span style="font-weight:bold; -aw-import:ignore">&#xa0;</span>
+                                                        </p>
+                                                        <p style="margin-top:6pt; margin-bottom:14pt"><span>&#xa0;</span></p>
+                                                        <p style="margin-top:6pt; margin-bottom:14pt"><span>&#xa0;</span></p>
+                                                        <div style="-aw-headerfooter-type:footer-primary; clear:both">
+                                                            <p class="Footer" style="text-align:center">
+                                                                <span style="-aw-field-start:true"></span><span style="-aw-field-code:' PAGE   \\* MERGEFORMAT '"></span><span style="-aw-field-separator:true"></span><span>1</span><span style="-aw-field-end:true"></span>
+                                                            </p>
+                                                            <p class="Footer"><span style="-aw-import:ignore">&#xa0;</span></p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="tab-pane" id="thongtinchung">
+                                    <div class="row">
+                                        <div class="card-content-custom">
+                                            <div class="col-md-12" style="text-align: left; padding-top: 10px;">
+                                                <label class="Showheader-title">
+                                                    <label class="mt-0 header-title header-title-Edit" data-toggle="collapse" data-target="#collapseThongTinBanKeKhai1" aria-expanded="false" aria-controls="collapseThongTinBanKeKhai">
+                                                        <i class="far fa-caret-square-down"></i>
+                                                        <span class="TitleForm clsShow cursor-pointer">Thông tin loại bản kê khai</span>
+                                                    </label>
+                                                </label>
+                                            </div>
+                                            <div class="col-md-12 collapse show" id="collapseThongTinBanKeKhai1">
+                                                <div class="row">
+                                                    <div class="col-4">
+                                                        <div class="form-group">
+                                                            <label>Loại kê khai</label>
+                                                            <select class="form-control" disabled name="Ma_Loai_KeKhai" id="Ma_Loai_KeKhai" style="width: 100%; height: 100%" readonly>
+                                                            </select>
+
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-4">
+                                                        <div class="form-group">
+                                                            <label>Lĩnh vực kê khai</label>
+                                                            <select class="form-control" name="Ma_LinhVuc_KeKhai" disabled id="Ma_LinhVuc_KeKhai" style="width: 100%; height: 100%" readonly>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-4">
+                                                        <div class="form-group">
+                                                            <label>Năm kê khai</label>
+                                                            <input type="text" class="form-control" placeholder="Nhập năm kê khai" id="Nam_KeKhai" name="Nam_KeKhai" value="@DateTime.Now.Year" readonly>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                    <div class="row">
+                                        <div class="card-content-custom">
+                                            <div class="col-md-12" style="text-align: left; padding-top: 10px;">
+                                                <label class="Showheader-title">
+                                                    <label class="mt-0 header-title header-title-Edit" data-toggle="collapse" data-target="#collapseThongTinCanBo" aria-expanded="false" aria-controls="collapseThongTinCanBo">
+                                                        <i class="far fa-caret-square-down"></i>
+                                                        <span class="TitleForm clsShow cursor-pointer">Thông tin người kê khai</span>
+                                                    </label>
+                                                </label>
+                                            </div>
+                                            <div class="col-md-12 collapse show" id="collapseThongTinCanBo">
+                                                <div class="row">
+                                                    <div class="col-5">
+                                                        <div class="form-group">
+                                                            <label>Họ Và Tên</label>
+                                                            <input type="text" class="form-control" id="HoTen" readonly>
+                                                            <input type="text" class="form-control" id="Ma_CanBo" name="Ma_CanBo" hidden>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-2">
+                                                        <div class="form-group">
+                                                            <label>Ngày sinh</label>
+                                                            <input type="text" class="form-control" id="DoB" readonly>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-5">
+                                                        <div class="form-group">
+                                                            <label>Địa chỉ</label>
+                                                            <input type="text" class="form-control" id="DiaChiThuongTru" readonly>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-3">
+                                                        <div class="form-group">
+                                                            <label>Tỉnh thành</label>
+                                                            <input type="text" class="form-control" id="Ma_TinhThanh" readonly>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-3">
+                                                        <div class="form-group">
+                                                            <label>Quận huyện</label>
+                                                            <input type="text" class="form-control" id="Ma_QuanHuyen" readonly>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-3">
+                                                        <div class="form-group">
+                                                            <label>Phường Xã</label>
+                                                            <input type="text" class="form-control" id="Ma_PhuongXa" readonly>
+                                                        </div>
+                                                    </div>
+
+
+                                                    <div class="col-3">
+                                                        <div class="form-group">
+                                                            <label>Số CMND/CCCD</label>
+                                                            <input type="text" class="form-control" id="SoCCCD" readonly>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-3">
+                                                        <div class="form-group">
+                                                            <label>Ngày Cấp</label>
+                                                            <input type="text" class="form-control" id="NgayCap" readonly>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-3">
+                                                        <div class="form-group">
+                                                            <label>Nơi Cấp</label>
+                                                            <input type="text" class="form-control" id="NoiCap" readonly>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-3">
+                                                        <div class="form-group">
+                                                            <label>Cơ Quan</label>
+                                                            <input type="text" class="form-control" id="Ma_CoQuan_DonVi" readonly>
+
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-3">
+                                                        <div class="form-group">
+                                                            <label>Chức Vụ</label>
+                                                            <input type="text" class="form-control" id="Ma_ChucVu_ChucDanh" readonly>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row" style="margin-top:10px;">
+                                        <div class="card-content-custom">
+                                            <div class="col-md-12" style="text-align: left; padding-top: 10px;">
+                                                <label class="Showheader-title">
+                                                    <label class="mt-0 header-title header-title-Edit" data-toggle="collapse" data-target="#collapseThanNhan" aria-expanded="false" aria-controls="collapseThanNhan">
+                                                        <i class="far fa-caret-square-down"></i>
+                                                        <span class="TitleForm clsShow cursor-pointer">Thông tin thân nhân</span>
+                                                    </label>
+                                                </label>
+                                            </div>
+                                            <div class="col-md-12 collapse show" id="collapseThanNhan">
+
+
+
+
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+
+                                </div>
+                                <div class="tab-pane" id="QuanSuDungDat">
+
+                                    <div class="row" style="margin-top:10px;">
+                                        <div class="card-content-custom">
+                                            <div class="col-md-12" style="text-align: left; padding-top: 10px;">
+                                                <label class="Showheader-title">
+                                                    <label class="mt-0 header-title header-title-Edit" data-toggle="collapse" data-target="#collapseDat" aria-expanded="false" aria-controls="collapseDatO">
+                                                        <i class="far fa-caret-square-down"></i>
+                                                        <span class="TitleForm clsShow cursor-pointer">Đất ở</span>
+                                                    </label>
+                                                </label>
+                                            </div>
+                                            <div class="col-md-12 collapse show" id="collapseDat">
+
+
+
+                                                <div class="row" style="margin-top: 20px; float: right;" id="clsAddRow_collapseDat">
+
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                    <div class="row" style="margin-top:10px;">
+                                        <div class="card-content-custom">
+                                            <div class="col-md-12" style="text-align: left; padding-top: 10px;">
+                                                <label class="Showheader-title">
+                                                    <label class="mt-0 header-title header-title-Edit" data-toggle="collapse" data-target="#collapseCacLoaiDatKhac" aria-expanded="false" aria-controls="collapseCacLoaiDatKhac">
+                                                        <i class="far fa-caret-square-down"></i>
+                                                        <span class="TitleForm clsShow cursor-pointer">Các loại đất khác</span>
+                                                    </label>
+                                                </label>
+                                            </div>
+                                            <div class="col-md-12 collapse show" id="collapseCacLoaiDatKhac">
+
+                                                <div class="row" style="margin-top: 20px; float: right;" id="clsAddRow_collapseCacLoaiDatKhac">
+
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                </div>
+                                <div class="tab-pane" id="NhaOCongTrinh">
+
+                                    <div class="row" style="margin-top:10px;">
+                                        <div class="card-content-custom">
+                                            <div class="col-md-12" style="text-align: left; padding-top: 10px;">
+                                                <label class="Showheader-title">
+                                                    <label class="mt-0 header-title header-title-Edit" data-toggle="collapse" data-target="#collapseNhaO" aria-expanded="false" aria-controls="collapseNhaO">
+                                                        <i class="far fa-caret-square-down"></i>
+                                                        <span class="TitleForm clsShow cursor-pointer">Nhà ở</span>
+                                                    </label>
+                                                </label>
+                                            </div>
+                                            <div class="col-md-12 collapse show" id="collapseNhaO">
+
+
+                                                <div class="row" style="margin-top: 20px; float: right;" id="clsAddRow_collapseNhaO">
+
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                    <div class="row" style="margin-top:10px;">
+                                        <div class="card-content-custom">
+                                            <div class="col-md-12" style="text-align: left; padding-top: 10px;">
+                                                <label class="Showheader-title">
+                                                    <label class="mt-0 header-title header-title-Edit" data-toggle="collapse" data-target="#collapseCongTrinhXayDungKhac" aria-expanded="false" aria-controls="collapseConTrinhXayDungKhac">
+                                                        <i class="far fa-caret-square-down"></i>
+                                                        <span class="TitleForm clsShow cursor-pointer">Công trình xây dựng khác</span>
+                                                    </label>
+                                                </label>
+                                            </div>
+                                            <div class="col-md-12 collapse show" id="collapseCongTrinhXayDungKhac">
+
+
+                                                <div class="row" style="margin-top: 20px; float: right;" id="clsAddRow_collapseCongTrinh">
+
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                </div>
+                                <div class="tab-pane" id="TaiSanGanLienVoiDat">
+
+                                    <div class="row" style="margin-top:10px;">
+                                        <div class="card-content-custom">
+                                            <div class="col-md-12" style="text-align: left; padding-top: 10px;">
+                                                <label class="Showheader-title">
+                                                    <label class="mt-0 header-title header-title-Edit" data-toggle="collapse" data-target="#collapseCayLauNam" aria-expanded="false" aria-controls="collapseCayLauNam">
+                                                        <i class="far fa-caret-square-down"></i>
+                                                        <span class="TitleForm clsShow cursor-pointer">Cây lâu năm</span>
+                                                    </label>
+                                                </label>
+                                            </div>
+                                            <div class="col-md-12 collapse show" id="collapseCayLauNam">
+                                                <div class="row" style="margin-top: 20px; float: right;" id="clsAddRow_collapseCayLauNam">
+
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                    <div class="row" style="margin-top:10px;">
+                                        <div class="card-content-custom">
+                                            <div class="col-md-12" style="text-align: left; padding-top: 10px;">
+                                                <label class="Showheader-title">
+                                                    <label class="mt-0 header-title header-title-Edit" data-toggle="collapse" data-target="#collapseRungSanXuat" aria-expanded="false" aria-controls="collapseRungSanXuat">
+                                                        <i class="far fa-caret-square-down"></i>
+                                                        <span class="TitleForm clsShow cursor-pointer">Rừng sản xuất</span>
+                                                    </label>
+                                                </label>
+                                            </div>
+                                            <div class="col-md-12 collapse show" id="collapseRungSanXuat">
+
+
+                                                <div class="row" style="margin-top: 20px; float: right;" id="clsAddRow_collapseRungSanXuat">
+
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                    <div class="row" style="margin-top:10px;">
+                                        <div class="card-content-custom">
+                                            <div class="col-md-12" style="text-align: left; padding-top: 10px;">
+                                                <label class="Showheader-title">
+                                                    <label class="mt-0 header-title header-title-Edit" data-toggle="collapse" data-target="#collapseKienTrucKhac" aria-expanded="false" aria-controls="collapseKienTrucKhac">
+                                                        <i class="far fa-caret-square-down"></i>
+                                                        <span class="TitleForm clsShow cursor-pointer">Vật kiến trúc khác gắn liền với đất</span>
+                                                    </label>
+                                                </label>
+                                            </div>
+                                            <div class="col-md-12 collapse show" id="collapseKienTrucKhac">
+
+
+                                                <div class="row" style="margin-top: 20px; float: right;" id="clsAddRow_collapseKienTruc">
+
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                </div>
+                                <div class="tab-pane" id="KimLoaiQuyDaQuy">
+
+                                    <div class="row" style="margin-top:10px;">
+                                        <div class="card-content-custom">
+                                            <div class="col-md-12" style="text-align: left; padding-top: 10px;">
+                                                <label class="Showheader-title">
+                                                    <label class="mt-0 header-title header-title-Edit" data-toggle="collapse" data-target="#collapseKimLoaiDaQuy" aria-expanded="false" aria-controls="collapseKimLoaiQuyDaQuy">
+                                                        <i class="far fa-caret-square-down"></i>
+                                                        <span class="TitleForm clsShow cursor-pointer">Vàng, kim cương, bạch kim và các kim loại quý, đá quý khác có tổng giá trị từ 50 triệu đồng trở lên.</span>
+                                                    </label>
+                                                </label>
+                                            </div>
+                                            <div class="col-md-12 collapse show" id="collapseKimLoaiDaQuy">
+
+
+                                                <div class="row" style="margin-top: 20px; float: right;" id="clsAddRow_collapseKimLoaiDaQuy">
+
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                </div>
+                                <div class="tab-pane" id="Tien">
+
+                                    <div class="row">
+                                        <div class="card-content-custom">
+                                            <div class="col-md-12" style="text-align: left; padding-top: 10px;">
+                                                <label class="Showheader-title">
+                                                    <label class="mt-0 header-title header-title-Edit" data-toggle="collapse" data-target="#collapseTien" aria-expanded="false" aria-controls="collapseTien">
+                                                        <i class="far fa-caret-square-down"></i>
+                                                        <span class="TitleForm clsShow cursor-pointer">Tiền (tiền Việt Nam, ngoại tệ) gồm tiền mặt, tiền cho vay, tiền trả trước, tiền gửi cá nhân, tổ chức trong nước, tổ chức nước ngoài tại Việt Nam mà tổng giá trị quy đổi từ 50 triệu đồng trở lên.</span>
+                                                    </label>
+                                                </label>
+                                            </div>
+                                            <div class="col-md-12 collapse show" id="collapseTien">
+
+                                                <div class="row" style="margin-top: 20px; float: right;" id="clsAddRow_collapseTien">
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="tab-pane" id="DauTu">
+
+                                    <div class="row">
+                                        <div class="card-content-custom">
+                                            <div class="col-md-12" style="text-align: left; padding-top: 10px;">
+                                                <label class="Showheader-title">
+                                                    <label class="mt-0 header-title header-title-Edit" data-toggle="collapse" data-target="#collapseCoPhieu" aria-expanded="false" aria-controls="collapseCoPhieu">
+                                                        <i class="far fa-caret-square-down"></i>
+                                                        <span class="TitleForm clsShow cursor-pointer">Cổ phiếu</span>
+                                                    </label>
+                                                </label>
+                                            </div>
+                                            <div class="col-md-12 collapse show" id="collapseCoPhieu">
+
+                                                <div class="row" style="margin-top: 20px; float: right;" id="clsAddRow_collapseCoPhieu">
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="card-content-custom">
+                                            <div class="col-md-12" style="text-align: left; padding-top: 10px;">
+                                                <label class="Showheader-title">
+                                                    <label class="mt-0 header-title header-title-Edit" data-toggle="collapse" data-target="#collapseTraiPhieu" aria-expanded="false" aria-controls="collapseTraiPhieu">
+                                                        <i class="far fa-caret-square-down"></i>
+                                                        <span class="TitleForm clsShow cursor-pointer">Trái phiếu</span>
+                                                    </label>
+                                                </label>
+                                            </div>
+                                            <div class="col-md-12 collapse show" id="collapseTraiPhieu">
+
+
+                                                <div class="row" style="margin-top: 20px; float: right;" id="clsAddRow_collapseTraiPhieu">
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="card-content-custom">
+                                            <div class="col-md-12" style="text-align: left; padding-top: 10px;">
+                                                <label class="Showheader-title">
+                                                    <label class="mt-0 header-title header-title-Edit" data-toggle="collapse" data-target="#collapseGopVon" aria-expanded="false" aria-controls="collapseGopVon">
+                                                        <i class="far fa-caret-square-down"></i>
+                                                        <span class="TitleForm clsShow cursor-pointer">Vốn góp</span>
+                                                    </label>
+                                                </label>
+                                            </div>
+                                            <div class="col-md-12 collapse show" id="collapseGopVon">
+
+
+                                                <div class="row" style="margin-top: 20px; float: right; " id="clsAddRow_collapseGopVon">
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="card-content-custom">
+                                            <div class="col-md-12" style="text-align: left; padding-top: 10px;">
+                                                <label class="Showheader-title">
+                                                    <label class="mt-0 header-title header-title-Edit" data-toggle="collapse" data-target="#collapseGiayToKhac" aria-expanded="false" aria-controls="collapseGiayToKhac">
+                                                        <i class="far fa-caret-square-down"></i>
+                                                        <span class="TitleForm clsShow cursor-pointer">Các loại giấy tờ có giá khác</span>
+                                                    </label>
+                                                </label>
+                                            </div>
+                                            <div class="col-md-12 collapse show" id="collapseGiayToKhac">
+
+
+                                                <div class="row" style="margin-top: 20px; float: right;" id="clsAddRow_collapseGiayToKhac">
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="tab-pane" id="TaiSanKhac">
+
+                                    <div class="row">
+                                        <div class="card-content-custom">
+                                            <div class="col-md-12" style="text-align: left; padding-top: 10px;">
+                                                <label class="Showheader-title">
+                                                    <label class="mt-0 header-title header-title-Edit" data-toggle="collapse" data-target="#collapseGiayDangKy" aria-expanded="false" aria-controls="collapseGiayDangKy">
+                                                        <i class="far fa-caret-square-down"></i>
+                                                        <span class="TitleForm clsShow cursor-pointer">Tài sản theo quy định của pháp luật phải đăng ký sử dụng và được cấp giấy đăng ký (tầu bay, tầu thủy, thuyền, máy ủi, máy xúc, ô tô, mô tô, xe gắn máy...)</span>
+                                                    </label>
+                                                </label>
+                                            </div>
+                                            <div class="col-md-12 collapse show" id="collapseGiayDangKy">
+
+
+                                                <div class="row" style="margin-top: 20px; float: right;" id="clsAddRow_collapseGiayDangKy">
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="card-content-custom">
+                                            <div class="col-md-12" style="text-align: left; padding-top: 10px;">
+                                                <label class="Showheader-title">
+                                                    <label class="mt-0 header-title header-title-Edit" data-toggle="collapse" data-target="#collapseTaiSanKhac" aria-expanded="false" aria-controls="collapseTaiSanKhac">
+                                                        <i class="far fa-caret-square-down"></i>
+                                                        <span class="TitleForm clsShow cursor-pointer">Tài sản khác (đồ mỹ nghệ, đồ thờ cúng, bàn ghế, cây cảnh, tranh, ảnh, các loại tài sản khác)</span>
+                                                    </label>
+                                                </label>
+                                            </div>
+                                            <div class="col-md-12 collapse show" id="collapseTaiSanKhac">
+
+
+                                                <div class="row" style="margin-top: 20px; float: right;" id="clsAddRow_collapseTaiSanKhac">
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="tab-pane" id="TaiSanNuocNgoai">
+
+                                    <div class="row">
+                                        <div class="card-content-custom">
+                                            <div class="col-md-12" style="text-align: left; padding-top: 10px;">
+                                                <label class="Showheader-title">
+                                                    <label class="mt-0 header-title header-title-Edit" data-toggle="collapse" data-target="#collapseTaiSanNuocNgoai" aria-expanded="false" aria-controls="collapseTaiSanNuocNgoai">
+                                                        <i class="far fa-caret-square-down"></i>
+                                                        <span class="TitleForm clsShow cursor-pointer">Tài sản nước ngoài</span>
+                                                    </label>
+                                                </label>
+                                            </div>
+                                            <div class="col-md-12 collapse show" id="collapseTaiSanNuocNgoai">
+
+                                                <div class="row" style="margin-top: 20px; float: right;" id="clsAddRow_collapseTaiSanNuocNgoai">
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="tab-pane" id="TaiKhoanNuocNgoai">
+
+                                    <div class="row">
+                                        <div class="card-content-custom">
+                                            <div class="col-md-12" style="text-align: left; padding-top: 10px;">
+                                                <label class="Showheader-title">
+                                                    <label class="mt-0 header-title header-title-Edit" data-toggle="collapse" data-target="#collapseTaiKhoanNuocNgoai" aria-expanded="false" aria-controls="collapseTaiKhoanNuocNgoai">
+                                                        <i class="far fa-caret-square-down"></i>
+                                                        <span class="TitleForm clsShow cursor-pointer">Tài khoản nước ngoài</span>
+                                                    </label>
+                                                </label>
+                                            </div>
+                                            <div class="col-md-12 collapse show" id="collapseTaiKhoanNuocNgoai">
+
+                                                <div class="row" style="margin-top: 20px; float: right;" id="clsAddRow_collapseTaiKhoanNuocNgoai">
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="tab-pane" id="TongThuNhap">
+
+                                    <div class="row">
+                                        <div class="card-content-custom">
+                                            <div class="col-md-12" style="text-align: left; padding-top: 10px;">
+                                                <label class="Showheader-title">
+                                                    <label class="mt-0 header-title header-title-Edit" data-toggle="collapse" data-target="#collapseTongThuNhap" aria-expanded="false" aria-controls="collapseTongThuNhap">
+                                                        <i class="far fa-caret-square-down"></i>
+                                                        <span class="TitleForm clsShow cursor-pointer">Tổng thu nhập giữa 2 lần kê khai</span>
+                                                    </label>
+                                                </label>
+                                            </div>
+                                            <div class="col-md-12 collapse show" id="collapseTongThuNhap">
+
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="tab-pane" id="BienDongTSTN">
+
+                                    <table id="BienDongTSTN_tb" class="table table-bordered dt-responsive nowrap content_midle_center table-responsive" style="width:100%">
+                                        <thead>
+                                            <tr>
+                                                <th style="width:55%;" rowspan="2">Loại tài sản, thu nhập</th>
+                                                <th style="width:20%;" colspan="2">Tăng/Giảm</th>
+                                                <th style="width:40%;" rowspan="2">Nội dung giải trình nguồn gốc tài sản tăng thêm và tổng thu nhập</th>
+                                                <th hidden></th>
+                                            </tr>
+                                            <tr>
+                                                <th>Số lượng tài sản</th>
+                                                <th>Giá trị tài sản, thu nhập</th>
+                                            </tr>
+
+                                        </thead>
+
+                                    </table>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+<div class="modal fade" id="add-sh">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">ĐỀ NGHỊ PHỐI HỢP XÁC MINH</h4>
+                <button type="button" class="close closeform" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                @using (Ajax.BeginForm("DeNghiXacMinh", "NV_TienHanhXacMinh", new AjaxOptions { HttpMethod = "POST", OnSuccess = "FnSuccess_DeNghiXacMinh", OnFailure = "Failure_DeNghiXacMinh", OnBegin = "FnBegin_DeNghiXacMinh" }, new { @class = "formtiendoEdit form-horizontal" }))
+                {
+                    @Html.AntiForgeryToken()
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label>Mục tiêu xác minh</label>
+                                    <input type="text" class="form-control" placeholder="Nhập mục tiêu xác minh" id="MucTieu" name="MucTieu">
+                                    <input type="text" class="form-control" hidden name="MaCanBo" id="MaCanBo">
+                                    <input type="text" class="form-control" hidden name="MaLapKeHoachXacMinh" id="MaLapKeHoachXacMinh" value="@ViewBag.ID">
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label>Cơ quan, tổ chức, đơn vị, cá nhân phối hợp</label>
+                                    <select class="form-control" name="CoQuanPhoiHop" id="CoQuanPhoiHop" style="width: 100%; height: 100%">
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="form-group">
+                                    <label>Nội dung đề nghị</label>
+                                    <textarea type="text" class="form-control" placeholder="Nhập nội dung đề nghị" id="NoiDungDeNghi" name="NoiDungDeNghi"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer justify-content-between">
+                        <button type="button" class="btn btn-danger closeform" data-dismiss="modal" style="width: 110px">
+                            Hủy
+                        </button>
+                        <button type="submit" class="btn btn-primary" style="position: relative; width: 110px;">
+                            <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="background: none; display: block; shape-rendering: auto; margin: 0px; padding: 0px; width: 20px; height: 20px; position: absolute;left: 5px;top: 6px;" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid" class="loading_thongtinkehoach d-none">
+                                <circle cx="50" cy="50" r="32" stroke-width="8" stroke="#ffffff" stroke-dasharray="50.26548245743669 50.26548245743669" fill="none" stroke-linecap="round">
+                                    <animateTransform attributeName="transform" type="rotate" repeatCount="indefinite" dur="1s" keyTimes="0;1" values="0 50 50;360 50 50"></animateTransform>
+                                </circle>
+                            </svg>
+                            Gửi
+                        </button>
+                    </div>
+
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<script src="~/Scripts/NV_TienHanhXacMinh_ChiTiet.js"></script>

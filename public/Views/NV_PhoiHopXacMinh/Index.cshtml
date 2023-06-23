@@ -1,0 +1,142 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-left">
+                    <li class="breadcrumb-item"><a href="@Url.Action("Index","Home")">Trang chủ</a></li>
+                    <li class="breadcrumb-item active">Danh Sách đề nghị xác minh</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="card elevation-2" style="overflow-x: scroll; overflow-y: hidden;">
+                    <div class="card-tools">
+                      
+                    </div>
+                    <table class="table table-hover text-nowrap table-bordered" id="dataTable">
+                        <thead class="bg-primary">
+                            <tr>
+                                <th style="width: 3%;">STT</th>
+                                <th style="width: 15%;">Mục tiêu đề nghị</th>
+                                <th style="width: 10%;">Cán bộ</th>
+                                <th style="width: 30%;">Nội dung đề nghị</th>
+                                <th style="width: 10%;">Đơn vị phối hợp</th>
+                                <th class="text-center" style="width: 12%;">Trạng thái</th>
+                                <th class="text-center" style="width: 10%;">Chức năng</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                    <div class="card-footer clearfix" style="height: 51px; width: 100%">
+                        <ul class="pagination pagination-sm m-0 float-right">
+                        </ul>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+</section>
+<script>
+
+    var t;
+
+    function loadDataTable() {
+
+        t = $("#dataTable").DataTable({
+            "lengthChange": false,
+            "info": false,
+
+            "language": {
+
+                "search": "",
+                "info": "Tổng số _TOTAL_ hàng",
+                "infoEmpty": "",
+                "infoFiltered": "",
+                "paginate": {
+                    "next": "»",
+                    "previous": "«"
+                },
+                "processing": `Đang tải dữ liệu`,
+
+                searchPlaceholder: "Tìm...",
+                zeroRecords: "Không tìm thấy kết quả",
+
+            },
+
+            "serverSide": true,
+            "processing": true,
+            "ajax": {
+                "url": "/NV_PhoiHopXacMinh/LoadData",
+                "type": "POST",
+                "datatype": "json"
+            },
+            "columns": [
+                { "data": "ChuDe" },
+                { "data": "ChuDe" },
+                { "data": "HoTen" },
+
+                { "data": "NoiDungDeNghi" },
+
+                { "data": "Ten" },
+                {
+                    "data": "TrangThai", "render": function (data, type, row) {
+
+                        if (data == true) return `<div class="icheck-primary d-inline pr-5">
+                                        <label for="TrangThai">
+                                            Đã phản hồi
+                                        </label>
+                                    </div>`
+
+                        else return `<div class="icheck-primary d-inline pr-5"> 
+                                        <label for="TrangThai">
+                                            Đang chờ phản hồi
+                                        </label>
+                                    </div>`
+
+                    }
+                },
+
+                {
+                    "data": "ID", "render": function (data, type, row) {
+                        return ` <a style="cursor:pointer" class="btn-edit" pattern="edit" href="/NV_PhoiHopXacMinh/PhoiHopXacMinh/${data}"><span class="fa fa-pager"></span> Xem chi tiết</a>`
+                    }
+                },
+            ]
+
+        });
+        t.on('draw.dt', function () {
+            var info = t.page.info();
+            t.column(0, { search: 'applied', order: 'applied', page: 'applied' }).nodes().each(function (cell, i) {
+                cell.innerHTML = i + 1 + info.start;
+            });
+        });
+
+    }
+
+
+
+
+
+
+    $(document).ready(function () {
+        loadDataTable();
+
+    })
+
+</script>

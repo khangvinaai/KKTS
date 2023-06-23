@@ -1,0 +1,151 @@
+﻿
+@{
+    ViewBag.Title = "Báo Cáo Kết Quả Xác Minh";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-left">
+                    <li class="breadcrumb-item"><a href="@Url.Action("Index","Home")">Trang chủ</a></li>
+                    <li class="breadcrumb-item active">Báo Cáo Kết Quả Xác Minh</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</section>
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="card elevation-2">
+                    <div class="card-tools">
+                        <div class="input-group input-group-sm row">
+
+                            <input type="text" name="table_search" class="form-control float-right mr-1" placeholder="Tìm..." id="Filter">
+                            <div class="input-group-append mr-3">
+                                <button type="submit" class="btn btn-default" id="search_btn">
+                                    <i class="fas fa-search text-primary"></i>
+                                </button>
+                            </div>
+                            <div class="input-group-append">
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <table class="table table-hover text-nowrap table-bordered" id="dataTable">
+                        <thead class="bg-primary">
+                            <tr>
+                                <th width="5%">STT</th>
+                                <th width="35%">Tên Kế Hoạch Xác Minh</th>
+                                <th width="10%">Kế Hoạch Năm</th>
+                                <th width="10%">Căn Cứ Quyết Định</th>
+                                <th width="20%">Nội Dung Xác Minh</th>
+                                <th width="10%">Ngày Ra Quyết Định</th>
+                                <th width="10%">Thời Hạn Xác Minh</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                    <div class="card-footer clearfix" style="height: 51px; width: 100%">
+                        <ul class="pagination pagination-sm m-0 float-right">
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    var dt;
+    function loadDataTable() {
+        dt = $("#dataTable").DataTable({
+            "lengthChange": false,
+            "info": false,
+            "searching": true,
+            "language": {
+                "search": "",
+                "info": "Tổng số _TOTAL_ hàng",
+                "infoEmpty": "",
+                "infoFiltered": "",
+                "paginate": {
+                    "next": "»",
+                    "previous": "«"
+                },
+                "processing": `Đang tải dữ liệu`,
+                searchPlaceholder: "Tìm...",
+                zeroRecords: "Không tìm thấy kết quả",
+
+            },
+            dom: 'Bfrtip',
+            buttons: [
+                {
+                    text: '<i class="fa fa-file-excel"></i>',
+                    extend: 'excel',
+                    className: 'btn btn-outline-primary btn-sm mt-2 ml-3'
+                },
+                {
+                    text: '<i class="fa fa-file-pdf"></i>',
+                    extend: 'pdf',
+                    className: 'btn btn-outline-primary btn-sm mt-2'
+                },
+                {
+                    text: '<i class="fa fa-print"></i>',
+                    extend: 'print',
+                    className: 'btn btn-outline-primary btn-sm mt-2'
+                }
+            ],
+
+            //Hoàng chỉnh sửa option tỉnh, huyện 23-2-2022
+            "serverSide": true,
+            "processing": true,
+            "ajax": {
+                "url": "/NV_LapKeHoachXacMinh/LoadDataKeHoachXacMinh",
+                "type": "POST",
+                "datatype": "json"
+            },
+
+            "columns": [
+                { "data": "ID" },
+                {
+                    "data": { "TenKeHoachXacMinh": "TenKeHoachXacMinh", "ID": "ID" }, "render": function (data, type, row, meta) {
+                        return `<a href="/bao-cao-ket-qua-xac-minh/bao-cao/${data.ID}"><b>${data.TenKeHoachXacMinh}</b></a>`
+                    }
+                },
+                { "data": "KeHoachNam" },
+                { "data": "CanCuQuyetDinh" },
+                { "data": "NoiDungXacMinh" },
+                {
+                    "data": "NgayRaQuyetDinh", "render": function (data, type, row, meta) {
+                        return moment(data).format('DD/MM/YYYY');
+                    }
+                },
+                {
+                    "data": "ThoiHanXacMinh", "render": function (data, type, row, meta) {
+                        return data + " Ngày";
+                    }
+                },
+
+            ]
+        });
+        dt.on('draw.dt', function () {
+            var info = dt.page.info();
+            dt.column(0, { search: 'applied', order: 'applied', page: 'applied' }).nodes().each(function (cell, i) {
+                cell.innerHTML = i + 1 + info.start;
+            });
+        });
+    }
+
+    $(document).ready(function () {
+        loadDataTable();
+
+    })
+</script>
+
+
+

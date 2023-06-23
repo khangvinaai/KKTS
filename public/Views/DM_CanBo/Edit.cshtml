@@ -1,0 +1,547 @@
+﻿
+@{
+    ViewBag.Title = "Cập nhật thông tin cán bộ";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-left">
+                    <li class="breadcrumb-item"><a href="@Url.Action("Index", "Home")">Trang chủ</a></li>
+                    <li class="breadcrumb-item active">Cập nhật thông tin cán bộ</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12 card">
+                @using (Ajax.BeginForm("Edit", "DM_CanBo", new AjaxOptions { HttpMethod = "POST", OnSuccess = "FnSuccess_Edit", OnFailure = "Failure_Edit", OnBegin = "FnBegin_Edit" }, new { @class = "formDM_CanBoEdit form-horizontal" }))
+                {
+                    @Html.AntiForgeryToken()
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="card-content-custom">
+                                <div class="col-md-12" style="text-align: left; padding-top: 10px;">
+                                    <label class="Showheader-title">
+                                        <label class="mt-0 header-title header-title-Edit" data-toggle="collapse" data-target="#collapseThongTinCanBo" aria-expanded="false" aria-controls="collapseThongTinCanBo">
+                                            <i class="far fa-caret-square-down"></i>
+                                            <span class="TitleForm clsShow cursor-pointer">Thông tin người kê khai</span>
+                                        </label>
+                                    </label>
+                                </div>
+                                <div class="col-md-12 collapse show" id="collapseThongTinCanBo">
+                                    <div class="row">
+                                        <div class="col-5">
+                                            <div class="form-group">
+                                                <label>Họ Và Tên</label>
+                                                <input type="text" class="form-control" placeholder="nhập họ và tên" id="HoTen_edt" name="HoTen">
+                                                <input type="text" class="form-control" id="Ma_CanBo_edt" name="Ma_CanBo" hidden>
+                                            </div>
+                                        </div>
+                                        <div class="col-2">
+                                            <div class="form-group">
+                                                <label>Ngày sinh</label>
+                                                <input type="date" class="form-control" id="DoB_edt" name="DoB">
+                                            </div>
+                                        </div>
+                                        <div class="col-5">
+                                            <div class="form-group">
+                                                <label>Địa chỉ</label>
+                                                <input type="text" class="form-control" placeholder="nhập địa chỉ" id="DiaChiThuongTru_edt" name="DiaChiThuongTru">
+                                            </div>
+                                        </div>
+                                        <div class="col-3">
+                                            <div class="form-group">
+                                                <label>Tỉnh thành</label>
+                                                <select class="form-control" name="Ma_TinhThanh" id="Ma_TinhThanh_edt" style="width: 100%; height: 100%">
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-3">
+                                            <div class="form-group">
+                                                <label>Quận huyện</label>
+                                                <select class="form-control" name="Ma_QuanHuyen" id="Ma_QuanHuyen_edt" style="width: 100%; height: 100%">
+                                                    <option value="">Chọn</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-3">
+                                            <div class="form-group">
+                                                <label>Phường Xã</label>
+                                                <select class="form-control" name="Ma_PhuongXa_TT" id="Ma_PhuongXa_TT_edt" style="width: 100%; height: 100%">
+                                                    <option value="">Chọn</option>
+                                                </select>
+                                            </div>
+                                        </div>
+
+
+                                        <div class="col-3">
+                                            <div class="form-group">
+                                                <label>Số CMND/CCCD</label>
+                                                <input type="text" class="form-control" placeholder="nhập số CMND/CCCD" id="SoCCCD_edt" name="SoCCCD">
+                                            </div>
+                                        </div>
+
+                                        <div class="col-3">
+                                            <div class="form-group">
+                                                <label>Ngày Cấp</label>
+                                                <input type="date" class="form-control" id="NgayCap_edt" name="NgayCap">
+                                            </div>
+                                        </div>
+
+                                        <div class="col-3">
+                                            <div class="form-group">
+                                                <label>Nơi Cấp</label>
+                                                <input type="text" class="form-control" placeholder="nơi cấp" id="NoiCap_edt" name="NoiCap">
+                                            </div>
+                                        </div>
+
+                                        <div class="col-3">
+                                            <div class="form-group">
+                                                <label>Cơ Quan</label>
+                                                
+                                                <select class="form-control" name="Ma_CoQuan_DonVi" id="Ma_CoQuan_DonVi_edt" style="width: 100%; height: 100%">
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-3">
+                                            <div class="form-group">
+                                                <label>Chức Vụ</label>
+                                                @*<input type="text" class="form-control" placeholder="Cơ quan đơn vị" id="Ma_ChucVu_ChucDanh_edt" name="Ma_ChucVu_ChucDanh">*@
+                                                <select class="form-control" name="Ma_ChucVu_ChucDanh" id="Ma_ChucVu_ChucDanh_edt" style="width: 100%; height: 100%">
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row" style="margin-top:10px;">
+                            <div class="card-content-custom">
+                                <div class="col-md-12" style="text-align: left; padding-top: 10px;">
+                                    <label class="Showheader-title">
+                                        <label class="mt-0 header-title header-title-Edit" data-toggle="collapse" data-target="#collapseThanNhan" aria-expanded="false" aria-controls="collapseThanNhan">
+                                            <i class="far fa-caret-square-down"></i>
+                                            <span class="TitleForm clsShow cursor-pointer">Thông tin thân nhân</span>
+                                        </label>
+                                    </label>
+                                </div>
+                                <div class="col-md-12 collapse show" id="collapseThanNhan">
+                                    <div class="row tn0_edt d-none" style="padding-top: 1%; padding-bottom: 1%; padding-left: 2%; padding-right: 2%; border-radius: 10px; box-shadow: 0 5px 20px 0 rgb(0 0 0 / 15%); margin-top: 10px;">
+                                        <div class="col-5">
+                                            <div class="form-group">
+                                                <label>Họ Và Tên</label>
+                                                <input type="text" class="form-control" placeholder="nhập họ và tên" id="HoTenThanNhan0_edt" name="HoTenThanNhan[]">
+                                                <input type="text" class="form-control" id="Ma_CanBo_ThanNhan0_edt" name="Ma_CanBo_ThanNhan" hidden>
+                                            </div>
+                                        </div>
+                                        <div class="col-2">
+                                            <div class="form-group">
+                                                <label>Ngày sinh</label>
+                                                <input type="date" class="form-control" id="DoBTN0_edt" name="DoBTN[]">
+                                            </div>
+                                        </div>
+                                        <div class="col-5">
+                                            <div class="form-group">
+                                                <label>Địa chỉ</label>
+                                                <input type="text" class="form-control" placeholder="nhập địa chỉ" id="DiaChiThuongTruTN0_edt" name="DiaChiThuongTruTN[]">
+                                            </div>
+                                        </div>
+                                        <div class="col-3">
+                                            <div class="form-group">
+                                                <label>Tỉnh thành</label>
+                                                <select class="form-control" name="Ma_TinhThanhTN[]" id="Ma_TinhThanhTN0_edt" style="width: 100%; height: 100%">
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-3">
+                                            <div class="form-group">
+                                                <label>Quận huyện</label>
+                                                <select class="form-control" name="Ma_QuanHuyenTN[]" id="Ma_QuanHuyenTN0_edt" style="width: 100%; height: 100%">
+                                                    <option value="">Chọn</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-3">
+                                            <div class="form-group">
+                                                <label>Phường Xã</label>
+                                                <select class="form-control" name="Ma_PhuongXa_TTTN[]" id="Ma_PhuongXa_TTTN0_edt" style="width: 100%; height: 100%">
+                                                    <option value="">Chọn</option>
+                                                </select>
+                                            </div>
+                                        </div>
+
+
+                                        <div class="col-3">
+                                            <div class="form-group">
+                                                <label>Số CMND/CCCD</label>
+                                                <input type="text" class="form-control" placeholder="nhập số CMND/CCCD" id="SoCCCDTN0_edt" name="SoCCCDTN[]">
+                                            </div>
+                                        </div>
+
+                                        <div class="col-3">
+                                            <div class="form-group">
+                                                <label>Ngày Cấp</label>
+                                                <input type="date" class="form-control" id="NgayCapTN0_edt" name="NgayCapTN[]">
+                                            </div>
+                                        </div>
+
+                                        <div class="col-3">
+                                            <div class="form-group">
+                                                <label>Nơi Cấp</label>
+                                                <input type="text" class="form-control" placeholder="nơi cấp" id="NoiCapTN0_edt" name="NoiCapTN[]">
+                                            </div>
+                                        </div>
+                                        <div class="col-3">
+                                            <div class="form-group">
+                                                <label>Thân nhân là</label>
+                                                <select class="form-control" name="VaiTroThanNhan[]" id="VaiTroThanNhan0_edt" style="width: 100%; height: 100%">
+                                                    <option value="">Chọn</option>
+                                                    <option value="Vợ hoặc Chồng">Vợ hoặc Chồng</option>
+                                                    <option value="Con">Con</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row tn1_edt d-none" style="padding-top: 1%; padding-bottom: 1%; padding-left: 2%; padding-right: 2%; border-radius: 10px; box-shadow: 0 5px 20px 0 rgb(0 0 0 / 15%); margin-top: 10px;">
+                                        <div class="col-5">
+                                            <div class="form-group">
+                                                <label>Họ Và Tên</label>
+                                                <input type="text" class="form-control" placeholder="nhập họ và tên" id="HoTenThanNhan1_edt" name="HoTenThanNhan[]">
+                                                <input type="text" class="form-control" id="Ma_CanBo_ThanNhan1_edt" name="Ma_CanBo_ThanNhan" hidden>
+                                            </div>
+                                        </div>
+                                        <div class="col-2">
+                                            <div class="form-group">
+                                                <label>Ngày sinh</label>
+                                                <input type="date" class="form-control" id="DoBTN1_edt" name="DoBTN[]">
+                                            </div>
+                                        </div>
+                                        <div class="col-5">
+                                            <div class="form-group">
+                                                <label>Địa chỉ</label>
+                                                <input type="text" class="form-control" placeholder="nhập địa chỉ" id="DiaChiThuongTruTN1_edt" name="DiaChiThuongTruTN[]">
+                                            </div>
+                                        </div>
+                                        <div class="col-3">
+                                            <div class="form-group">
+                                                <label>Tỉnh thành</label>
+                                                <select class="form-control" name="Ma_TinhThanhTN[]" id="Ma_TinhThanhTN1_edt" style="width: 100%; height: 100%">
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-3">
+                                            <div class="form-group">
+                                                <label>Quận huyện</label>
+                                                <select class="form-control" name="Ma_QuanHuyenTN[]" id="Ma_QuanHuyenTN1_edt" style="width: 100%; height: 100%">
+                                                    <option value="">Chọn</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-3">
+                                            <div class="form-group">
+                                                <label>Phường Xã</label>
+                                                <select class="form-control" name="Ma_PhuongXa_TTTN[]" id="Ma_PhuongXa_TTTN1_edt" style="width: 100%; height: 100%">
+                                                    <option value="">Chọn</option>
+                                                </select>
+                                            </div>
+                                        </div>
+
+
+                                        <div class="col-3">
+                                            <div class="form-group">
+                                                <label>Số CMND/CCCD</label>
+                                                <input type="text" class="form-control" placeholder="nhập số CMND/CCCD" id="SoCCCDTN1_edt" name="SoCCCDTN[]">
+                                            </div>
+                                        </div>
+
+                                        <div class="col-3">
+                                            <div class="form-group">
+                                                <label>Ngày Cấp</label>
+                                                <input type="date" class="form-control" id="NgayCapTN1_edt" name="NgayCapTN[]">
+                                            </div>
+                                        </div>
+
+                                        <div class="col-3">
+                                            <div class="form-group">
+                                                <label>Nơi Cấp</label>
+                                                <input type="text" class="form-control" placeholder="nơi cấp" id="NoiCapTN1_edt" name="NoiCapTN[]">
+                                            </div>
+                                        </div>
+                                        <div class="col-3">
+                                            <div class="form-group">
+                                                <label>Thân nhân là</label>
+                                                <select class="form-control" name="VaiTroThanNhan[]" id="VaiTroThanNhan1_edt" style="width: 100%; height: 100%">
+                                                    <option value="">Chọn</option>
+                                                    <option value="Vợ hoặc Chồng">Vợ hoặc Chồng</option>
+                                                    <option value="Con">Con</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row tn2_edt d-none" style="padding-top: 1%; padding-bottom: 1%; padding-left: 2%; padding-right: 2%; border-radius: 10px; box-shadow: 0 5px 20px 0 rgb(0 0 0 / 15%); margin-top: 10px;">
+                                        <div class="col-5">
+                                            <div class="form-group">
+                                                <label>Họ Và Tên</label>
+                                                <input type="text" class="form-control" placeholder="nhập họ và tên" id="HoTenThanNhan2_edt" name="HoTenThanNhan[]">
+                                                <input type="text" class="form-control" id="Ma_CanBo_ThanNhan2_edt" name="Ma_CanBo_ThanNhan" hidden>
+                                            </div>
+                                        </div>
+                                        <div class="col-2">
+                                            <div class="form-group">
+                                                <label>Ngày sinh</label>
+                                                <input type="date" class="form-control" id="DoBTN2_edt" name="DoBTN[]">
+                                            </div>
+                                        </div>
+                                        <div class="col-5">
+                                            <div class="form-group">
+                                                <label>Địa chỉ</label>
+                                                <input type="text" class="form-control" placeholder="nhập địa chỉ" id="DiaChiThuongTruTN2_edt" name="DiaChiThuongTruTN[]">
+                                            </div>
+                                        </div>
+                                        <div class="col-3">
+                                            <div class="form-group">
+                                                <label>Tỉnh thành</label>
+                                                <select class="form-control" name="Ma_TinhThanhTN[]" id="Ma_TinhThanhTN2_edt" style="width: 100%; height: 100%">
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-3">
+                                            <div class="form-group">
+                                                <label>Quận huyện</label>
+                                                <select class="form-control" name="Ma_QuanHuyenTN[]" id="Ma_QuanHuyenTN2_edt" style="width: 100%; height: 100%">
+                                                    <option value="">Chọn</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-3">
+                                            <div class="form-group">
+                                                <label>Phường Xã</label>
+                                                <select class="form-control" name="Ma_PhuongXa_TTTN[]" id="Ma_PhuongXa_TTTN2_edt" style="width: 100%; height: 100%">
+                                                    <option value="">Chọn</option>
+                                                </select>
+                                            </div>
+                                        </div>
+
+
+                                        <div class="col-3">
+                                            <div class="form-group">
+                                                <label>Số CMND/CCCD</label>
+                                                <input type="text" class="form-control" placeholder="nhập số CMND/CCCD" id="SoCCCDTN2_edt" name="SoCCCDTN[]">
+                                            </div>
+                                        </div>
+
+                                        <div class="col-3">
+                                            <div class="form-group">
+                                                <label>Ngày Cấp</label>
+                                                <input type="date" class="form-control" id="NgayCapTN2_edt" name="NgayCapTN[]">
+                                            </div>
+                                        </div>
+
+                                        <div class="col-3">
+                                            <div class="form-group">
+                                                <label>Nơi Cấp</label>
+                                                <input type="text" class="form-control" placeholder="nơi cấp" id="NoiCapTN2_edt" name="NoiCapTN[]">
+                                            </div>
+                                        </div>
+                                        <div class="col-3">
+                                            <div class="form-group">
+                                                <label>Thân nhân là</label>
+                                                <select class="form-control" name="VaiTroThanNhan[]" id="VaiTroThanNhan2_edt" style="width: 100%; height: 100%">
+                                                    <option value="">Chọn</option>
+                                                    <option value="Vợ hoặc Chồng">Vợ hoặc Chồng</option>
+                                                    <option value="Con">Con</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row tn3_edt d-none" style="padding-top: 1%; padding-bottom: 1%; padding-left: 2%; padding-right: 2%; border-radius: 10px; box-shadow: 0 5px 20px 0 rgb(0 0 0 / 15%); margin-top: 10px;">
+                                        <div class="col-5">
+                                            <div class="form-group">
+                                                <label>Họ Và Tên</label>
+                                                <input type="text" class="form-control" placeholder="nhập họ và tên" id="HoTenThanNhan3_edt" name="HoTenThanNhan[]">
+                                                <input type="text" class="form-control" id="Ma_CanBo_ThanNhan3_edt" name="Ma_CanBo_ThanNhan" hidden>
+                                            </div>
+                                        </div>
+                                        <div class="col-2">
+                                            <div class="form-group">
+                                                <label>Ngày sinh</label>
+                                                <input type="date" class="form-control" id="DoBTN3_edt" name="DoBTN[]">
+                                            </div>
+                                        </div>
+                                        <div class="col-5">
+                                            <div class="form-group">
+                                                <label>Địa chỉ</label>
+                                                <input type="text" class="form-control" placeholder="nhập địa chỉ" id="DiaChiThuongTruTN3_edt" name="DiaChiThuongTruTN[]">
+                                            </div>
+                                        </div>
+                                        <div class="col-3">
+                                            <div class="form-group">
+                                                <label>Tỉnh thành</label>
+                                                <select class="form-control" name="Ma_TinhThanhTN[]" id="Ma_TinhThanhTN3_edt" style="width: 100%; height: 100%">
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-3">
+                                            <div class="form-group">
+                                                <label>Quận huyện</label>
+                                                <select class="form-control" name="Ma_QuanHuyenTN[]" id="Ma_QuanHuyenTN3_edt" style="width: 100%; height: 100%">
+                                                    <option value="">Chọn</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-3">
+                                            <div class="form-group">
+                                                <label>Phường Xã</label>
+                                                <select class="form-control" name="Ma_PhuongXa_TTTN[]" id="Ma_PhuongXa_TTTN3_edt" style="width: 100%; height: 100%">
+                                                    <option value="">Chọn</option>
+                                                </select>
+                                            </div>
+                                        </div>
+
+
+                                        <div class="col-3">
+                                            <div class="form-group">
+                                                <label>Số CMND/CCCD</label>
+                                                <input type="text" class="form-control" placeholder="nhập số CMND/CCCD" id="SoCCCDTN3_edt" name="SoCCCDTN[]">
+                                            </div>
+                                        </div>
+
+                                        <div class="col-3">
+                                            <div class="form-group">
+                                                <label>Ngày Cấp</label>
+                                                <input type="date" class="form-control" id="NgayCapTN3_edt" name="NgayCapTN[]">
+                                            </div>
+                                        </div>
+
+                                        <div class="col-3">
+                                            <div class="form-group">
+                                                <label>Nơi Cấp</label>
+                                                <input type="text" class="form-control" placeholder="nơi cấp" id="NoiCapTN3_edt" name="NoiCapTN[]">
+                                            </div>
+                                        </div>
+                                        <div class="col-3">
+                                            <div class="form-group">
+                                                <label>Thân nhân là</label>
+                                                <select class="form-control" name="VaiTroThanNhan[]" id="VaiTroThanNhan3_edt" style="width: 100%; height: 100%">
+                                                    <option value="">Chọn</option>
+                                                    <option value="Vợ hoặc Chồng">Vợ hoặc Chồng</option>
+                                                    <option value="Con">Con</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row tn4_edt d-none" style="padding-top: 1%; padding-bottom: 1%; padding-left: 2%; padding-right: 2%; border-radius: 10px; box-shadow: 0 5px 20px 0 rgb(0 0 0 / 15%); margin-top: 10px;">
+                                        <div class="col-5">
+                                            <div class="form-group">
+                                                <label>Họ Và Tên</label>
+                                                <input type="text" class="form-control" placeholder="nhập họ và tên" id="HoTenThanNhan4_edt" name="HoTenThanNhan[]">
+                                                <input type="text" class="form-control" id="Ma_CanBo_ThanNhan4_edt" name="Ma_CanBo_ThanNhan" hidden>
+                                            </div>
+                                        </div>
+                                        <div class="col-2">
+                                            <div class="form-group">
+                                                <label>Ngày sinh</label>
+                                                <input type="date" class="form-control" id="DoBTN4_edt" name="DoBTN[]">
+                                            </div>
+                                        </div>
+                                        <div class="col-5">
+                                            <div class="form-group">
+                                                <label>Địa chỉ</label>
+                                                <input type="text" class="form-control" placeholder="nhập địa chỉ" id="DiaChiThuongTruTN4_edt" name="DiaChiThuongTruTN[]">
+                                            </div>
+                                        </div>
+                                        <div class="col-3">
+                                            <div class="form-group">
+                                                <label>Tỉnh thành</label>
+                                                <select class="form-control" name="Ma_TinhThanhTN[]" id="Ma_TinhThanhTN4_edt" style="width: 100%; height: 100%">
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-3">
+                                            <div class="form-group">
+                                                <label>Quận huyện</label>
+                                                <select class="form-control" name="Ma_QuanHuyenTN[]" id="Ma_QuanHuyenTN4_edt" style="width: 100%; height: 100%">
+                                                    <option value="">Chọn</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-3">
+                                            <div class="form-group">
+                                                <label>Phường Xã</label>
+                                                <select class="form-control" name="Ma_PhuongXa_TTTN[]" id="Ma_PhuongXa_TTTN4_edt" style="width: 100%; height: 100%">
+                                                    <option value="">Chọn</option>
+                                                </select>
+                                            </div>
+                                        </div>
+
+
+                                        <div class="col-3">
+                                            <div class="form-group">
+                                                <label>Số CMND/CCCD</label>
+                                                <input type="text" class="form-control" placeholder="nhập số CMND/CCCD" id="SoCCCDTN4_edt" name="SoCCCDTN[]">
+                                            </div>
+                                        </div>
+
+                                        <div class="col-3">
+                                            <div class="form-group">
+                                                <label>Ngày Cấp</label>
+                                                <input type="date" class="form-control" id="NgayCapTN4_edt" name="NgayCapTN[]">
+                                            </div>
+                                        </div>
+
+                                        <div class="col-3">
+                                            <div class="form-group">
+                                                <label>Nơi Cấp</label>
+                                                <input type="text" class="form-control" placeholder="nơi cấp" id="NoiCapTN4_edt" name="NoiCapTN[]">
+                                            </div>
+                                        </div>
+                                        <div class="col-3">
+                                            <div class="form-group">
+                                                <label>Thân nhân là</label>
+                                                <select class="form-control" name="VaiTroThanNhan[]" id="VaiTroThanNhan4_edt" style="width: 100%; height: 100%">
+                                                    <option value="">Chọn</option>
+                                                    <option value="Vợ hoặc Chồng">Vợ hoặc Chồng</option>
+                                                    <option value="Con">Con</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row" style="margin-top: 20px; float: right" id="clsAddRow_collapseThanNhan_edt">
+                                        <div class="col-12">
+                                            <span class="btn btn-primary clsAddRow"><i class="fas fa-plus-square"></i> Thêm dòng</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+
+                    </div>
+                    <div class="modal-footer justify-content-between">
+                        <button type="button" class="btn btn-danger closeform" data-dismiss="modal" style="width: 110px">
+                            Đóng
+                        </button>
+                        <button type="submit" class="btn btn-primary" style="position: relative; width: 110px;">
+                            <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="background: none; display: block; shape-rendering: auto; margin: 0px; padding: 0px; width: 20px; height: 20px; position: absolute;left: 5px;top: 6px;" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid" class="loading_editcanbo d-none">
+                                <circle cx="50" cy="50" r="32" stroke-width="8" stroke="#ffffff" stroke-dasharray="50.26548245743669 50.26548245743669" fill="none" stroke-linecap="round">
+                                    <animateTransform attributeName="transform" type="rotate" repeatCount="indefinite" dur="1s" keyTimes="0;1" values="0 50 50;360 50 50"></animateTransform>
+                                </circle>
+                            </svg>
+                            Cập nhật
+                        </button>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</section>
+
+<script src="~/Scripts/DM_CanBo_Edit.js"></script>

@@ -1,0 +1,164 @@
+﻿
+@{
+    ViewBag.Title = "Danh Sách Cơ Quan Đơn Vị Chưa Lập Kế Hoạch Kê Khai Hằng Năm";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-left">
+                    <li class="breadcrumb-item"><a href="@Url.Action("Index","Home")">Trang chủ</a></li>
+                    <li class="breadcrumb-item active">Báo Cáo Cơ Quan, Đơn Vị Chưa Lập Kế Hoạch Kê Khai Hằng Năm <span id="nam">@DateTime.Now.Year</span></li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="card elevation-2">
+                    <div class="card-tools">
+                        <div class="input-group input-group-sm row" style="width: 230px;">
+                            <span style="margin-top: 5px; margin-right: 5px;"><b>Năm Kế Hoạch:</b>  </span>
+                            <input type="number" name="table_search" class="form-control float-right mr-1" value="@DateTime.Now.Year" id="Filter">
+                            <div class="input-group-append mr-3">
+                                <button type="submit" class="btn btn-default" id="search_btn">
+                                    <i class="fas fa-search text-primary"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <table class="table table-hover text-nowrap table-bordered" id="dataTable" style="width: 100%;">
+                        <thead class="bg-primary">
+                            <tr>
+                                <th style="width: 5%">STT</th>
+                                <th style="width: 35%">Tên Loại Cơ Quan - Đơn Vị</th>
+                                <th style="width: 40%">Tên Cơ Quan - Đơn Vị</th>
+                                <th style="width: 15%">Trạng Thái</th>
+                                <th style="width: 5%"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                    <div class="card-footer clearfix" style="height: 51px; width: 100%">
+                        <ul class="pagination pagination-sm m-0 float-right">
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<script>
+    var dt;
+    function loadDataTable() {
+        dt = $("#dataTable").DataTable({
+            "lengthChange": false,
+            "info": true,
+            "searching": true,
+            "language": {
+                "search": "",
+                "info": "Tổng số _TOTAL_ cơ quan, đơn vị",
+                "infoEmpty": "",
+                "infoFiltered": "",
+                "paginate": {
+                    "next": "»",
+                    "previous": "«"
+                },
+                "processing": `Đang tải dữ liệu`,
+                searchPlaceholder: "Tìm...",
+                zeroRecords: "Không tìm thấy kết quả",
+
+            },
+            dom: 'Bfrtip',
+            buttons: [
+                {
+                    text: '<i class="fa fa-file-excel"></i>',
+                    extend: 'excel',
+                    className: 'btn btn-outline-primary btn-sm mt-2 ml-3'
+                },
+                {
+                    text: '<i class="fa fa-file-pdf"></i>',
+                    extend: 'pdf',
+                    className: 'btn btn-outline-primary btn-sm mt-2'
+                },
+                {
+                    text: '<i class="fa fa-print"></i>',
+                    extend: 'print',
+                    className: 'btn btn-outline-primary btn-sm mt-2'
+                }
+            ],
+
+            "serverSide": true,
+            "processing": true,
+            "ajax": {
+                "url": "/BC_DonViChuaLapKeHoach/LoadDataCoQuan",
+                "type": "POST",
+                "datatype": "json"
+            },
+            "columnDefs": [
+                { className: "cn", "targets": [4] }
+            ],
+            "columns": [
+                { "data": "Ten_Loai_CQDV" },
+                { "data": "Ten_Loai_CQDV" },
+                { "data": "Ten" },
+                {
+                    "data": "SoLuong", "render": function (data, type, row) {
+                      
+                        return `<span class="badge badge-danger">Chưa Lập Kế Hoạch Kế Khai Hằng Năm</span>`
+                       
+                    }
+                },
+                {
+                    "data": "Ma_CoQuan_DonVi", "render": function (data, type, row) {
+                        return `<div class="dropleft">
+                                      <button class="btn btn-outline-info btn-sm" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="padding: 4px 13px;">
+                                        <i class="fa-solid fa-ellipsis-vertical"></i>
+                                      </button>
+                                      <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                        <a class="dropdown-item" data-toggle="modal" data-target="#ThongBao" data-model-macoquan="${data}" data-model-loai="1"  data-model-macanbo="" onclick="ThongBao(this)">
+                                            Gửi Thông Báo
+                                        </a>   
+                                        <a class="dropdown-item" href="bao-cao-ke-hoach-ke-khai/ke-hoach-ke-khai/${data}" >
+                                            Gửi Email
+                                        </a> 
+                                      </div>
+                                    </div>`
+                    }
+                },
+            ]
+        });
+        dt.on('draw.dt', function () {
+            var info = dt.page.info();
+            dt.column(0, { search: 'applied', order: 'applied', page: 'applied' }).nodes().each(function (cell, i) {
+                cell.innerHTML = i + 1 + info.start;
+            });
+        });
+    }
+
+    $(document).ready(function () {
+        loadDataTable();
+
+        $("#search_btn").click(() => {
+            var searchValue = $('#Filter').val().trim()
+            $('#nam').text(searchValue)
+            dt.column(0).search(searchValue);
+            dt.draw()
+        })
+
+        $("#Filter").keypress(function (e) {
+            if (e.keyCode == 13) {
+                dt.columns(0).search($("#Filter").val());
+                $('#nam').text(searchValue)
+                dt.draw();
+            }
+        });
+    })
+</script>

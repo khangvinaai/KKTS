@@ -1,0 +1,349 @@
+﻿
+@{
+    ViewBag.Title = "Cán Bộ Được Xác Minh";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    <style>
+        .cn{
+            position: relative;
+        }
+    </style>
+}
+
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-left">
+                    <li class="breadcrumb-item"><a href="@Url.Action("Index","Home")">Trang chủ</a></li>
+                    <li class="breadcrumb-item"><a href="/ke-hoach-xac-minh">Kế Hoạch Xác Minh</a></li>
+                    <li class="breadcrumb-item"><a href="/ke-hoach-xac-minh/co-quan-duoc-xac-minh/@ViewBag.MaKeHoachXacMinh">Cơ Quan Được Xác Minh</a></li>
+                    <li class="breadcrumb-item active">Cán Bộ Được Xác Minh</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="card elevation-2">
+                    <div class="card-tools">
+                        <div class="input-group input-group-sm row">
+
+                            <input type="text" name="table_search" class="form-control float-right mr-1" placeholder="Tìm..." id="Filter">
+                            <div class="input-group-append mr-3">
+                                <button type="submit" class="btn btn-default" id="search_btn">
+                                    <i class="fas fa-search text-primary"></i>
+                                </button>
+                            </div>
+                            <div class="input-group-append">
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <table class="table table-hover text-nowrap table-bordered" id="dataTable" style="width: 100%">
+                        <thead class="bg-primary">
+                            <tr>
+                                <th width="5%">STT</th>
+                                <th width="13%">
+                                    Họ Tên Cán Bộ
+                                </th>
+                                <th width="10%">
+                                    Số CCCD
+                                </th>
+                                <th width="15%">
+                                    Chức vụ công tác
+                                </th>
+                                <th width="12%">
+                                    Cơ quan công tác
+                                </th>
+                                <th width="10%">
+                                    Tên Kế Hoạch Xác Minh
+                                </th>
+                              
+                                <th width="10%">
+                                    Trạng Thái Kê Khai
+                                </th>
+                                <th width="10%">
+                                    Trạng Thái Xác Minh
+                                </th>
+                                <th width="15%">
+                                    Chức năng
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                    <div class="card-footer clearfix" style="height: 51px; width: 100%">
+                        <ul class="pagination pagination-sm m-0 float-right">
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+
+    var dt;
+
+    function loadDataTable() {
+        dt = $("#dataTable").DataTable({
+            "lengthChange": false,
+            "info": false,
+            "searching": true,
+            "language": {
+                "search": "",
+                "info": "Tổng số _TOTAL_ hàng",
+                "infoEmpty": "",
+                "infoFiltered": "",
+                "paginate": {
+                    "next": "»",
+                    "previous": "«"
+                },
+                "processing": `Đang tải dữ liệu`,
+                searchPlaceholder: "Tìm...",
+                zeroRecords: "Không tìm thấy kết quả",
+
+            },
+            dom: 'Bfrtip',
+            buttons: [
+                {
+                    text: '<i class="fa fa-file-excel"></i>',
+                    extend: 'excel',
+                    className: 'btn btn-outline-primary btn-sm mt-2 ml-3'
+                },
+                {
+                    text: '<i class="fa fa-file-pdf"></i>',
+                    extend: 'pdf',
+                    className: 'btn btn-outline-primary btn-sm mt-2'
+                },
+                {
+                    text: '<i class="fa fa-print"></i>',
+                    extend: 'print',
+                    className: 'btn btn-outline-primary btn-sm mt-2'
+                }
+            ],
+
+            //Hoàng chỉnh sửa option tỉnh, huyện 23-2-2022
+            "serverSide": true,
+            "processing": true,
+            "ajax": {
+                "url": "/NV_DanhSachBanKeKhai/LoadDataCanBoXacMinh?macoquan=@ViewBag.MaCoQuan&makehoachxacminh=@ViewBag.MaKeHoachXacMinh",
+                "type": "POST",
+                "datatype": "json"
+            },
+
+             "columnDefs": [
+                { className: "cn", "targets": [7, 8] }
+            ],
+            "columns": [
+                {
+                    "data": "Ma_CanBo"
+                },
+                {
+                    "data": { "Ma_CanBo": "Ma_CanBo", "HoTen": "HoTen" }, "render": function (data, type, row, meta) {
+                        return data.HoTen
+                    },
+                },
+                { "data": "SoCCCD" },
+                { "data": "Ten_ChucVu_ChucDanh" },
+                { "data": "Ten" },
+                { "data": "TenKeHoachXacMinh" },
+                {
+                    "data": { "isKeKhai": "isKeKhai", "MaKeHoachKeKhai": "MaKeHoachKeKhai", "Ma_CanBo": "Ma_CanBo" }, "render": (data, type, row, meta) => {
+
+                        if (data.isKeKhai == false) {
+                            return ` <span class="badge badge-danger">Chưa kê khai</span>`
+                        } else {
+                            return `<span class="badge badge-success">Đã kê khai</span>`
+                        }
+                    }
+                },
+                {
+                    "data": { "TrangThaiXM": "TrangThaiXM" }, "render": (data, type, row, meta) => {
+
+                        if (data.TrangThaiXM == false) {
+                            return ` <span class="badge badge-info">Đang Tiến Hành Xác Minh</span>`
+                        } else {
+                            return `<span class="badge badge-success">Hoàn Thành Việc Xác Minh</span>`
+                        }
+                    }
+                },
+                {
+                    "data": { "isKeKhai": "isKeKhai", "Ma_CanBo": "Ma_CanBo", "TrangThai": "TrangThai", "TrangThaiXM": "TrangThaiXM","ID":"ID" }, "render": (data, type, row, meta) => {
+
+                        var row = ``
+
+                        if (data.TrangThai == true && data.isKeKhai == false) {
+                            row = row + `<button class="btn btn-outline-secondary btn-sm" disabled" disabled>
+                                            <i class="fa fa-print" aria-hidden="true"></i>
+                                         </button>`
+                        }
+                        else if (data.TrangThai == true && data.isKeKhai == true) {
+                            row = row + `<button class="btn btn-outline-info btn-sm btn-edit" id="btn_download_bankekhai_${data.Ma_CanBo}" onclick="print_bankkCBkk(this)" data-model-id="${data.Ma_CanBo}"><i class="fa fa-print" aria-hidden="true"></i></button><button class="btn btn-outline-info btn-sm d-none" id="loading_btnPrint_bankkCBkk_${data.Ma_CanBo}" style="position: relative; padding: 0px;"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="margin: auto; background: #fff0; display: block; width: 31px; height: 29px;" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid">
+                                        <circle cx="75" cy="50" fill="#93e6d6" r="5">
+                                            <animate attributeName="r" values="3;3;5;3;3" times="0;0.1;0.2;0.3;1" dur="1s" repeatCount="indefinite" begin="-0.9090909090909091s"></animate>
+                                            <animate attributeName="fill" values="#93e6d6;#93e6d6;#17a2b8;#93e6d6;#93e6d6" repeatCount="indefinite" times="0;0.1;0.2;0.3;1" dur="1s" begin="-0.9090909090909091s"></animate>
+                                        </circle>
+                                        <circle cx="71.03133832077953" cy="63.51602043638994" fill="#93e6d6" r="5">
+                                            <animate attributeName="r" values="3;3;5;3;3" times="0;0.1;0.2;0.3;1" dur="1s" repeatCount="indefinite" begin="-0.8181818181818182s"></animate>
+                                            <animate attributeName="fill" values="#93e6d6;#93e6d6;#17a2b8;#93e6d6;#93e6d6" repeatCount="indefinite" times="0;0.1;0.2;0.3;1" dur="1s" begin="-0.8181818181818182s"></animate>
+                                        </circle>
+                                        <circle cx="60.385375325047164" cy="72.74079988386296" fill="#93e6d6" r="5">
+                                            <animate attributeName="r" values="3;3;5;3;3" times="0;0.1;0.2;0.3;1" dur="1s" repeatCount="indefinite" begin="-0.7272727272727273s"></animate>
+                                            <animate attributeName="fill" values="#93e6d6;#93e6d6;#17a2b8;#93e6d6;#93e6d6" repeatCount="indefinite" times="0;0.1;0.2;0.3;1" dur="1s" begin="-0.7272727272727273s"></animate>
+                                        </circle>
+                                        <circle cx="46.442129043167874" cy="74.74553604702332" fill="#93e6d6" r="5">
+                                            <animate attributeName="r" values="3;3;5;3;3" times="0;0.1;0.2;0.3;1" dur="1s" repeatCount="indefinite" begin="-0.6363636363636364s"></animate>
+                                            <animate attributeName="fill" values="#93e6d6;#93e6d6;#17a2b8;#93e6d6;#93e6d6" repeatCount="indefinite" times="0;0.1;0.2;0.3;1" dur="1s" begin="-0.6363636363636364s"></animate>
+                                        </circle>
+                                        <circle cx="33.62848165136788" cy="68.89373935885646" fill="#93e6d6" r="5">
+                                            <animate attributeName="r" values="3;3;5;3;3" times="0;0.1;0.2;0.3;1" dur="1s" repeatCount="indefinite" begin="-0.5454545454545454s"></animate>
+                                            <animate attributeName="fill" values="#93e6d6;#93e6d6;#17a2b8;#93e6d6;#93e6d6" repeatCount="indefinite" times="0;0.1;0.2;0.3;1" dur="1s" begin="-0.5454545454545454s"></animate>
+                                        </circle>
+                                        <circle cx="26.012675659637566" cy="57.04331392103574" fill="#93e6d6" r="5">
+                                            <animate attributeName="r" values="3;3;5;3;3" times="0;0.1;0.2;0.3;1" dur="1s" repeatCount="indefinite" begin="-0.45454545454545453s"></animate>
+                                            <animate attributeName="fill" values="#93e6d6;#93e6d6;#17a2b8;#93e6d6;#93e6d6" repeatCount="indefinite" times="0;0.1;0.2;0.3;1" dur="1s" begin="-0.45454545454545453s"></animate>
+                                        </circle>
+                                        <circle cx="26.012675659637562" cy="42.95668607896427" fill="#93e6d6" r="5">
+                                            <animate attributeName="r" values="3;3;5;3;3" times="0;0.1;0.2;0.3;1" dur="1s" repeatCount="indefinite" begin="-0.36363636363636365s"></animate>
+                                            <animate attributeName="fill" values="#93e6d6;#93e6d6;#17a2b8;#93e6d6;#93e6d6" repeatCount="indefinite" times="0;0.1;0.2;0.3;1" dur="1s" begin="-0.36363636363636365s"></animate>
+                                        </circle>
+                                        <circle cx="33.62848165136787" cy="31.106260641143546" fill="#93e6d6" r="5">
+                                            <animate attributeName="r" values="3;3;5;3;3" times="0;0.1;0.2;0.3;1" dur="1s" repeatCount="indefinite" begin="-0.2727272727272727s"></animate>
+                                            <animate attributeName="fill" values="#93e6d6;#93e6d6;#17a2b8;#93e6d6;#93e6d6" repeatCount="indefinite" times="0;0.1;0.2;0.3;1" dur="1s" begin="-0.2727272727272727s"></animate>
+                                        </circle>
+                                        <circle cx="46.44212904316787" cy="25.254463952976682" fill="#93e6d6" r="5">
+                                            <animate attributeName="r" values="3;3;5;3;3" times="0;0.1;0.2;0.3;1" dur="1s" repeatCount="indefinite" begin="-0.18181818181818182s"></animate>
+                                            <animate attributeName="fill" values="#93e6d6;#93e6d6;#17a2b8;#93e6d6;#93e6d6" repeatCount="indefinite" times="0;0.1;0.2;0.3;1" dur="1s" begin="-0.18181818181818182s"></animate>
+                                        </circle>
+                                        <circle cx="60.38537532504715" cy="27.259200116137038" fill="#93e6d6" r="5">
+                                            <animate attributeName="r" values="3;3;5;3;3" times="0;0.1;0.2;0.3;1" dur="1s" repeatCount="indefinite" begin="-0.09090909090909091s"></animate>
+                                            <animate attributeName="fill" values="#93e6d6;#93e6d6;#17a2b8;#93e6d6;#93e6d6" repeatCount="indefinite" times="0;0.1;0.2;0.3;1" dur="1s" begin="-0.09090909090909091s"></animate>
+                                        </circle>
+                                        <circle cx="71.03133832077953" cy="36.48397956361006" fill="#93e6d6" r="5">
+                                            <animate attributeName="r" values="3;3;5;3;3" times="0;0.1;0.2;0.3;1" dur="1s" repeatCount="indefinite" begin="0s"></animate>
+                                            <animate attributeName="fill" values="#93e6d6;#93e6d6;#17a2b8;#93e6d6;#93e6d6" repeatCount="indefinite" times="0;0.1;0.2;0.3;1" dur="1s" begin="0s"></animate>
+                                        </circle>
+                                    </svg>
+                                </button>`
+                        }
+                        else {
+                            row = row + `<span class="badge badge-info">Đang Lập Danh Sách</span>`
+                        }
+
+                        row = row + `<a class="btn btn-outline-info btn-sm ml-1" style="width: 30px;" href="/can-bo-duoc-xac-minh/bao-cao-ket-qua/${data.ID}"><i class="fa fa-file" aria-hidden="true"></i></a>`
+
+                        if (data.TrangThaiXM == false) {
+                            row = row + `<button type="button"class="btn btn-outline-info btn-sm ml-1" onclick={completeKeKhai(${data.Ma_CanBo})}><i <i class="fa fa-check"></i> </button>`
+                        }
+
+
+                        return row
+                    }
+                },
+
+            ]
+        });
+        dt.on('draw.dt', function () {
+            var info = dt.page.info();
+            dt.column(0, { search: 'applied', order: 'applied', page: 'applied' }).nodes().each(function (cell, i) {
+                cell.innerHTML = i + 1 + info.start;
+            });
+        });
+    }
+
+    function print_bankkCBkk(obj) {
+        var ele = $(obj);
+        var MaCanBo = ele.data("model-id");
+
+        $.ajax({
+            url: `/NV_KeKhai_TSTN/InBanKeKhaiCanBo?MaKeHoachKeKhai=@ViewBag.MaKeHoachKeKhai&MaCanBo=${MaCanBo}`,
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            type: "POST",
+            beforeSend: function () {
+                $(`#btn_download_bankekhai_${MaCanBo}`).addClass("d-none")
+                $(`#loading_btnPrint_bankkCBkk_${MaCanBo}`).removeClass("d-none")
+            },
+            success: function (response) {
+                $(`#btn_download_bankekhai_${MaCanBo}`).removeClass("d-none")
+                $(`#loading_btnPrint_bankkCBkk_${MaCanBo}`).addClass("d-none")
+                window.open("/ke-khai-tai-san/ban-in/" + response)
+            },
+            error: function (response) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Thất Bại',
+                    text: 'Lỗi hệ thống',
+                    timer: 2000,
+                    showConfirmButton: false,
+                }).then(() => {
+                    $(`#btn_download_bankekhai_${MaCanBo}`).removeClass("d-none")
+                    $(`#loading_btnPrint_bankkCBkk_${MaCanBo}`).addClass("d-none")
+                })
+            }
+        });
+
+    }
+
+
+    function completeKeKhai(MaCanBo) {
+        swal.fire({
+            title: 'Xác Nhận',
+            text: "Hoàn thành việc xác minh cho cán bộ",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Hoàn thành',
+            cancelButtonText: 'Quay lại!',
+            reverseButtons: true
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    type: "POST",
+                    url: `/NV_DanhSachBanKeKhai/CompleteXacMinh?MaKeHoachXacMinh=@ViewBag.MaKeHoachXacMinh&MaCanBo=${MaCanBo}`,
+                    dataType: "json",
+                    success: function (response) {
+                        dt.draw();
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Thành Công',
+                            text: `Đã Cập Nhật Trạng Thái Hoàn Thành`,
+                            timer: 2000,
+                            showConfirmButton: false,
+                        })
+                        
+
+                    },
+                    error: function (error) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Có Lỗi',
+                            text: `Chưa Thể Cập Nhật Trạng Thái Vào Lúc Này`,
+                            timer: 2000,
+                            showConfirmButton: false,
+                        })
+                    }
+                });
+
+            }
+
+            else if (result.dismiss === Swal.DismissReason.cancel) {
+
+            }
+        })
+
+    }
+
+    $(document).ready(function () {
+        loadDataTable();
+    })
+
+</script>

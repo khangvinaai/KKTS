@@ -1,0 +1,11 @@
+﻿
+@{
+    ViewBag.Title = "Bản In Kê Khai Tài Sản";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<script src="https://unpkg.com/pdfobject@2.2.8/pdfobject.min.js"></script>
+<script>
+    var myPDF = PDFObject.embed(`../../Content/uploads/@ViewBag.TenFile`, document.body);
+</script>
+

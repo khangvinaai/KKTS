@@ -1,0 +1,11 @@
+﻿
+@{
+    ViewBag.Title = "Bản in danh sách cán bộ được xác minh";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<script src="https://unpkg.com/pdfobject@2.2.8/pdfobject.min.js"></script>
+<script>
+    var myPDF = PDFObject.embed(`../../Content/uploads/@ViewBag.TenFile`, document.body);
+</script>
+

@@ -1,0 +1,1812 @@
+﻿@using KeKhaiTaiSanThuNhap.Models
+@{
+    ViewBag.Title = "Lập bản kê khai tài sản và thu nhập";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    <style>
+        .error {
+            color: red;
+            font-weight: 600 !important;
+        }
+
+        #tabs .nav-tabs .nav-item.show .nav-link, .nav-tabs .nav-link.active {
+            color: #38a4f8;
+            background-color: transparent;
+            text-transform: uppercase;
+            border-color: transparent transparent #f3f3f3;
+            border-bottom: transparent;
+            font-weight: 400;
+            border-top: 1px solid #38a4f8 !important;
+            border-left: 1px solid #38a4f8 !important;
+            border-right: 1px solid #38a4f8 !important;
+        }
+
+        .nav-tabs .nav-link {
+            border: 1px solid transparent !IMPORTANT;
+            border-top-left-radius: 0.25rem;
+            border-top-right-radius: 0.25rem;
+        }
+
+        a.active, button.active, a:focus, button:focus, a:hover, button:hover {
+            color: #252525;
+            outline: none !important;
+            text-decoration: none !important;
+        }
+
+        .nav-link {
+            display: block;
+            padding: 0.5rem 1rem;
+        }
+
+        a, button {
+            outline: none !important;
+            text-decoration: none !important;
+            color: #99abb4;
+            transition: all 0.2s ease 0s;
+        }
+
+        .card {
+            background: #ffffff none repeat scroll 0 0;
+            margin: 0;
+            padding: 20px;
+            border: 0 solid #e7e7e7;
+            border-radius: 5px;
+            box-shadow: 0 5px 20px 0 rgb(0 0 0 / 15%);
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            position: relative;
+            display: -ms-flexbox;
+            display: flex;
+            -ms-flex-direction: column;
+            flex-direction: column;
+            min-width: 0;
+            word-wrap: break-word;
+            background-color: #fff;
+            background-clip: border-box;
+            border: 1px solid rgba(0,0,0,.125);
+            border-radius: 0.25rem;
+        }
+
+       
+
+        .card-content-custom {
+            padding-bottom: 1%;
+            padding-left: 2%;
+            padding-right: 2%;
+            border-radius: 10px;
+            width: 100%;
+        }
+    </style>
+}
+
+
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-left">
+                    <li class="breadcrumb-item"><a href="@Url.Action("Index", "Home")">Trang chủ</a></li>
+                    <li class="breadcrumb-item active">Kê khai tài sản và thu nhập</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                @using (Ajax.BeginForm("Create", "NV_KeKhai_TSTN", new AjaxOptions { HttpMethod = "POST", OnSuccess = "FnSuccess" }, new { @class = "form_KeKhai form-horizontal" }))
+                {
+                    <div class="card text_ui_right_cus Card-control">
+                        <div class="row line_header">
+                            <div class="col-md-6 title_ngtao clsTitleFrom" style="text-align: left; ">
+                                <input type="text"  id="id" name="id" hidden value="@ViewBag.MaKeHoachKeKhai">
+                            </div>
+                            <div class="col-md-6 title_ngtao clsTitleFrom" style="text-align: right; ">
+                                @if (ViewBag.DaKeKhai == true)
+                                {
+                                    <button class="btn btn-success mr-3" id="btnCompleteKeKhaiTaiSan" type="button"><i class="fa-solid fa-check"></i> Hoàn thành bản kê khai</button>
+                                }
+                                @if (ViewBag.DaHoanThanh != true)
+                                {
+                                    <button class="btn btn-primary clsCreateKeKhaiTaiSan" id="btnCreateKeKhaiTaiSan" type="submit"><i class="fas fa-edit"></i> Lưu bản kê khai</button>
+                                }
+
+                            </div>
+                        </div>
+                        <div style="padding-bottom: 1%; padding-left:2%; padding-right:2%;" class="row">
+                            <div class="col-md-12">
+                                <ul class="nav nav-tabs nav-justified">
+                                    <li id="tab_patient_reception_status_wait" class="nav-item">
+                                        <a class="nav-link active" data-toggle="tab" href="#thongtinchung">Thông tin chung</a>
+                                    </li>
+                                    <li id="tab_patient_reception_status_receive" class="nav-item">
+                                        <a class="nav-link" data-toggle="tab" href="#QuanSuDungDat">Quyền sử dụng đất</a>
+                                    </li>
+                                    <li id="tab_patient_reception_status_receive" class="nav-item">
+                                        <a class="nav-link" data-toggle="tab" href="#NhaOCongTrinh">Nhà ở/ Cộng trình</a>
+                                    </li>
+                                    <li id="tab_patient_reception_status_receive" class="nav-item">
+                                        <a class="nav-link" data-toggle="tab" href="#TaiSanGanLienVoiDat">Tài sản gắn liền với đất</a>
+                                    </li>
+                                    <li id="tab_patient_reception_status_receive" class="nav-item">
+                                        <a class="nav-link" data-toggle="tab" href="#KimLoaiQuyDaQuy">Kim loại quý/ Đá quý</a>
+                                    </li>
+                                    <li id="tab_patient_reception_status_receive" class="nav-item">
+                                        <a class="nav-link" data-toggle="tab" href="#Tien">Tiền</a>
+                                    </li>
+                                    <li id="tab_patient_reception_status_receive" class="nav-item">
+                                        <a class="nav-link" data-toggle="tab" href="#DauTu">Đầu tư</a>
+                                    </li>
+                                    <li id="tab_patient_reception_status_receive" class="nav-item">
+                                        <a class="nav-link" data-toggle="tab" href="#TaiSanKhac">Tài sản khác</a>
+                                    </li>
+                                    <li id="tab_patient_reception_status_receive" class="nav-item">
+                                        <a class="nav-link" data-toggle="tab" href="#TaiSanNuocNgoai">Tài sản nước ngoài</a>
+                                    </li>
+                                    <li id="tab_patient_reception_status_receive" class="nav-item">
+                                        <a class="nav-link" data-toggle="tab" href="#TaiKhoanNuocNgoai">Tài khoản nước ngoài</a>
+                                    </li>
+                                    <li id="tab_patient_reception_status_receive" class="nav-item">
+                                        <a class="nav-link" data-toggle="tab" href="#TongThuNhap">Tổng thu nhập giữa 2 lần kê khai</a>
+                                    </li>
+
+                                    @{ var dem = ViewBag;
+                                        if (dem.DemSoLanKeKhai > 0)
+                                        {
+                                            <li id="tab_patient_reception_status_receive" class="nav-item">
+                                                <a class="nav-link" data-toggle="tab" href="#BienDongTSTN">Biến động tài sản và thu nhập</a>
+                                            </li>
+                                        }
+                                        else
+                                        {
+
+                                        }
+                                    }
+
+
+
+                                </ul>
+                                <div class="tab-content">
+                                    <div class="tab-pane active" id="thongtinchung">
+
+                                        <div class="row">
+                                            <div class="card-content-custom">
+                                                <div class="col-md-12" style="text-align: left; padding-top: 10px;">
+                                                    <label class="Showheader-title">
+                                                        <label class="mt-0 header-title header-title-Edit" data-toggle="collapse" data-target="#collapseThongTinBanKeKhai" aria-expanded="false" aria-controls="collapseThongTinBanKeKhai">
+                                                            <i class="far fa-caret-square-down"></i>
+                                                            <span class="TitleForm clsShow cursor-pointer">Thông tin bản kê khai</span>
+                                                        </label>
+                                                    </label>
+                                                </div>
+                                                <div class="col-md-12 collapse show" id="collapseThongTinBanKeKhai">
+                                                    <div class="row">
+                                                        <div class="col-4">
+                                                            <div class="form-group">
+                                                                <label>Loại kê khai</label>
+                                                                <select class="form-control" name="Ma_Loai_KeKhai" id="Ma_Loai_KeKhai" style="width: 100%; height: 100%">
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-4">
+                                                            <div class="form-group">
+                                                                <label>Lĩnh vực kê khai</label>
+                                                                <select class="form-control" name="Ma_LinhVuc_KeKhai" id="Ma_LinhVuc_KeKhai" style="width: 100%; height: 100%">
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-4">
+                                                            <div class="form-group">
+                                                                <label>Năm kê khai</label>
+                                                                <input type="text" class="form-control" placeholder="Nhập năm kê khai" id="Nam_KeKhai" name="Nam_KeKhai" value="@DateTime.Now.Year">
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                        <div class="row">
+                                            <div class="card-content-custom">
+                                                <div class="col-md-12" style="text-align: left; padding-top: 10px;">
+                                                    <label class="Showheader-title">
+                                                        <label class="mt-0 header-title header-title-Edit" data-toggle="collapse" data-target="#collapseThongTinCanBo" aria-expanded="false" aria-controls="collapseThongTinCanBo">
+                                                            <i class="far fa-caret-square-down"></i>
+                                                            <span class="TitleForm clsShow cursor-pointer">Thông tin người kê khai</span>
+                                                        </label>
+                                                    </label>
+                                                </div>
+                                                <div class="col-md-12 collapse show" id="collapseThongTinCanBo">
+                                                    <div class="row">
+                                                        <div class="col-5">
+                                                            <div class="form-group">
+                                                                <label>Họ Và Tên</label>
+                                                                <input type="text" class="form-control" id="HoTen" readonly>
+                                                                <input type="text" class="form-control" id="Ma_CanBo" name="Ma_CanBo" hidden>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-2">
+                                                            <div class="form-group">
+                                                                <label>Ngày sinh</label>
+                                                                <input type="text" class="form-control" id="DoB" readonly>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-5">
+                                                            <div class="form-group">
+                                                                <label>Địa chỉ</label>
+                                                                <input type="text" class="form-control" id="DiaChiThuongTru" readonly>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-3">
+                                                            <div class="form-group">
+                                                                <label>Tỉnh thành</label>
+                                                                <input type="text" class="form-control" id="Ma_TinhThanh" readonly>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-3">
+                                                            <div class="form-group">
+                                                                <label>Quận huyện</label>
+                                                                <input type="text" class="form-control" id="Ma_QuanHuyen" readonly>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-3">
+                                                            <div class="form-group">
+                                                                <label>Phường Xã</label>
+                                                                <input type="text" class="form-control" id="Ma_PhuongXa" readonly>
+                                                            </div>
+                                                        </div>
+
+
+                                                        <div class="col-3">
+                                                            <div class="form-group">
+                                                                <label>Số CMND/CCCD</label>
+                                                                <input type="text" class="form-control" id="SoCCCD" readonly>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-3">
+                                                            <div class="form-group">
+                                                                <label>Ngày Cấp</label>
+                                                                <input type="text" class="form-control" id="NgayCap" readonly>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-3">
+                                                            <div class="form-group">
+                                                                <label>Nơi Cấp</label>
+                                                                <input type="text" class="form-control" id="NoiCap" readonly>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-3">
+                                                            <div class="form-group">
+                                                                <label>Cơ Quan</label>
+                                                                <input type="text" class="form-control" id="Ma_CoQuan_DonVi" readonly>
+
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-3">
+                                                            <div class="form-group">
+                                                                <label>Chức Vụ</label>
+                                                                <input type="text" class="form-control" id="Ma_ChucVu_ChucDanh" readonly>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row" style="margin-top:10px;">
+                                            <div class="card-content-custom">
+                                                <div class="col-md-12" style="text-align: left; padding-top: 10px;">
+                                                    <label class="Showheader-title">
+                                                        <label class="mt-0 header-title header-title-Edit" data-toggle="collapse" data-target="#collapseThanNhan" aria-expanded="false" aria-controls="collapseThanNhan">
+                                                            <i class="far fa-caret-square-down"></i>
+                                                            <span class="TitleForm clsShow cursor-pointer">Thông tin thân nhân</span>
+                                                        </label>
+                                                    </label>
+                                                </div>
+                                                <div class="col-md-12 collapse show" id="collapseThanNhan">
+
+
+
+
+                                                </div>
+                                            </div>
+
+                                        </div>
+
+
+                                    </div>
+                                    <div class="tab-pane" id="QuanSuDungDat">
+
+                                        <div class="row" style="margin-top:10px;">
+                                            <div class="card-content-custom">
+                                                <div class="col-md-12" style="text-align: left; padding-top: 10px;">
+                                                    <label class="Showheader-title">
+                                                        <label class="mt-0 header-title header-title-Edit" data-toggle="collapse" data-target="#collapseDat" aria-expanded="false" aria-controls="collapseDatO">
+                                                            <i class="far fa-caret-square-down"></i>
+                                                            <span class="TitleForm clsShow cursor-pointer">Đất ở</span>
+                                                        </label>
+                                                    </label>
+                                                </div>
+                                                <div class="col-md-12 collapse show" id="collapseDat">
+                                                    <div class="row" style="padding-top: 1%; padding-bottom: 1%; padding-left: 2%; padding-right: 2%; border-radius: 10px; box-shadow: 0 5px 20px 0 rgb(0 0 0 / 15%); margin-top: 10px;">
+                                                        <div class="col-4">
+                                                            <div class="form-group">
+                                                                <label>Địa chỉ</label>
+                                                                <input type="text" class="form-control" placeholder="Nhập địa chỉ" id="DiaChiDat" name="DiaChiDat[]">
+                                                                <input type="text" class="form-control" hidden name="LoaiDat[]" value="Đất Ở">
+                                                                <input type="text" class="form-control" hidden name="TenLoaiDat[]" value="">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-4">
+                                                            <div class="form-group">
+                                                                <label>Diện tích</label>
+                                                                <input type="text" class="form-control" placeholder="Nhập diện tích" id="DienTichDat" name="DienTichDat[]">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-4">
+                                                            <div class="form-group">
+                                                                <label>Giá trị</label>
+                                                                <input type="text" class="form-control" placeholder="Nhập giá trị của đất" id="GiaTriDat" name="GiaTriDat[]">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-6">
+                                                            <div class="form-group">
+                                                                <label>Giấy chứng nhận quyền sử dụng</label>
+                                                                <textarea class="form-control" placeholder="Ghi số giấy chứng nhận quyền sử dụng đất và tên người được cấp hoặc tên người đại diện (nếu là giấy chứng nhận quyền sử dụng đất chung của nhiều người); Nếu thửa đất chưa được cấp giấy chứng nhận quyền sử dụng đất thì ghi ''Chưa được cấp giấy chứng nhận quyền sử dụng đất''. " id="GiayChungNhanQuyenSoHuuDatO" name="GiayChungNhanQuyenSoHuuDat[]"></textarea>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-6">
+                                                            <div class="form-group">
+                                                                <label>Thông tin khác (nếu có)</label>
+                                                                <textarea class="form-control" placeholder="Ví dụ: Người kê khai đứng tên đăng kí quyền sử dụng, quyền sở hưu nhưng thực tế là của người khác" id="ThongTinDatKhacNeuCo" name="ThongTinDatKhacNeuCo[]"></textarea>
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+
+
+                                                    <div class="row" style="margin-top: 20px; float: right;" id="clsAddRow_collapseDat">
+                                                        <div class="col-12">
+                                                            <span class="btn btn-primary clsAddRow"><i class="fas fa-plus-square"></i> Thêm dòng</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                        <div class="row" style="margin-top:10px;">
+                                            <div class="card-content-custom">
+                                                <div class="col-md-12" style="text-align: left; padding-top: 10px;">
+                                                    <label class="Showheader-title">
+                                                        <label class="mt-0 header-title header-title-Edit" data-toggle="collapse" data-target="#collapseCacLoaiDatKhac" aria-expanded="false" aria-controls="collapseCacLoaiDatKhac">
+                                                            <i class="far fa-caret-square-down"></i>
+                                                            <span class="TitleForm clsShow cursor-pointer">Các loại đất khác</span>
+                                                        </label>
+                                                    </label>
+                                                </div>
+                                                <div class="col-md-12 collapse show" id="collapseCacLoaiDatKhac">
+                                                    <div class="row" style="padding-top: 1%; padding-bottom: 1%; padding-left: 2%; padding-right: 2%; border-radius: 10px; box-shadow: 0 5px 20px 0 rgb(0 0 0 / 15%); margin-top: 10px;">
+                                                        <div class="col-3">
+                                                            <div class="form-group">
+                                                                <label>Loại đất</label>
+                                                                <input type="text" class="form-control" placeholder="Nhập loại đất" id="TenLoaiDat" name="TenLoaiDat[]">
+                                                                <input type="text" class="form-control" hidden name="LoaiDat[]" value="Đất Khác">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-3">
+                                                            <div class="form-group">
+                                                                <label>Địa chỉ</label>
+                                                                <input type="text" class="form-control" placeholder="Nhập địa chỉ" id="DiaChiDat" name="DiaChiDat[]">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-3">
+                                                            <div class="form-group">
+                                                                <label>Diện tích</label>
+                                                                <input type="text" class="form-control" placeholder="Nhập diện tích" id="DienTichDat" name="DienTichDat[]">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-3">
+                                                            <div class="form-group">
+                                                                <label>Giá trị</label>
+                                                                <input type="text" class="form-control" placeholder="Nhập giá trị của đất" id="GiaTriDat" name="GiaTriDat[]">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-6">
+                                                            <div class="form-group">
+                                                                <label>Giấy chứng nhận quyền sử dụng</label>
+                                                                <textarea class="form-control" placeholder="Nhập số giấy chứng nhận và tên người đại diện" id="GiayChungNhanQuyenSoHuuDat" name="GiayChungNhanQuyenSoHuuDat[]"></textarea>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-6">
+                                                            <div class="form-group">
+                                                                <label>Thông tin khác (nếu có)</label>
+                                                                <textarea class="form-control" placeholder="Nhập cụ thể về tình trạng thực tế quản lý và sử dụng" id="ThongTinDatKhacNeuCo" name="ThongTinDatKhacNeuCo[]"></textarea>
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+                                                    <div class="row" style="margin-top: 20px; float: right;" id="clsAddRow_collapseCacLoaiDatKhac">
+                                                        <div class="col-12">
+                                                            <span class="btn btn-primary clsAddRow"><i class="fas fa-plus-square"></i> Thêm dòng</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+                                    <div class="tab-pane" id="NhaOCongTrinh">
+
+                                        <div class="row" style="margin-top:10px;">
+                                            <div class="card-content-custom">
+                                                <div class="col-md-12" style="text-align: left; padding-top: 10px;">
+                                                    <label class="Showheader-title">
+                                                        <label class="mt-0 header-title header-title-Edit" data-toggle="collapse" data-target="#collapseNhaO" aria-expanded="false" aria-controls="collapseNhaO">
+                                                            <i class="far fa-caret-square-down"></i>
+                                                            <span class="TitleForm clsShow cursor-pointer">Nhà ở</span>
+                                                        </label>
+                                                    </label>
+                                                </div>
+                                                <div class="col-md-12 collapse show" id="collapseNhaO">
+                                                    <div class="row" style="padding-top: 1%; padding-bottom: 1%; padding-left: 2%; padding-right: 2%; border-radius: 10px; box-shadow: 0 5px 20px 0 rgb(0 0 0 / 15%); margin-top: 10px;">
+
+                                                        <div class="col-4">
+                                                            <div class="form-group">
+                                                                <label>Địa chỉ</label>
+                                                                <input type="text" class="form-control" placeholder="Nhập địa chỉ" id="DiaChiNhaO" name="DiaChiNhaO[]">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-3">
+                                                            <div class="form-group">
+                                                                <label>Loại nhà</label>
+                                                                <input type="text" class="form-control" placeholder="Nhập địa chỉ" id="LoaiNhaO" name="LoaiNhaO[]">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-3">
+                                                            <div class="form-group">
+                                                                <label>Diện tích sử dụng</label>
+                                                                <input type="text" class="form-control" placeholder="Tổng diện tích tất cả sàn ( hầm, tầng mái...)" id="DienTichNhaO" name="DienTichNhaO[]">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-2">
+                                                            <div class="form-group">
+                                                                <label>Giá trị</label>
+                                                                <input type="text" class="form-control" placeholder="Nhập giá trị của nhà ở" id="GiaTriNhaO" name="GiaTriNhaO[]">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-6">
+                                                            <div class="form-group">
+                                                                <label>Giấy chứng nhận quyền sử dụng</label>
+                                                                <textarea class="form-control" placeholder="Ghi số giấy chứng nhận quyền sử dụng đất và tên người được cấp hoặc tên người đại diện (nếu là giấy chứng nhận quyền sử dụng đất chung của nhiều người); Nếu thửa đất chưa được cấp giấy chứng nhận quyền sử dụng đất thì ghi ''Chưa được cấp giấy chứng nhận quyền sử dụng đất''. " id="GiayChungNhanNhaO" name="GiayChungNhanNhaO[]"></textarea>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-6">
+                                                            <div class="form-group">
+                                                                <label>Thông tin khác (nếu có)</label>
+                                                                <textarea class="form-control" placeholder="Ví dụ: Người kê khai đứng tên đăng kí quyền sử dụng, quyền sở hưu nhưng thực tế là của người khác" id="ThongTinNhaOKhacNeuCo" name="ThongTinNhaOKhacNeuCo[]"></textarea>
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+
+                                                    <div class="row" style="margin-top: 20px; float: right;" id="clsAddRow_collapseNhaO">
+                                                        <div class="col-12">
+                                                            <span class="btn btn-primary clsAddRow"><i class="fas fa-plus-square"></i> Thêm dòng</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                        <div class="row" style="margin-top:10px;">
+                                            <div class="card-content-custom">
+                                                <div class="col-md-12" style="text-align: left; padding-top: 10px;">
+                                                    <label class="Showheader-title">
+                                                        <label class="mt-0 header-title header-title-Edit" data-toggle="collapse" data-target="#collapseConTrinhXayDungKhac" aria-expanded="false" aria-controls="collapseConTrinhXayDungKhac">
+                                                            <i class="far fa-caret-square-down"></i>
+                                                            <span class="TitleForm clsShow cursor-pointer">Công trình xây dựng khác</span>
+                                                        </label>
+                                                    </label>
+                                                </div>
+                                                <div class="col-md-12 collapse show" id="collapseConTrinhXayDungKhac">
+                                                    <div class="row" style="padding-top: 1%; padding-bottom: 1%; padding-left: 2%; padding-right: 2%; border-radius: 10px; box-shadow: 0 5px 20px 0 rgb(0 0 0 / 15%); margin-top: 10px;">
+                                                        <div class="col-4">
+                                                            <div class="form-group">
+                                                                <label>Tên công trình</label>
+                                                                <input type="text" class="form-control" placeholder="Nhập loại đất" id="TenCongTrinh" name="TenCongTrinh[]">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-4">
+                                                            <div class="form-group">
+                                                                <label>Địa chỉ</label>
+                                                                <input type="text" class="form-control" placeholder="Nhập địa chỉ" id="DiaChiCongTrinh" name="DiaChiCongTrinh[]">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-4">
+                                                            <div class="form-group">
+                                                                <label>Loại công trình</label>
+                                                                <input type="text" class="form-control" placeholder="Nhập loại đất" id="LoaiCongTrinh" name="LoaiCongTrinh[]">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-4">
+                                                            <div class="form-group">
+                                                                <label>Cấp công trình</label>
+                                                                <input type="text" class="form-control" placeholder="Nhập loại đất" id="CapCongTrinh" name="CapCongTrinh[]">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-4">
+                                                            <div class="form-group">
+                                                                <label>Diện tích</label>
+                                                                <input type="text" class="form-control" placeholder="Nhập diện tích" id="DienTichCongTrinh" name="DienTichCongTrinh[]">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-4">
+                                                            <div class="form-group">
+                                                                <label>Giá trị</label>
+                                                                <input type="text" class="form-control" placeholder="Nhập giá trị của công trình" id="GiaTriCongTrinh" name="GiaTriCongTrinh[]">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-6">
+                                                            <div class="form-group">
+                                                                <label>Giấy chứng nhận quyền sử dụng</label>
+                                                                <textarea class="form-control" placeholder="Nhập số giấy chứng nhận và tên người đại diện" id="GiayChungNhanCongTrinh" name="GiayChungNhanCongTrinh[]"></textarea>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-6">
+                                                            <div class="form-group">
+                                                                <label>Thông tin khác (nếu có)</label>
+                                                                <textarea class="form-control" placeholder="Nhập cụ thể về tình trạng thực tế quản lý và sử dụng" id="ThongTinCongTrinhKhacNeuCo" name="ThongTinCongTrinhKhacNeuCo[]"></textarea>
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+                                                  
+                                                    <div class="row" style="margin-top: 20px; float: right;" id="clsAddRow_collapseCongTrinh">
+                                                        <div class="col-12">
+                                                            <span class="btn btn-primary clsAddRow" id="clsAddRow"><i class="fas fa-plus-square"></i> Thêm dòng</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+                                    <div class="tab-pane" id="TaiSanGanLienVoiDat">
+
+                                        <div class="row" style="margin-top:10px;">
+                                            <div class="card-content-custom">
+                                                <div class="col-md-12" style="text-align: left; padding-top: 10px;">
+                                                    <label class="Showheader-title">
+                                                        <label class="mt-0 header-title header-title-Edit" data-toggle="collapse" data-target="#collapseCayLauNam" aria-expanded="false" aria-controls="collapseCayLauNam">
+                                                            <i class="far fa-caret-square-down"></i>
+                                                            <span class="TitleForm clsShow cursor-pointer">Cây lâu năm</span>
+                                                        </label>
+                                                    </label>
+                                                </div>
+                                                <div class="col-md-12 collapse show" id="collapseCayLauNam">
+                                                    <div class="row" style="padding-top: 1%; padding-bottom: 1%; padding-left: 2%; padding-right: 2%; border-radius: 10px; box-shadow: 0 5px 20px 0 rgb(0 0 0 / 15%); margin-top: 10px;">
+                                                        <div class="col-4">
+                                                            <div class="form-group">
+                                                                <label>Loại cây</label>
+                                                                <input type="text" class="form-control" placeholder="Nhập loại cây" id="LoaiCay" name="TenTaiSan[]">
+                                                                <input type="text" class="form-control" hidden id="LoaiTaiSan" name="LoaiTaiSan[]" value='cln'>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-4">
+                                                            <div class="form-group">
+                                                                <label>Số lượng</label>
+                                                                <input type="text" class="form-control" placeholder="Nhập số lượng cây" id="SoLuongCay" name="SoLuong_DienTich[]">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-4">
+                                                            <div class="form-group">
+                                                                <label>Giá trị</label>
+                                                                <input type="text" class="form-control" placeholder="Nhập loại đất" id="GiaTriCay" name="GiaTriTS[]">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                             
+                                                    <div class="row" style="margin-top: 20px; float: right;" id="clsAddRow_collapseCayLauNam">
+                                                        <div class="col-12">
+                                                            <span class="btn btn-primary clsAddRow" id="clsAddRow"><i class="fas fa-plus-square"></i> Thêm dòng</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                        <div class="row" style="margin-top:10px;">
+                                            <div class="card-content-custom">
+                                                <div class="col-md-12" style="text-align: left; padding-top: 10px;">
+                                                    <label class="Showheader-title">
+                                                        <label class="mt-0 header-title header-title-Edit" data-toggle="collapse" data-target="#collapseRungSanXuat" aria-expanded="false" aria-controls="collapseRungSanXuat">
+                                                            <i class="far fa-caret-square-down"></i>
+                                                            <span class="TitleForm clsShow cursor-pointer">Rừng sản xuất</span>
+                                                        </label>
+                                                    </label>
+                                                </div>
+                                                <div class="col-md-12 collapse show" id="collapseRungSanXuat">
+                                                    <div class="row" style="padding-top: 1%; padding-bottom: 1%; padding-left: 2%; padding-right: 2%; border-radius: 10px; box-shadow: 0 5px 20px 0 rgb(0 0 0 / 15%); margin-top: 10px;">
+                                                        <div class="col-4">
+                                                            <div class="form-group">
+                                                                <label>Loại rừng</label>
+                                                                <input type="text" class="form-control" placeholder="Nhập loại rừng" id="LoaiRung" name="TenTaiSan[]">
+                                                                <input type="text" class="form-control" hidden id="LoaiTaiSan" name="LoaiTaiSan[]" value='rsx'>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-4">
+                                                            <div class="form-group">
+                                                                <label>Diện tích</label>
+                                                                <input type="text" class="form-control" placeholder="Nhập diện tích rừng" id="DienTichRung" name="SoLuong_DienTich[]">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-4">
+                                                            <div class="form-group">
+                                                                <label>Giá trị</label>
+                                                                <input type="text" class="form-control" placeholder="Nhập giá trị rừng" id="GiaTriRung" name="GiaTriTS[]">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                  
+                                                    <div class="row" style="margin-top: 20px; float: right;" id="clsAddRow_collapseRungSanXuat">
+                                                        <div class="col-12">
+                                                            <span class="btn btn-primary clsAddRow" id="clsAddRow"><i class="fas fa-plus-square"></i> Thêm dòng</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                        <div class="row" style="margin-top:10px;">
+                                            <div class="card-content-custom">
+                                                <div class="col-md-12" style="text-align: left; padding-top: 10px;">
+                                                    <label class="Showheader-title">
+                                                        <label class="mt-0 header-title header-title-Edit" data-toggle="collapse" data-target="#collapseKienTrucKhac" aria-expanded="false" aria-controls="collapseKienTrucKhac">
+                                                            <i class="far fa-caret-square-down"></i>
+                                                            <span class="TitleForm clsShow cursor-pointer">Vật kiến trúc khác gắn liền với đất</span>
+                                                        </label>
+                                                    </label>
+                                                </div>
+                                                <div class="col-md-12 collapse show" id="collapseKienTrucKhac">
+                                                    <div class="row" style="padding-top: 1%; padding-bottom: 1%; padding-left: 2%; padding-right: 2%; border-radius: 10px; box-shadow: 0 5px 20px 0 rgb(0 0 0 / 15%); margin-top: 10px;">
+                                                        <div class="col-4">
+                                                            <div class="form-group">
+                                                                <label>Tên gọi</label>
+                                                                <input type="text" class="form-control" placeholder="Nhập tên" id="TenKienTrucGanDat" name="TenTaiSan[]">
+                                                                <input type="text" class="form-control" hidden id="LoaiTaiSan" name="LoaiTaiSan[]" value='vkt'>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-4">
+                                                            <div class="form-group">
+                                                                <label>Số lượng</label>
+                                                                <input type="text" class="form-control" placeholder="Nhập số lượng vật kiến trúc" id="SoLuongKienTruc" name="SoLuong_DienTich[]">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-4">
+                                                            <div class="form-group">
+                                                                <label>Giá trị</label>
+                                                                <input type="text" class="form-control" placeholder="Nhập giá trị vật kiến trúc" id="GiaTriVatKienTruc" name="GiaTriTS[]">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    
+                                                    <div class="row" style="margin-top: 20px; float: right;" id="clsAddRow_collapseKienTruc">
+                                                        <div class="col-12">
+                                                            <span class="btn btn-primary clsAddRow" id="clsAddRow"><i class="fas fa-plus-square"></i> Thêm dòng</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+                                    <div class="tab-pane" id="KimLoaiQuyDaQuy">
+
+                                        <div class="row" style="margin-top:10px;">
+                                            <div class="card-content-custom">
+                                                <div class="col-md-12" style="text-align: left; padding-top: 10px;">
+                                                    <label class="Showheader-title">
+                                                        <label class="mt-0 header-title header-title-Edit" data-toggle="collapse" data-target="#collapseKimLoaiQuyDaQuy" aria-expanded="false" aria-controls="collapseKimLoaiQuyDaQuy">
+                                                            <i class="far fa-caret-square-down"></i>
+                                                            <span class="TitleForm clsShow cursor-pointer">Vàng, kim cương, bạch kim và các kim loại quý, đá quý khác có tổng giá trị từ 50 triệu đồng trở lên.</span>
+                                                        </label>
+                                                    </label>
+                                                </div>
+                                                <div class="col-md-12 collapse show" id="collapseKimLoaiQuyDaQuy">
+                                                    <div class="row" style="padding-top: 1%; padding-bottom: 1%; padding-left: 2%; padding-right: 2%; border-radius: 10px; box-shadow: 0 5px 20px 0 rgb(0 0 0 / 15%); margin-top: 10px;">
+                                                        <div class="col-6">
+                                                            <div class="form-group">
+                                                                <label>Tên gọi</label>
+                                                                <input type="text" class="form-control" placeholder="Nhập tên" id="TenTrangSuc" name="TenTrangSuc[]">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-6">
+                                                            <div class="form-group">
+                                                                <label>Giá trị</label>
+                                                                <input type="text" class="form-control" placeholder="Nhập giá trị" id="GiaTriTrangSuc" name="GiaTriTrangSuc[]">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="row" style="margin-top: 20px; float: right;" id="clsAddRow_collapseKimLoaiDaQuy">
+                                                        <div class="col-12">
+                                                            <span class="btn btn-primary clsAddRow" id="clsAddRow"><i class="fas fa-plus-square"></i> Thêm dòng</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+                                    <div class="tab-pane" id="Tien">
+
+                                        <div class="row">
+                                            <div class="card-content-custom">
+                                                <div class="col-md-12" style="text-align: left; padding-top: 10px;">
+                                                    <label class="Showheader-title">
+                                                        <label class="mt-0 header-title header-title-Edit" data-toggle="collapse" data-target="#collapseTien" aria-expanded="false" aria-controls="collapseTien">
+                                                            <i class="far fa-caret-square-down"></i>
+                                                            <span class="TitleForm clsShow cursor-pointer">Tiền (tiền Việt Nam, ngoại tệ) gồm tiền mặt, tiền cho vay, tiền trả trước, tiền gửi cá nhân, tổ chức trong nước, tổ chức nước ngoài tại Việt Nam mà tổng giá trị quy đổi từ 50 triệu đồng trở lên.</span>
+                                                        </label>
+                                                    </label>
+                                                </div>
+                                                <div class="col-md-12 collapse show" id="collapseTien">
+                                                    <div class="row" style="padding-top: 1%; padding-bottom: 1%; padding-left: 2%; padding-right: 2%; border-radius: 10px; box-shadow: 0 5px 20px 0 rgb(0 0 0 / 15%); margin-top: 10px;">
+                                                        <div class="col-6">
+                                                            <div class="form-group">
+                                                                <label>Tên gọi</label>
+                                                                <input type="text" class="form-control" placeholder="Nhập tên" id="TenLoaiTien" name="TenLoaiTien[]">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-6">
+                                                            <div class="form-group">
+                                                                <label>Giá trị</label>
+                                                                <input type="text" class="form-control" placeholder="Nhập giá trị" id="GiaTriLoaiTien" name="GiaTriLoaiTien[]">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="row" style="margin-top: 20px; float: right;" id="clsAddRow_collapseTien">
+                                                        <div class="col-12">
+                                                            <span class="btn btn-primary clsAddRow" id="clsAddRow"><i class="fas fa-plus-square"></i> Thêm dòng</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                    <div class="tab-pane" id="DauTu">
+
+                                        <div class="row">
+                                            <div class="card-content-custom">
+                                                <div class="col-md-12" style="text-align: left; padding-top: 10px;">
+                                                    <label class="Showheader-title">
+                                                        <label class="mt-0 header-title header-title-Edit" data-toggle="collapse" data-target="#collapseCoPhieu" aria-expanded="false" aria-controls="collapseCoPhieu">
+                                                            <i class="far fa-caret-square-down"></i>
+                                                            <span class="TitleForm clsShow cursor-pointer">Cổ phiếu</span>
+                                                        </label>
+                                                    </label>
+                                                </div>
+                                                <div class="col-md-12 collapse show" id="collapseCoPhieu">
+                                                    <div class="row" style="padding-top: 1%; padding-bottom: 1%; padding-left: 2%; padding-right: 2%; border-radius: 10px; box-shadow: 0 5px 20px 0 rgb(0 0 0 / 15%); margin-top: 10px;">
+                                                        <div class="col-4">
+                                                            <div class="form-group">
+                                                                <label>Tên cố phiếu</label>
+                                                                <input type="text" class="form-control" placeholder="Nhập tên cổ phiếu" id="TenPhieu" name="TenPhieu[]">
+                                                                <input hidden value="CoPhieu" id="LoaiPhieu" name="LoaiPhieu">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-4">
+                                                            <div class="form-group">
+                                                                <label>Số lượng</label>
+                                                                <input type="text" class="form-control" placeholder="Nhập số lượng" id="SoLuongPhieu" name="SoLuongPhieu[]">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-4">
+                                                            <div class="form-group">
+                                                                <label>Giá trị</label>
+                                                                <input type="text" class="form-control" placeholder="Nhập giá trị" id="GiaTriPhieu" name="GiaTriPhieu[]">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                 
+                                                    <div class="row" style="margin-top: 20px; float: right;" id="clsAddRow_collapseCoPhieu">
+                                                        <div class="col-12">
+                                                            <span class="btn btn-primary clsAddRow" id="clsAddRow"><i class="fas fa-plus-square"></i> Thêm dòng</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="card-content-custom">
+                                                <div class="col-md-12" style="text-align: left; padding-top: 10px;">
+                                                    <label class="Showheader-title">
+                                                        <label class="mt-0 header-title header-title-Edit" data-toggle="collapse" data-target="#collapseTraiPhieu" aria-expanded="false" aria-controls="collapseTraiPhieu">
+                                                            <i class="far fa-caret-square-down"></i>
+                                                            <span class="TitleForm clsShow cursor-pointer">Trái phiếu</span>
+                                                        </label>
+                                                    </label>
+                                                </div>
+                                                <div class="col-md-12 collapse show" id="collapseTraiPhieu">
+                                                    <div class="row" style="padding-top: 1%; padding-bottom: 1%; padding-left: 2%; padding-right: 2%; border-radius: 10px; box-shadow: 0 5px 20px 0 rgb(0 0 0 / 15%); margin-top: 10px;">
+                                                        <div class="col-4">
+                                                            <div class="form-group">
+                                                                <label>Tên trái phiếu</label>
+                                                                <input type="text" class="form-control" placeholder="Nhập tên trái phiếu" id="TenPhieu" name="TenPhieu[]">
+                                                                <input hidden value="TraiPhieu" id="LoaiPhieu" name="LoaiPhieu">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-4">
+                                                            <div class="form-group">
+                                                                <label>Số lượng</label>
+                                                                <input type="text" class="form-control" placeholder="Nhập số lượng" id="SoLuongPhieu" name="SoLuongPhieu[]">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-4">
+                                                            <div class="form-group">
+                                                                <label>Giá trị</label>
+                                                                <input type="text" class="form-control" placeholder="Nhập giá trị" id="GiaTriPhieu" name="GiaTriPhieu[]">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                              
+                                                    <div class="row" style="margin-top: 20px; float: right;" id="clsAddRow_collapseTraiPhieu">
+                                                        <div class="col-12">
+                                                            <span class="btn btn-primary clsAddRow" id="clsAddRow"><i class="fas fa-plus-square"></i> Thêm dòng</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="card-content-custom">
+                                                <div class="col-md-12" style="text-align: left; padding-top: 10px;">
+                                                    <label class="Showheader-title">
+                                                        <label class="mt-0 header-title header-title-Edit" data-toggle="collapse" data-target="#collapseGopVon" aria-expanded="false" aria-controls="collapseGopVon">
+                                                            <i class="far fa-caret-square-down"></i>
+                                                            <span class="TitleForm clsShow cursor-pointer">Vốn góp</span>
+                                                        </label>
+                                                    </label>
+                                                </div>
+                                                <div class="col-md-12 collapse show" id="collapseGopVon">
+                                                    <div class="row" style="padding-top: 1%; padding-bottom: 1%; padding-left: 2%; padding-right: 2%; border-radius: 10px; box-shadow: 0 5px 20px 0 rgb(0 0 0 / 15%); margin-top: 10px;">
+                                                        <div class="col-8">
+                                                            <div class="form-group">
+                                                                <label>Hình thức góp vốn</label>
+                                                                <input type="text" class="form-control" placeholder="Nhập tên hình thức góp vốn" id="TenPhieu" name="TenPhieu[]">
+                                                                <input hidden value="VonGop" id="LoaiPhieu" name="LoaiPhieu">
+                                                                <input hidden value="0" id="SoLuongPhieu" name="SoLuongPhieu[]">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-4">
+                                                            <div class="form-group">
+                                                                <label>Giá trị</label>
+                                                                <input type="text" class="form-control" placeholder="Nhập giá trị" id="GiaTriPhieu" name="GiaTriPhieu[]">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                   
+                                                    <div class="row" style="margin-top: 20px; float: right; " id="clsAddRow_collapseGopVon">
+                                                        <div class="col-12">
+                                                            <span class="btn btn-primary clsAddRow" id="clsAddRow"><i class="fas fa-plus-square"></i> Thêm dòng</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="card-content-custom">
+                                                <div class="col-md-12" style="text-align: left; padding-top: 10px;">
+                                                    <label class="Showheader-title">
+                                                        <label class="mt-0 header-title header-title-Edit" data-toggle="collapse" data-target="#collapseGiayToKhac" aria-expanded="false" aria-controls="collapseGiayToKhac">
+                                                            <i class="far fa-caret-square-down"></i>
+                                                            <span class="TitleForm clsShow cursor-pointer">Các loại giấy tờ có giá khác</span>
+                                                        </label>
+                                                    </label>
+                                                </div>
+                                                <div class="col-md-12 collapse show" id="collapseGiayToKhac">
+                                                    <div class="row" style="padding-top: 1%; padding-bottom: 1%; padding-left: 2%; padding-right: 2%; border-radius: 10px; box-shadow: 0 5px 20px 0 rgb(0 0 0 / 15%); margin-top: 10px;">
+                                                        <div class="col-8">
+                                                            <div class="form-group">
+                                                                <label>Tên giấy tờ có giá</label>
+                                                                <input type="text" class="form-control" placeholder="Nhập tên giấy tờ" id="TenPhieu" name="TenPhieu[]">
+                                                                <input hidden value="GiayTo" id="LoaiPhieu" name="LoaiPhieu">
+                                                                <input hidden value="0" id="SoLuongPhieu" name="SoLuongPhieu[]">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-4">
+                                                            <div class="form-group">
+                                                                <label>Giá trị</label>
+                                                                <input type="text" class="form-control" placeholder="Nhập giá trị" id="GiaTriPhieu" name="GiaTriPhieu[]">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                 
+                                                    <div class="row" style="margin-top: 20px; float: right;" id="clsAddRow_collapseGiayToKhac">
+                                                        <div class="col-12">
+                                                            <span class="btn btn-primary clsAddRow" id="clsAddRow"><i class="fas fa-plus-square"></i> Thêm dòng</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                    <div class="tab-pane" id="TaiSanKhac">
+
+                                        <div class="row">
+                                            <div class="card-content-custom">
+                                                <div class="col-md-12" style="text-align: left; padding-top: 10px;">
+                                                    <label class="Showheader-title">
+                                                        <label class="mt-0 header-title header-title-Edit" data-toggle="collapse" data-target="#collapseGiayDangKy" aria-expanded="false" aria-controls="collapseGiayDangKy">
+                                                            <i class="far fa-caret-square-down"></i>
+                                                            <span class="TitleForm clsShow cursor-pointer">Tài sản theo quy định của pháp luật phải đăng ký sử dụng và được cấp giấy đăng ký (tầu bay, tầu thủy, thuyền, máy ủi, máy xúc, ô tô, mô tô, xe gắn máy...)</span>
+                                                        </label>
+                                                    </label>
+                                                </div>
+                                                <div class="col-md-12 collapse show" id="collapseGiayDangKy">
+                                                    <div class="row" style="padding-top: 1%; padding-bottom: 1%; padding-left: 2%; padding-right: 2%; border-radius: 10px; box-shadow: 0 5px 20px 0 rgb(0 0 0 / 15%); margin-top: 10px;">
+                                                        <div class="col-4">
+                                                            <div class="form-group">
+                                                                <label>Tên tài sản</label>
+                                                                <input type="text" class="form-control" placeholder="Nhập tên tài sản" id="TenTaiSanKhac" name="TenTaiSanKhac[]">
+                                                                <input hidden value="GiayDangKy" id="LoaiTaiSanKhac" name="LoaiTaiSanKhac">
+                                                                <input hidden value="" id="NamBatDauSoHuuTaiSanKhac" name="NamBatDauSoHuuTaiSanKhac[]">
+
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-4">
+                                                            <div class="form-group">
+                                                                <label>Số đăng ký</label>
+                                                                <input type="text" class="form-control" placeholder="Nhập số đăng ký" id="SoDangKyTaiSanKhac" name="SoDangKyTaiSanKhac[]">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-4">
+                                                            <div class="form-group">
+                                                                <label>Giá trị</label>
+                                                                <input type="text" class="form-control" placeholder="Nhập giá trị" id="GiaTriTaiSanKhac" name="GiaTriTaiSanKhac[]">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                               
+                                                    <div class="row" style="margin-top: 20px; float: right;" id="clsAddRow_collapseGiayDangKy">
+                                                        <div class="col-12">
+                                                            <span class="btn btn-primary clsAddRow" id="clsAddRow"><i class="fas fa-plus-square"></i> Thêm dòng</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="card-content-custom">
+                                                <div class="col-md-12" style="text-align: left; padding-top: 10px;">
+                                                    <label class="Showheader-title">
+                                                        <label class="mt-0 header-title header-title-Edit" data-toggle="collapse" data-target="#collapseTaiSanKhac" aria-expanded="false" aria-controls="collapseTaiSanKhac">
+                                                            <i class="far fa-caret-square-down"></i>
+                                                            <span class="TitleForm clsShow cursor-pointer">Tài sản khác (đồ mỹ nghệ, đồ thờ cúng, bàn ghế, cây cảnh, tranh, ảnh, các loại tài sản khác)</span>
+                                                        </label>
+                                                    </label>
+                                                </div>
+                                                <div class="col-md-12 collapse show" id="collapseTaiSanKhac">
+                                                    <div class="row" style="padding-top: 1%; padding-bottom: 1%; padding-left: 2%; padding-right: 2%; border-radius: 10px; box-shadow: 0 5px 20px 0 rgb(0 0 0 / 15%); margin-top: 10px;">
+                                                        <div class="col-4">
+                                                            <div class="form-group">
+                                                                <label>Tên tài sản</label>
+                                                                <input type="text" class="form-control" placeholder="Nhập tên tài sản" id="TenTaiSanKhac" name="TenTaiSanKhac[]">
+                                                                <input hidden value="TaiSanKhac" id="LoaiTaiSanKhac" name="LoaiTaiSanKhac">
+                                                                <input hidden value="" id="SoDangKyTaiSanKhac" name="SoDangKyTaiSanKhac[]">
+                                                               
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-4">
+                                                            <div class="form-group">
+                                                                <label>Năm bắt đầu sở hữu</label>
+                                                                <input type="number" min="1900" max="2099" step="1" value="2016" class="form-control"  placeholder="Nhập năm bắt đầu sỡ hữu" id="NamBatDauSoHuuTaiSanKhac" name="NamBatDauSoHuuTaiSanKhac[]">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-4">
+                                                            <div class="form-group">
+                                                                <label>Giá trị</label>
+                                                                <input type="text" class="form-control" placeholder="Nhập giá trị" id="GiaTriTaiSanKhac" name="GiaTriTaiSanKhac[]">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                   
+                                                    <div class="row" style="margin-top: 20px; float: right;" id="clsAddRow_collapseTaiSanKhac">
+                                                        <div class="col-12">
+                                                            <span class="btn btn-primary clsAddRow" id="clsAddRow"><i class="fas fa-plus-square"></i> Thêm dòng</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                    <div class="tab-pane" id="TaiSanNuocNgoai">
+
+                                        <div class="row">
+                                            <div class="card-content-custom">
+                                                <div class="col-md-12" style="text-align: left; padding-top: 10px;">
+                                                    <label class="Showheader-title">
+                                                        <label class="mt-0 header-title header-title-Edit" data-toggle="collapse" data-target="#collapseTaiSanNuocNgoai" aria-expanded="false" aria-controls="collapseTaiSanNuocNgoai">
+                                                            <i class="far fa-caret-square-down"></i>
+                                                            <span class="TitleForm clsShow cursor-pointer">Tàn sản nước ngoài</span>
+                                                        </label>
+                                                    </label>
+                                                </div>
+                                                <div class="col-md-12 collapse show" id="collapseTaiSanNuocNgoai">
+                                                    <div class="row" style="padding-top: 1%; padding-bottom: 1%; padding-left: 2%; padding-right: 2%; border-radius: 10px; box-shadow: 0 5px 20px 0 rgb(0 0 0 / 15%); margin-top: 10px;">
+                                                        <div class="col-6">
+                                                            <div class="form-group">
+                                                                <label>Tên tài sản</label>
+                                                                <input type="text" class="form-control" placeholder="Nhập tên tài sản" id="TenTaiSanNuocNgoai" name="TenTaiSanNuocNgoai[]">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-6">
+                                                            <div class="form-group">
+                                                                <label>Giá trị</label>
+                                                                <input type="text" class="form-control" placeholder="Nhập giá trị" id="GiaTriTaiSanNuocNgoai" name="GiaTriTaiSanNuocNgoai[]">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="row" style="margin-top: 20px; float: right;" id="clsAddRow_collapseTaiSanNuocNgoai">
+                                                        <div class="col-12">
+                                                            <span class="btn btn-primary clsAddRow" id="clsAddRow"><i class="fas fa-plus-square"></i> Thêm dòng</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                    <div class="tab-pane" id="TaiKhoanNuocNgoai">
+
+                                        <div class="row">
+                                            <div class="card-content-custom">
+                                                <div class="col-md-12" style="text-align: left; padding-top: 10px;">
+                                                    <label class="Showheader-title">
+                                                        <label class="mt-0 header-title header-title-Edit" data-toggle="collapse" data-target="#collapseTaiKhoanNuocNgoai" aria-expanded="false" aria-controls="collapseTaiKhoanNuocNgoai">
+                                                            <i class="far fa-caret-square-down"></i>
+                                                            <span class="TitleForm clsShow cursor-pointer">Tài khoản nước ngoài</span>
+                                                        </label>
+                                                    </label>
+                                                </div>
+                                                <div class="col-md-12 collapse show" id="collapseTaiKhoanNuocNgoai">
+                                                    <div class="row" style="padding-top: 1%; padding-bottom: 1%; padding-left: 2%; padding-right: 2%; border-radius: 10px; box-shadow: 0 5px 20px 0 rgb(0 0 0 / 15%); margin-top: 10px;">
+                                                        <div class="col-4">
+                                                            <div class="form-group">
+                                                                <label>Tên chủ tài khoản</label>
+                                                                <input type="text" class="form-control" placeholder="Nhập tên chủ tài khoản" id="TenTaiKhoanNguocNgoai" name="TenTaiKhoanNuocNgoai[]">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-4">
+                                                            <div class="form-group">
+                                                                <label>Số tài khoản</label>
+                                                                <input type="text" class="form-control" placeholder="Nhập số tài khoản" id="SoTaiKhoanNuocNgoai" name="SoTaiKhoanNuocNgoai[]">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-4">
+                                                            <div class="form-group">
+                                                                <label>Tên ngân hàng, chi nhánh ngân hàng, nơi mở tài khoản</label>
+                                                                <input type="text" class="form-control" placeholder="Nhập tên" id="TenNganHangNuocNgoai" name="TenNganHangNguocNgoai[]">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="row" style="margin-top: 20px; float: right;" id="clsAddRow_collapseTaiKhoanNuocNgoai">
+                                                        <div class="col-12">
+                                                            <span class="btn btn-primary clsAddRow" id="clsAddRow"><i class="fas fa-plus-square"></i> Thêm dòng</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                    <div class="tab-pane" id="TongThuNhap">
+
+                                        <div class="row">
+                                            <div class="card-content-custom">
+                                                <div class="col-md-12" style="text-align: left; padding-top: 10px;">
+                                                    <label class="Showheader-title">
+                                                        <label class="mt-0 header-title header-title-Edit" data-toggle="collapse" data-target="#collapseTongThuNhap" aria-expanded="false" aria-controls="collapseTongThuNhap">
+                                                            <i class="far fa-caret-square-down"></i>
+                                                            <span class="TitleForm clsShow cursor-pointer">Tổng thu nhập giữa 2 lần kê khai</span>
+                                                        </label>
+                                                    </label>
+                                                </div>
+                                                <div class="col-md-12 collapse show" id="collapseTongThuNhap">
+                                                    <div class="row" style="padding-top: 1%; padding-bottom: 1%; padding-left: 2%; padding-right: 2%; border-radius: 10px; box-shadow: 0 5px 20px 0 rgb(0 0 0 / 15%); margin-top: 10px;">
+                                                        <div class="col-6">
+                                                            <div class="form-group">
+                                                                <label>Tổng thu nhập người kê khai</label>
+                                                                <input type="text" class="form-control" placeholder="Nhập tổng thu nhập của Anh/Chị" id="ThuNhapNguoiKeKhai" name="ThuNhapNguoiKeKhai[]">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-6">
+                                                            <div class="form-group">
+                                                                <label>Tổng thu nhập của vợ (hoặc chồng)</label>
+                                                                <input type="text" class="form-control" placeholder="Nhập tổng thu nhập của vợ/chồng" id="ThuNhapVoHoacChong" name="ThuNhapVoHoacChong[]">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-6">
+                                                            <div class="form-group">
+                                                                <label>Tổng thu nhập của con chưa thành niên</label>
+                                                                <input type="text" class="form-control" placeholder="Nhập tổng thu nhập con" id="ThuNhapCon" name="ThuNhapCon[]">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-6">
+                                                            <div class="form-group">
+                                                                <label>Tổng các khoản thu nhập chung</label>
+                                                                <input type="text" class="form-control" placeholder="Nhập tổng thu nhập của chung" id="ThuNhapChung" name="ThuNhapChung[]">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                    <div class="tab-pane" id="BienDongTSTN">
+
+                                        <table id="" class="table table-bordered dt-responsive nowrap content_midle_center table-responsive" style="width:100%">
+                                            <thead>
+                                                <tr>
+                                                    <th style="width:55%;" rowspan="2">Loại tài sản, thu nhập</th>
+                                                    <th style="width:20%;" colspan="2">Tăng/Giảm</th>
+                                                    <th style="width:40%;" rowspan="2">Nội dung giải trình nguồn gốc tài sản tăng thêm và tổng thu nhập</th>
+                                                    <th hidden></th>
+                                                </tr>
+                                                <tr>
+                                                    <th>Số lượng tài sản</th>
+                                                    <th>Giá trị tài sản, thu nhập</th>
+                                                </tr>
+                                              
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>
+                                                        <div class="row">
+                                                            <div class="col-md-12">
+                                                                <label>1. Quyền sử dụng đất</label>
+                                                            </div>
+                                                            <div class="col-md-12">
+                                                                <label class="label-info">1.1. Đất ở</label>
+                                                                <textarea class="input-group" name="TenBienDongTS[]"></textarea>
+                                                            </div>
+                                                            <div class="col-md-12">
+                                                                <label class="label-info">1.2. Các loại đất khác</label>
+                                                                <textarea class="input-group"  name="TenBienDongTS[]"></textarea>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="row">
+                                                            <div class="col-md-12" style="height: 21px;">
+                                                                <label></label>
+                                                            </div>
+                                                            <div class="col-md-12">
+                                                                <label class="label-info" style="height: 21px;"></label>
+                                                                <textarea class="input-group" name="SoLuongBienDongTS[]"></textarea>
+                                                            </div>
+                                                            <div class="col-md-12">
+                                                                <label class="label-info" style="height: 21px;"></label>
+                                                                <textarea class="input-group" name="SoLuongBienDongTS[]"></textarea>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="row">
+                                                            <div class="col-md-12" style="height:21px;">
+                                                                <label></label>
+                                                            </div>
+                                                            <div class="col-md-12">
+                                                                <label class="label-info" style="height: 21px;"></label>
+                                                                <textarea class="input-group" name="GiaTriBienDongTS[]"></textarea>
+                                                            </div>
+                                                            <div class="col-md-12">
+                                                                <label class="label-info" style="height: 21px;"></label>
+                                                                <textarea class="input-group" name="GiaTriBienDongTS[]"></textarea>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="row">
+                                                            <div class="col-md-12" style="height: 21px;">
+                                                                <label></label>
+                                                            </div>
+                                                            <div class="col-md-12">
+                                                                <label class="label-info" style="height: 21px;"></label>
+                                                                <textarea class="input-group" name="NoiDungBienDongTS[]"></textarea>
+                                                            </div>
+                                                            <div class="col-md-12">
+                                                                <label class="label-info" style="height: 21px;"></label>
+                                                                <textarea class="input-group" name="NoiDungBienDongTS[]"></textarea>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    <td hidden>
+                                                        <div class="row">
+                                                            <div class="col-md-12" style="height: 21px;">
+                                                                <label></label>
+                                                            </div>
+                                                            <div class="col-md-12">
+                                                                <label class="label-info" style="height: 21px;"></label>
+                                                                <textarea class="input-group" name="LoaiBienDongTS[]">DatO</textarea>
+                                                            </div>
+                                                            <div class="col-md-12">
+                                                                <label class="label-info" style="height: 21px;"></label>
+                                                                <textarea class="input-group" name="LoaiBienDongTS[]">DatKhac</textarea>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <div class="row">
+                                                            <div class="col-md-12">
+                                                                <label>2. Nhà ở, công trình xây dựng</label>
+                                                            </div>
+                                                            <div class="col-md-12">
+                                                                <label class="label-info">2.1. Nhà ở</label>
+                                                                <textarea class="input-group" name="TenBienDongTS[]"></textarea>
+                                                            </div>
+                                                            <div class="col-md-12">
+                                                                <label class="label-info">2.2. Công trình xây dụng khác</label>
+                                                                <textarea class="input-group" name="TenBienDongTS[]"></textarea>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="row">
+                                                            <div class="col-md-12" style="height: 21px;">
+                                                                <label></label>
+                                                            </div>
+                                                            <div class="col-md-12">
+                                                                <label class="label-info" style="height: 21px;"></label>
+                                                                <textarea class="input-group" name="SoLuongBienDongTS[]"></textarea>
+                                                            </div>
+                                                            <div class="col-md-12">
+                                                                <label class="label-info" style="height: 21px;"></label>
+                                                                <textarea class="input-group" name="SoLuongBienDongTS[]"></textarea>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="row">
+                                                            <div class="col-md-12" style="height:21px;">
+                                                                <label></label>
+                                                            </div>
+                                                            <div class="col-md-12">
+                                                                <label class="label-info" style="height: 21px;"></label>
+                                                                <textarea class="input-group" name="GiaTriBienDongTS[]"></textarea>
+                                                            </div>
+                                                            <div class="col-md-12">
+                                                                <label class="label-info" style="height: 21px;"></label>
+                                                                <textarea class="input-group" name="GiaTriBienDongTS[]"></textarea>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="row">
+                                                            <div class="col-md-12" style="height: 21px;">
+                                                                <label></label>
+                                                            </div>
+                                                            <div class="col-md-12">
+                                                                <label class="label-info" style="height: 21px;"></label>
+                                                                <textarea class="input-group" name="NoiDungBienDongTS[]"></textarea>
+                                                            </div>
+                                                            <div class="col-md-12">
+                                                                <label class="label-info" style="height: 21px;"></label>
+                                                                <textarea class="input-group" name="NoiDungBienDongTS[]"></textarea>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    <td hidden>
+                                                        <div class="row">
+                                                            <div class="col-md-12" style="height: 21px;">
+                                                                <label></label>
+                                                            </div>
+                                                            <div class="col-md-12">
+                                                                <label class="label-info" style="height: 21px;"></label>
+                                                                <textarea class="input-group" name="LoaiBienDongTS[]">NhaOCongTrinh</textarea>
+                                                            </div>
+                                                            <div class="col-md-12">
+                                                                <label class="label-info" style="height: 21px;"></label>
+                                                                <textarea class="input-group" name="LoaiBienDongTS[]">CongTrinhKhac</textarea>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <div class="row">
+                                                            <div class="col-md-12">
+                                                                <label>3. Tài sản khác gắn liền với đất</label>
+                                                            </div>
+                                                            <div class="col-md-12">
+                                                                <label class="label-info">3.1. Cây lâu năm</label>
+                                                                <textarea class="input-group" name="TenBienDongTS[]"></textarea>
+                                                            </div>
+                                                            <div class="col-md-12">
+                                                                <label class="label-info">3.2. Rừng sản xuất</label>
+                                                                <textarea class="input-group" name="TenBienDongTS[]"></textarea>
+                                                            </div>
+                                                            <div class="col-md-12">
+                                                                <label class="label-info">3.3. Vật kiến trúc khác gắn liền với đất</label>
+                                                                <textarea class="input-group" name="TenBienDongTS[]"></textarea>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="row">
+                                                            <div class="col-md-12" style="height: 21px;">
+                                                                <label></label>
+                                                            </div>
+                                                            <div class="col-md-12">
+                                                                <label class="label-info" style="height: 21px;"></label>
+                                                                <textarea class="input-group" name="SoLuongBienDongTS[]"></textarea>
+                                                            </div>
+                                                            <div class="col-md-12">
+                                                                <label class="label-info" style="height: 21px;"></label>
+                                                                <textarea class="input-group" name="SoLuongBienDongTS[]"></textarea>
+                                                            </div>
+                                                            <div class="col-md-12">
+                                                                <label class="label-info" style="height: 21px;"></label>
+                                                                <textarea class="input-group" name="SoLuongBienDongTS[]"></textarea>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="row">
+                                                            <div class="col-md-12" style="height:21px;">
+                                                                <label></label>
+                                                            </div>
+                                                            <div class="col-md-12">
+                                                                <label class="label-info" style="height: 21px;"></label>
+                                                                <textarea class="input-group" name="GiaTriBienDongTS[]"></textarea>
+                                                            </div>
+                                                            <div class="col-md-12">
+                                                                <label class="label-info" style="height: 21px;"></label>
+                                                                <textarea class="input-group" name="GiaTriBienDongTS[]"></textarea>
+                                                            </div>
+                                                            <div class="col-md-12">
+                                                                <label class="label-info" style="height: 21px;"></label>
+                                                                <textarea class="input-group" name="GiaTriBienDongTS[]"></textarea>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="row">
+                                                            <div class="col-md-12" style="height: 21px;">
+                                                                <label></label>
+                                                            </div>
+                                                            <div class="col-md-12">
+                                                                <label class="label-info" style="height: 21px;"></label>
+                                                                <textarea class="input-group" name="NoiDungBienDongTS[]"></textarea>
+                                                            </div>
+                                                            <div class="col-md-12">
+                                                                <label class="label-info" style="height: 21px;"></label>
+                                                                <textarea class="input-group" name="NoiDungBienDongTS[]"></textarea>
+                                                            </div>
+                                                            <div class="col-md-12">
+                                                                <label class="label-info" style="height: 21px;"></label>
+                                                                <textarea class="input-group" name="NoiDungBienDongTS[]"></textarea>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    <td hidden>
+                                                        <div class="row">
+                                                            <div class="col-md-12" style="height: 21px;">
+                                                                <label></label>
+                                                            </div>
+                                                            <div class="col-md-12">
+                                                                <label class="label-info" style="height: 21px;"></label>
+                                                                <textarea class="input-group" name="LoaiBienDongTS[]">CayLauNam</textarea>
+                                                            </div>
+                                                            <div class="col-md-12">
+                                                                <label class="label-info" style="height: 21px;"></label>
+                                                                <textarea class="input-group" name="LoaiBienDongTS[]">Rung</textarea>
+                                                            </div>
+                                                            <div class="col-md-12">
+                                                                <label class="label-info" style="height: 21px;"></label>
+                                                                <textarea class="input-group" name="LoaiBienDongTS[]">VatKienTruc</textarea>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <div class="row">
+                                                            <div class="col-md-12">
+                                                                <label>4. Vàng, kim cương, bạch kim và kim loại quý, đá quý khác có tổng giá trị từ 50 triệu đồng trở lên</label>
+                                                                <textarea class="input-group" name="TenBienDongTS[]"></textarea>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    <td style="vertical-align: bottom;">
+                                                        <div class="row">
+                                                            <div class="col-md-12">
+                                                                <label class="label-info"></label>
+                                                                <textarea class="input-group" name="SoLuongBienDongTS[]"></textarea>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    <td style="vertical-align: bottom;">
+                                                        <div class="row">
+                                                            <div class="col-md-12">
+                                                                <label class="label-info"></label>
+                                                                <textarea class="input-group" name="GiaTriBienDongTS[]"></textarea>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    <td style="vertical-align: bottom;">
+                                                        <div class="row">
+                                                            <div class="col-md-12">
+                                                                <label class="label-info"></label>
+                                                                <textarea class="input-group" name="NoiDungBienDongTS[]"></textarea>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    <td hidden>
+                                                        <div class="row">
+                                                            <div class="col-md-12">
+                                                                <label class="label-info"></label>
+                                                                <textarea class="input-group" name="LoaiBienDongTS[]">VangBacDaQuy</textarea>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <div class="row">
+                                                            <div class="col-md-12">
+                                                                <label>5. Tiền (tiền Việt Nam, ngoại tệ) gồm tiền mặt, tiền cho vay, tiền trả trước, tiền gửi cá nhân, tổ chức trong nước, tổ chức nước ngoài tại Việt Nam mà tổng giá trị quy đổi từ 50 triệu đồng trở lên</label>
+                                                                <textarea class="input-group" name="TenBienDongTS[]"></textarea>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    <td style="vertical-align: bottom;">
+                                                        <div class="row">
+                                                            <div class="col-md-12">
+                                                                <label class="label-info"></label>
+                                                                <textarea class="input-group" name="SoLuongBienDongTS[]"></textarea>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    <td style="vertical-align: bottom;">
+                                                        <div class="row">
+                                                            <div class="col-md-12">
+                                                                <label class="label-info"></label>
+                                                                <textarea class="input-group" name="GiaTriBienDongTS[]"></textarea>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    <td style="vertical-align: bottom;">
+                                                        <div class="row">
+                                                            <div class="col-md-12">
+                                                                <label class="label-info"></label>
+                                                                <textarea class="input-group" name="NoiDungBienDongTS[]"></textarea>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    <td hidden>
+                                                        <div class="row">
+                                                            <div class="col-md-12">
+                                                                <label class="label-info"></label>
+                                                                <textarea class="input-group" name="LoaiBienDongTS[]">Tien</textarea>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <div class="row">
+                                                            <div class="col-md-12">
+                                                                <label>6. Cổ phiếu, trái phiếu, vốn góp, các loại giấy tờ có giá khác mà tổng giá trị từ 50 triệu đồng trở lên</label>
+                                                            </div>
+                                                            <div class="col-md-12">
+                                                                <label class="label-info">6.1. Cổ phiếu</label>
+                                                                <textarea class="input-group" name="TenBienDongTS[]"></textarea>
+                                                            </div>
+                                                            <div class="col-md-12">
+                                                                <label class="label-info">6.2. Trái phiếu</label>
+                                                                <textarea class="input-group" name="TenBienDongTS[]"></textarea>
+                                                            </div>
+                                                            <div class="col-md-12">
+                                                                <label class="label-info">6.3. Vốn góp</label>
+                                                                <textarea class="input-group" name="TenBienDongTS[]"></textarea>
+                                                            </div>
+                                                            <div class="col-md-12">
+                                                                <label class="label-info">6.4. Các loại giấy tờ có giá khác</label>
+                                                                <textarea class="input-group" name="TenBienDongTS[]"></textarea>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    <td style="vertical-align:bottom;">
+                                                        <div class="row">
+                                                            <div class="col-md-12" style="height: 21px;">
+                                                                <label></label>
+                                                            </div>
+                                                            <div class="col-md-12">
+                                                                <label class="label-info" style="height: 21px;"></label>
+                                                                <textarea class="input-group" name="SoLuongBienDongTS[]"></textarea>
+                                                            </div>
+                                                            <div class="col-md-12">
+                                                                <label class="label-info" style="height: 15px;"></label>
+                                                                <textarea class="input-group" name="SoLuongBienDongTS[]"></textarea>
+                                                            </div>
+                                                            <div class="col-md-12">
+                                                                <label class="label-info" style="height: 15px;"></label>
+                                                                <textarea class="input-group" name="SoLuongBienDongTS[]"></textarea>
+                                                            </div>
+                                                            <div class="col-md-12">
+                                                                <label class="label-info" style="height: 15px;"></label>
+                                                                <textarea class="input-group" name="SoLuongBienDongTS[]"></textarea>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    <td style="vertical-align:bottom;">
+                                                        <div class="row">
+                                                            <div class="col-md-12" style="height: 21px;">
+                                                                <label></label>
+                                                            </div>
+                                                            <div class="col-md-12">
+                                                                <label class="label-info" style="height: 21px;"></label>
+                                                                <textarea class="input-group" name="GiaTriBienDongTS[]"></textarea>
+                                                            </div>
+                                                            <div class="col-md-12">
+                                                                <label class="label-info" style="height: 15px;"></label>
+                                                                <textarea class="input-group" name="GiaTriBienDongTS[]"></textarea>
+                                                            </div>
+                                                            <div class="col-md-12">
+                                                                <label class="label-info" style="height: 15px;"></label>
+                                                                <textarea class="input-group" name="GiaTriBienDongTS[]"></textarea>
+                                                            </div>
+                                                            <div class="col-md-12">
+                                                                <label class="label-info" style="height: 15px;"></label>
+                                                                <textarea class="input-group" name="GiaTriBienDongTS[]"></textarea>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    <td style="vertical-align:bottom;">
+                                                        <div class="row">
+                                                            <div class="col-md-12" style="height: 21px;">
+                                                                <label></label>
+                                                            </div>
+                                                            <div class="col-md-12">
+                                                                <label class="label-info" style="height: 21px;"></label>
+                                                                <textarea class="input-group" name="NoiDungBienDongTS[]"></textarea>
+                                                            </div>
+                                                            <div class="col-md-12">
+                                                                <label class="label-info" style="height: 15px;"></label>
+                                                                <textarea class="input-group" name="NoiDungBienDongTS[]"></textarea>
+                                                            </div>
+                                                            <div class="col-md-12">
+                                                                <label class="label-info" style="height: 15px;"></label>
+                                                                <textarea class="input-group" name="NoiDungBienDongTS[]"></textarea>
+                                                            </div>
+                                                            <div class="col-md-12">
+                                                                <label class="label-info" style="height: 15px;"></label>
+                                                                <textarea class="input-group" name="NoiDungBienDongTS[]"></textarea>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    <td hidden>
+                                                        <div class="row">
+                                                            <div class="col-md-12" style="height: 21px;">
+                                                                <label></label>
+                                                            </div>
+                                                            <div class="col-md-12">
+                                                                <label class="label-info" style="height: 21px;"></label>
+                                                                <textarea class="input-group" name="LoaiBienDongTS[]">CoPhieu</textarea>
+                                                            </div>
+                                                            <div class="col-md-12">
+                                                                <label class="label-info" style="height: 15px;"></label>
+                                                                <textarea class="input-group" name="LoaiBienDongTS[]">TraiPhieu</textarea>
+                                                            </div>
+                                                            <div class="col-md-12">
+                                                                <label class="label-info" style="height: 15px;"></label>
+                                                                <textarea class="input-group" name="LoaiBienDongTS[]">VonGop</textarea>
+                                                            </div>
+                                                            <div class="col-md-12">
+                                                                <label class="label-info" style="height: 15px;"></label>
+                                                                <textarea class="input-group" name="LoaiBienDongTS[]">GiayToKhac</textarea>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="vertical-align:bottom;">
+                                                        <div class="row">
+                                                            <div class="col-md-12">
+                                                                <label>7. Tài sản khác có giá trị từ 50 triệu đồng trở lên, bao gồm: </label>
+                                                            </div>
+                                                            <div class="col-md-12">
+                                                                <label class="label-info">7.1. Tài sản theo quy định của pháp luật phải đăng ký sử dụng và được cấp giấy đăng ký</label>
+                                                                <textarea class="input-group" name="TenBienDongTS[]"></textarea>
+                                                            </div>
+                                                            <div class="col-md-12">
+                                                                <label class="label-info">7.2. Tài sản khác</label>
+                                                                <textarea class="input-group" name="TenBienDongTS[]"></textarea>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    <td style="vertical-align:bottom;">
+                                                        <div class="row">
+                                                            <div class="col-md-12" style="height: 21px;">
+                                                                <label></label>
+                                                            </div>
+                                                            <div class="col-md-12">
+                                                                <label class="label-info" style="height: 21px;"></label>
+                                                                <textarea class="input-group" name="SoLuongBienDongTS[]"></textarea>
+                                                            </div>
+                                                            <div class="col-md-12">
+                                                                <label class="label-info" style="height: 15px;"></label>
+                                                                <textarea class="input-group" name="SoLuongBienDongTS[]"></textarea>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    <td style="vertical-align:bottom;">
+                                                        <div class="row">
+                                                            <div class="col-md-12" style="height: 21px;">
+                                                                <label></label>
+                                                            </div>
+                                                            <div class="col-md-12">
+                                                                <label class="label-info" style="height: 21px;"></label>
+                                                                <textarea class="input-group" name="GiaTriBienDongTS[]"></textarea>
+                                                            </div>
+                                                            <div class="col-md-12">
+                                                                <label class="label-info" style="height: 15px;"></label>
+                                                                <textarea class="input-group" name="GiaTriBienDongTS[]"></textarea>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    <td style="vertical-align:bottom;">
+                                                        <div class="row">
+                                                            <div class="col-md-12" style="height: 21px;">
+                                                                <label></label>
+                                                            </div>
+                                                            <div class="col-md-12">
+                                                                <label class="label-info" style="height: 21px;"></label>
+                                                                <textarea class="input-group" name="NoiDungBienDongTS[]"></textarea>
+                                                            </div>
+                                                            <div class="col-md-12">
+                                                                <label class="label-info" style="height: 15px;"></label>
+                                                                <textarea class="input-group" name="NoiDungBienDongTS[]"></textarea>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    <td hidden>
+                                                        <div class="row">
+                                                            <div class="col-md-12" style="height: 21px;">
+                                                                <label></label>
+                                                            </div>
+                                                            <div class="col-md-12">
+                                                                <label class="label-info" style="height: 21px;"></label>
+                                                                <textarea class="input-group" name="LoaiBienDongTS[]">TaiSanQDPL</textarea>
+                                                            </div>
+                                                            <div class="col-md-12">
+                                                                <label class="label-info" style="height: 15px;"></label>
+                                                                <textarea class="input-group" name="LoaiBienDongTS[]">TaiSanKhac</textarea>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <div class="row">
+                                                            <div class="col-md-12">
+                                                                <label>8. Tài sản nước ngoài</label>
+                                                                <textarea class="input-group" name="TenBienDongTS[]"></textarea>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    <td style="vertical-align: bottom;">
+                                                        <div class="row">
+                                                            <div class="col-md-12">
+                                                                <label class="label-info"></label>
+                                                                <textarea class="input-group" name="SoLuongBienDongTS[]"></textarea>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    <td style="vertical-align: bottom;">
+                                                        <div class="row">
+                                                            <div class="col-md-12">
+                                                                <label class="label-info"></label>
+                                                                <textarea class="input-group" name="GiaTriBienDongTS[]"></textarea>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    <td style="vertical-align: bottom;">
+                                                        <div class="row">
+                                                            <div class="col-md-12">
+                                                                <label class="label-info"></label>
+                                                                <textarea class="input-group" name="NoiDungBienDongTS[]"></textarea>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    <td hidden>
+                                                        <div class="row">
+                                                            <div class="col-md-12">
+                                                                <label class="label-info"></label>
+                                                                <textarea class="input-group" name="LoaiBienDongTS[]">TaiSanNuocNgoai</textarea>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <div class="row">
+                                                            <div class="col-md-12">
+                                                                <label>9. Tổng thu nhập giữa 02 lần kê khai</label>
+                                                                <textarea class="input-group" name="TenBienDongTS[]"></textarea>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    <td style="vertical-align: bottom;">
+                                                        <div class="row">
+                                                            <div class="col-md-12">
+                                                                <label class="label-info"></label>
+                                                                <textarea class="input-group" name="SoLuongBienDongTS[]"></textarea>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    <td style="vertical-align: bottom;">
+                                                        <div class="row">
+                                                            <div class="col-md-12">
+                                                                <label class="label-info"></label>
+                                                                <textarea class="input-group" name="GiaTriBienDongTS[]"></textarea>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    <td style="vertical-align: bottom;">
+                                                        <div class="row">
+                                                            <div class="col-md-12">
+                                                                <label class="label-info"></label>
+                                                                <textarea class="input-group" name="NoiDungBienDongTS[]"></textarea>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    <td hidden>
+                                                        <div class="row">
+                                                            <div class="col-md-12">
+                                                                <label class="label-info"></label>
+                                                                <textarea class="input-group" name="LoaiBienDongTS[]">ThuNhap</textarea>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+
+            </div>
+        </div>
+        <div class="modal fade" id="add-sh2">
+
+        </div>
+    </div>
+</section>
+
+<script src="~/Scripts/NV_KeKhai_TSTN_LapBanKeKhai.js"></script>
+

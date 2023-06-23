@@ -1,0 +1,310 @@
+﻿
+@{
+    ViewBag.Title = "Nghiệp Vụ Lập Kế Hoạch Kê Khai";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-left">
+                    <li class="breadcrumb-item"><a href="@Url.Action("Index","Home")">Trang chủ</a></li>
+                    <li class="breadcrumb-item active">Nghiệp Vụ Lập Kế Hoạch Kê Khai</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="card elevation-2">
+                    <div class="card-tools">
+                        <div class="input-group input-group-sm row">
+                            @if (ViewBag.Role == "ADMIN" || ViewBag.Role == "NDDTTT")
+                            {
+                                <div class="mr-2 d-flex" style="overflow: auto; white-space: nowrap; max-width: 400px">
+                                    <select id="MaCoQuanDonVi_search" class="js-example-basic-single js-states form-control select_search">
+                                        <option value="0">TẤT CẢ CƠ QUAN</option>
+                                    </select>
+                                </div>
+                            }
+                            <div class="mr-4 d-flex" style="overflow: auto; white-space: nowrap;">
+                                <select id="LoaiKeKhai" class="js-example-basic-single js-states form-control select_search">
+                                    <option value="0">TẤT CẢ</option>
+                                    <option value="3">KÊ KHAI LẦN ĐẦU</option>
+                                    <option value="4">KÊ KHAI HẰNG NĂM, BỔ SUNG</option>
+                                    <option value="12">KÊ KHAI PHỤC VỤ CÔNG TÁC CÁN BỘ</option>
+                                </select>
+                            </div>
+                            <div class="mr-4 d-flex" style="overflow: auto; white-space: nowrap;">
+                                @*<span style="display: flex; align-items: center; " class="pr-2">Kế Hoạch Năm</span>*@
+                                <input type="number" name="table_search" class="form-control float-right" min="2017" max="2030" value="@DateTime.Now.Year.ToString()" id="keHoachNam">
+                            </div>
+                            <input type="text" name="table_search" class="form-control float-right mr-1" placeholder="Tìm..." id="Filter">
+                            <div class="input-group-append mr-3">
+
+                                <button type="submit" class="btn btn-default" id="search_btn">
+                                    <i class="fas fa-search text-primary"></i>
+                                </button>
+                            </div>
+                            <div class="input-group-append">
+                                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#add-sh" id="THEM">
+                                    <i class="fas fa-plus pr-2"></i>Thêm Mới
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <table class="table table-hover text-nowrap table-bordered" id="dataTable" style="width: 100%">
+                        <thead class="bg-primary">
+                            <tr>
+                                <th width="5%">STT</th>
+                                <th width="20%">Tên Cơ Quan Đơn Vị</th>
+                                <th width="20%">Tên Kế Hoạch</th>
+                                <th width="10%">Loại Kế Hoạch</th>
+                                <th width="10%">Loại Kê Khai</th>
+                                <th width="10%">Kế Hoạch Năm</th>
+                                <th width="10%">Thời Gian Bắt Đầu</th>
+                                <th width="10%">Thời Gian Kết Thúc</th>
+                                <th width="5%"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                    <div class="card-footer clearfix" style="height: 51px; width: 100%">
+                        <ul class="pagination pagination-sm m-0 float-right">
+                        </ul>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        @* Modal thêm cơ quan *@
+        <div class="modal fade" id="add-sh">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Lập Kế Hoạch Kê Khai</h4>
+                        <button type="button" class="close closeform" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">×</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        @using (Ajax.BeginForm("Create", "DM_CoQuanDonVi", new AjaxOptions { HttpMethod = "POST", OnSuccess = "FnSuccess", OnFailure = "Failure", OnBegin = "FnBegin" }, new { @class = "NV_Create form-horizontal", enctype = "multipart/form-data" }))
+                        {
+                            @Html.AntiForgeryToken()
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-12 d-flex">
+                                        <hr style="width: 20%" />
+                                        <span style="font-size: 17px;">Thông Tin Chung Kế Hoạch Kê Khai Tài Sản, Thu Nhập</span>
+                                        <hr style="width: 20%" />
+                                    </div>
+
+                                    <div class="col-12">
+                                        <div class="form-group">
+                                            <label>Kế Hoạch Năm<span style="color: red"> *</span></label>
+                                            <input type="number" min="1900" max="2099" step="1" value="@DateTime.Now.Year" class="form-control" placeholder="nhập kế hoạch năm" id="KeHoachNam" name="KeHoachNam">
+                                        </div>
+                                    </div>
+
+                                    <div class="col-12">
+                                        <div class="form-group">
+                                            <label>Loại Kế Hoạch Kê Khai<span style="color: red">*</span></label>
+                                            <select class="form-control" id="Ma_Loai_KeKhai" name="Ma_Loai_KeKhai" style="width: 100%; height: 100%;">
+                                                <option value="3">Kê Khai Lần Đầu</option>
+                                                <option value="4">Kê Khai Hằng Năm</option>
+                                                <option value="12">Kê Khai Phục Vụ Công Tác Cán Bộ</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-12">
+                                        <div class="form-group">
+                                            <label>Tên Kế Hoạch<span style="color: red"> *</span></label>
+                                            <input type="text" class="form-control" placeholder="nhập tên kế hoạch kê khai" id="TenKeHoachKeKhai" name="TenKeHoachKeKhai">
+                                        </div>
+                                    </div>
+
+
+
+                                    <div class="col-6">
+                                        <div class="form-group">
+                                            <label>Thời Gian Bắt Đầu Kê khai<span style="color: red"> *</span></label>
+                                            <input type="date" class="form-control" id="ThoiGianBatDau" name="ThoiGianBatDau">
+                                        </div>
+                                    </div>
+
+                                    <div class="col-6">
+                                        <div class="form-group">
+                                            <label>Thời Gian Kết Thúc Kê Khai<span style="color: red"> *</span></label>
+                                            <input type="date" class="form-control" id="ThoiGianKetThuc" name="ThoiGianKetThuc">
+                                        </div>
+                                    </div>
+
+                                    <div class="col-6">
+                                        <div class="form-group">
+                                            <label>Thời Gian Bắt Đầu Công Khai<span style="color: red"> *</span></label>
+                                            <input type="date" class="form-control" id="ThoiGianBatDauCongKhai" name="ThoiGianBatDauCongKhai">
+                                        </div>
+                                    </div>
+
+                                    <div class="col-6">
+                                        <div class="form-group">
+                                            <label>Thời Gian Kết Thúc Công Khai<span style="color: red"> *</span></label>
+                                            <input type="date" class="form-control" id="ThoiGianKetThucCongKhai" name="ThoiGianKetThucCongKhai">
+                                        </div>
+                                    </div>
+
+
+                                    <div class="col-12">
+                                        <div class="form-group">
+                                            <label>Đính Kèm Tệp<span style="color: red"> *</span></label>
+                                            <input class="form-control" type="file" id=" NghiDinh" name="NghiDinh" multiple style="height: auto; ">
+                                        </div>
+                                    </div>
+                                    <div class="col-12 row" id="KKTT">
+                                       
+                                    </div>
+                                    
+                                </div>
+                            </div>
+                            <div class="modal-footer justify-content-between">
+                                <button type="button" class="btn btn-danger closeform" data-dismiss="modal" style="width: 105px">
+                                    Đóng
+                                </button>
+                                <button type="submit" class="btn btn-primary" style="position: relative; width: 105px;">
+                                    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="background: none; display: block; shape-rendering: auto; margin: 0px; padding: 0px; width: 20px; height: 20px; position: absolute;left: 5px;top: 6px;" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid" class="loading_lkh d-none">
+                                        <circle cx="50" cy="50" r="32" stroke-width="8" stroke="#ffffff" stroke-dasharray="50.26548245743669 50.26548245743669" fill="none" stroke-linecap="round">
+                                            <animateTransform attributeName="transform" type="rotate" repeatCount="indefinite" dur="1s" keyTimes="0;1" values="0 50 50;360 50 50"></animateTransform>
+                                        </circle>
+                                    </svg>
+                                    Lưu Mới
+                                </button>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        @* Modal detail*@
+        <div class="modal fade" id="add-sh1">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Chi Tiết Kế Hoạch Kê Khai</h4>
+                        <button type="button" class="close closeform" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">×</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-12 d-flex">
+                                    <hr style="width: 20%" />
+                                    <span style="font-size: 17px;">Thông Tin Chung Kế Hoạch Kê Khai Tài Sản, Thu Nhập</span>
+                                    <hr style="width: 20%" />
+                                </div>
+
+                                <div class="col-12">
+                                    <div class="form-group">
+                                        <label>Kế Hoạch Năm</label>
+                                        <input type="number" min="1900" max="2099" step="1" value="@DateTime.Now.Year" class="form-control" placeholder="nhập kế hoạch năm" id="KeHoachNam_Detail" name="KeHoachNam">
+                                    </div>
+                                </div>
+
+                                <div class="col-12">
+                                    <div class="form-group">
+                                        <label>Loại Kế Hoạch Kê Khai</label>
+                                        <select class="form-control" id="Ma_Loai_KeKhai_Detail" name="Ma_Loai_KeKhai" style="width: 100%; height: 100%;">
+                                            <option value="3">Kê Khai Lần Đầu</option>
+                                            <option value="4">Kê Khai Hằng Năm</option>
+                                            <option value="12">Kê Khai Phục Vụ Công Tác Cán Bộ</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="col-12">
+                                    <div class="form-group">
+                                        <label>Tên Kế Hoạch</label>
+                                        <input type="text" class="form-control" placeholder="nhập tên kế hoạch kê khai" id="TenKeHoachKeKhai_Detail" name="TenKeHoachKeKhai">
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="form-group">
+                                        <label>Thời Gian Bắt Đầu Kê khai</label>
+                                        <input type="date" class="form-control" id="ThoiGianBatDau_Detail" name="ThoiGianBatDau">
+                                    </div>
+                                </div>
+
+                                <div class="col-6">
+                                    <div class="form-group">
+                                        <label>Thời Gian Kết Thúc Kê Khai</label>
+                                        <input type="date" class="form-control" id="ThoiGianKetThuc_Detail" name="ThoiGianKetThuc">
+                                    </div>
+                                </div>
+
+                                <div class="col-6">
+                                    <div class="form-group">
+                                        <label>Thời Gian Bắt Đầu Công Khai</label>
+                                        <input type="date" class="form-control" id="ThoiGianBatDauCongKhai_Detail" name="ThoiGianBatDauCongKhai">
+                                    </div>
+                                </div>
+
+                                <div class="col-6">
+                                    <div class="form-group">
+                                        <label>Thời Gian Kết Thúc Công Khai<span style="color: red"> *</span></label>
+                                        <input type="date" class="form-control" id="ThoiGianKetThucCongKhai_Detail" name="ThoiGianKetThucCongKhai">
+                                    </div>
+                                </div>
+
+
+                                <div class="col-12">
+                                    <div class="form-group">
+                                        <label>Đính Kèm Tệp<span style="color: red"> *</span></label>
+                                        <span id="NghiDinh_Detail"></span>
+                                       
+                                    </div>
+                                </div>
+                                <div class="col-12 row" id="KKTT_Detail">
+
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="modal-footer justify-content-between">
+                            <button type="button" class="btn btn-danger closeform" data-dismiss="modal" style="width: 105px">
+                                Đóng
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+</section>
+<script>
+    $(".custom-file-input").on("change", function () {
+        var fileName = $(this).val().split("\\").pop();
+        $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
+    });
+
+    $.get("/DM_CoQuanDonVi/GetCoQuanSearch", (data) => {
+        $.each(data, (index, item) => {
+            $("#MaCoQuanDonVi_search").append(`<option value="${item.Ma_CoQuan_DonVi}">${item.TenCoQuan}</option>`)
+        })
+    })
+    
+
+</script>
+<script src="~/Scripts/NghiepVu/NV_LapKeHoachKeKhai.js"></script>
+

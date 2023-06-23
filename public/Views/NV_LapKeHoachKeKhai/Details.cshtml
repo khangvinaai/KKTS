@@ -1,0 +1,75 @@
+﻿@model KeKhaiTaiSanThuNhap.Models.NV_LapKeHoachKeKhai
+
+@{
+    ViewBag.Title = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>NV_LapKeHoachKeKhai</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.TenKeHoachKeKhai)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.TenKeHoachKeKhai)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.KeHoachNam)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.KeHoachNam)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ThoiGianBatDau)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ThoiGianBatDau)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ThoiGianKetThuc)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ThoiGianKetThuc)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.NghiDinh)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.NghiDinh)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.TienDo)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.TienDo)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.TrangThai)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.TrangThai)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.MaKeHoachKeKhai }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

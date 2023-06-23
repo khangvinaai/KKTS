@@ -1,0 +1,147 @@
+﻿
+@{
+    ViewBag.Title = "Danh Mục Chức Vụ - Chức Danh";
+    Layout = "~/Views/Shared/_Layout.cshtml"; 
+}
+
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-left">
+                    <li class="breadcrumb-item"><a href="@Url.Action("Index","Home")">Trang chủ</a></li>
+                    <li class="breadcrumb-item active">Danh Mục Chức Vụ - Chức Danh</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="card elevation-2">
+                    <div class="card-tools">
+                        <div class="input-group input-group-sm row">
+
+
+                            <input type="text" name="table_search" class="form-control float-right mr-1" placeholder="Tìm..." id="Filter">
+                            <div class="input-group-append mr-3">
+                                <button type="submit" class="btn btn-default" id="search_btn">
+                                    <i class="fas fa-search text-primary"></i>
+                                </button>
+                            </div>
+                            <div class="input-group-append">
+                                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#add-sh" id="THEM">
+                                    <i class="fas fa-plus pr-2"></i>Thêm Mới
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <table class="table table-hover text-nowrap table-bordered" id="dataTable" style="width: 100%">
+                        <thead class="bg-primary">
+                            <tr>
+                                <th width="5%">STT</th>
+                                <th width="90%">Tên Chức Vụ - Chức Danh</th>
+                                <th width="5%"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                    <div class="card-footer clearfix" style="height: 51px; width: 100%">
+                        <ul class="pagination pagination-sm m-0 float-right">
+                        </ul>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="add-sh">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Thêm Danh Mục Chức Vụ - Chức Danh</h4>
+                        <button type="button" class="close closeform" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">×</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        @using (Ajax.BeginForm("Create", "DM_ChucVu_ChucDanh", new AjaxOptions { HttpMethod = "POST", OnSuccess = "FnSuccess", OnFailure = "Failure", OnBegin = "FnBegin" }, new { @class = "DM_Create form-horizontal", @id = "formChucDanh" }))
+                        {
+                            @Html.AntiForgeryToken()
+                            <div class="card-body">
+                                <div class="form-group row">
+                                    <label for="cnsh" class="col-sm-3 col-form-label">Tên Chức vụ Chức Danh <span style="color: red"> *</span></label>
+                                    <div class="col-sm-9">
+                                        <input type="text" class="form-control" placeholder="nhập tên chức vụ" id="Ten_ChucVu_ChucDanh" name="Ten_ChucVu_ChucDanh" required>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="modal-footer justify-content-between">
+                                <button type="button" class="btn btn-danger closeform" data-dismiss="modal" style="width: 105px">
+                                    Đóng
+                                </button>
+                                <button type="submit" class="btn btn-primary" style="position: relative; width: 105px;">
+                                    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="background: none; display: block; shape-rendering: auto; margin: 0px; padding: 0px; width: 20px; height: 20px; position: absolute;left: 5px;top: 6px;" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid" class="loading_newchucvu d-none">
+                                        <circle cx="50" cy="50" r="32" stroke-width="8" stroke="#ffffff" stroke-dasharray="50.26548245743669 50.26548245743669" fill="none" stroke-linecap="round">
+                                            <animateTransform attributeName="transform" type="rotate" repeatCount="indefinite" dur="1s" keyTimes="0;1" values="0 50 50;360 50 50"></animateTransform>
+                                        </circle>
+                                    </svg>
+                                    Lưu Mới
+                                </button>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="add-sh1">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Cập Nhật Danh Mục Chức Vụ - Chức Danh</h4>
+                        <button type="button" class="close closeform" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">×</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        @using (Ajax.BeginForm("Edit", "DM_ChucVu_ChucDanh", new AjaxOptions { HttpMethod = "POST", OnSuccess = "FnSuccess_Edit", OnFailure = "Failure_Edit", OnBegin = "FnBegin_Edit" }, new { @class = "DM_Edt form-horizontal" }))
+                        {
+                            @Html.AntiForgeryToken()
+                            <div class="card-body">
+                                <div class="form-group row">
+                                    <label for="cnsh" class="col-sm-3 col-form-label">Tên Chức Vụ Chức Danh <span style="color: red"> *</span></label>
+                                    <div class="col-sm-9">
+                                        <input type="hidden" disable="true" class="form-control" id="Ma_ChucVu_ChucDanh_edt" name="Ma_ChucVu_ChucDanh" value="">
+                                        <input type="text" class="form-control" placeholder="nhập tên chức vụ" id="Ten_ChucVu_ChucDanh_edt" name="Ten_ChucVu_ChucDanh" value="">
+                                    </div>
+                                </div>
+                                <div class="modal-footer justify-content-between">
+                                    <button type="button" class="btn btn-danger closeform" data-dismiss="modal" style="width: 110px">
+                                        Đóng
+                                    </button>
+                                    <button type="submit" class="btn btn-primary" style="position: relative; width: 110px;">
+                                        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="background: none; display: block; shape-rendering: auto; margin: 0px; padding: 0px; width: 20px; height: 20px; position: absolute;left: 5px;top: 6px;" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid" class="loading_editxaphuong d-none">
+                                            <circle cx="50" cy="50" r="32" stroke-width="8" stroke="#ffffff" stroke-dasharray="50.26548245743669 50.26548245743669" fill="none" stroke-linecap="round">
+                                                <animateTransform attributeName="transform" type="rotate" repeatCount="indefinite" dur="1s" keyTimes="0;1" values="0 50 50;360 50 50"></animateTransform>
+                                            </circle>
+                                        </svg>
+                                        Cập nhật
+                                    </button>
+                                </div>
+
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+<script src="~/Scripts/DanhMuc/DM_ChucVu_ChucDanh.js"></script>

@@ -1,0 +1,367 @@
+﻿
+@{
+    ViewBag.Title = "GiaoNhanBanKeKhai";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    <style type="text/css">
+
+        p {
+            margin: 0pt 0pt 10pt
+        }
+
+        table {
+            margin-top: 0pt;
+            margin-bottom: 10pt
+        }
+
+        .Footer {
+            margin-bottom: 0pt;
+            line-height: normal;
+            font-family: 'Times New Roman';
+            font-size: 14pt
+        }
+
+        .Header {
+            margin-bottom: 0pt;
+            line-height: normal;
+            font-family: 'Times New Roman';
+            font-size: 14pt
+        }
+
+        .ListParagraph {
+            margin-left: 36pt;
+            margin-bottom: 10pt;
+            line-height: 115%;
+            font-family: 'Times New Roman';
+            font-size: 14pt
+        }
+
+        .Vnbnnidung60 {
+            margin-bottom: 0pt;
+            line-height: 12.5pt;
+            widows: 0;
+            orphans: 0;
+            font-family: 'Times New Roman';
+            font-size: 9.5pt;
+            font-weight: bold;
+            background-color: #ffffff
+        }
+
+        span.FooterChar {
+            font-family: 'Times New Roman';
+            font-size: 14pt
+        }
+
+        span.HeaderChar {
+            font-family: 'Times New Roman';
+            font-size: 14pt
+        }
+
+        span.Vnbnnidung6 {
+            font-family: 'Times New Roman';
+            font-size: 9.5pt;
+            font-weight: bold;
+            background-color: #ffffff
+        }
+
+        .TableGrid {
+        }
+        .title-input-custom {
+            text-align: center;
+            border: 1px solid #6c89bd;
+            border-bottom: 0px;
+            border-radius: 5px;
+            border-bottom-right-radius: 0px;
+            border-bottom-left-radius: 0px;
+            color: #007bff;
+        }
+    </style>
+}
+
+
+
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-left">
+                    <li class="breadcrumb-item"><a href="@Url.Action("Index","Home")">Trang chủ</a></li>
+                    <li class="breadcrumb-item active">Danh sách biên bản giao nhận</li>
+                    <li class="breadcrumb-item">Chi tiết biên bản giao nhận</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="card text_ui_right_cus Card-control">
+                    @using (Ajax.BeginForm("Create", "NV_GiaoNhanBanKekhai", new AjaxOptions { HttpMethod = "POST", OnSuccess = "FnSuccess", OnFailure = "Failure"}, new { @class = "formDM_CanBo form-horizontal" }))
+                    {
+                        @Html.AntiForgeryToken()
+
+                        <div class="row line_header" style="padding-bottom: 1%;padding-left: 2%;padding-right: 2%;padding-top: 1%;">
+                            <div class="col-md-6 title_ngtao clsTitleFrom" style="text-align: left; ">
+
+                            </div>
+                            <div class="col-md-6 title_ngtao clsTitleFrom" style="text-align: right; ">
+                                <button type="submit" class="btn btn-primary-custom clsLuuBienBan" id="btnLuuBaoCao"><i class="fas fa-edit"></i> Lưu biên bản</button>
+                                <button type="button" class="btn btn-primary-custom clsprintBienBan" id="btnprintBaoCao"><i class="fas fa-print"></i> In biên bản</button>
+                                <button type="button" class="btn btn-primary-custom clsSendBienBan" id="btnGuiBaoCao"><i class="fa fa-arrow-alt-circle-right"></i> Giao biên bản</button>
+                                <button type="button" class="btn btn-primary-custom clsSendBienBan" id="btnNhanBaoCao"><i class="fa fa-arrow-alt-circle-down"></i> Nhận biên bản</button>
+                            </div>
+                        </div>
+                        <div style="padding-bottom: 1%; padding-left:2%; padding-right:2%;" class="row">
+                            <div class="col-md-7" id="MaBienBan" style=" padding-top: 1%; padding-bottom: 1%; padding-left: 2%; padding-right: 2%; border-radius: 10px; box-shadow: 0 5px 20px 0 rgb(0 0 0 / 15%); margin-top: 10px;">
+                                <div>
+                                    <p style="margin-top:6pt; margin-bottom:6pt; text-align:center; line-height:normal"><span style="font-weight:bold">MẪU BIÊN BẢN</span><br /><span style="font-weight:bold">Giao nhận Bản kê khai tài sản, thu nhập năm <span id="spanNamKeKhai1" name="spanNamKeKhai1"></span></span></p>
+                                    <p style="margin-top:6pt; margin-bottom:6pt; text-align:center; line-height:115%; font-size:12pt"><span>(Kèm theo Công văn số: <span id="spanCongVanSo"> ... </span>./UBND-NC ngày <span id="spanNgayCongVan"> ... </span>/<span id="spanThangCongVan"> ... </span>/<span id="spanNamCongVan"> ... </span> của UBND tỉnh)</span></p>
+                                    <p style="margin-top:6pt; margin-bottom:6pt; text-align:center; line-height:115%; font-size:13pt"><span style="font-weight:bold">---------------</span></p>
+                                    <p class="Vnbnnidung60" style="margin-top:6pt; margin-left:2pt; text-align:center; line-height:normal; font-size:14pt; background-color:transparent"><span style="font-weight:normal; font-style:italic; -aw-import:ignore">&#xa0;</span></p>
+                                    <div style="text-align:center">
+                                        <table cellspacing="0" cellpadding="0" style="width:458.45pt; margin-right:auto; margin-left:auto; margin-bottom:0pt; border-collapse:collapse" >
+                                            <tr>
+                                                <td style="width:174.45pt; vertical-align:top; background-color:#ffffff">
+                                                    <p style="margin-top:6pt; margin-bottom:6pt; text-align:center; font-size:13pt"><a name="bookmark118"></a><a name="bookmark119"><span style="-aw-import:spaces">&#xa0; </span><span>TÊN CQ, TC CHỦ QUẢN</span></a></p>
+                                                    <p style="margin-top:6pt; margin-bottom:6pt; text-align:center; font-size:13pt"><span style="font-weight:bold">TÊN CƠ QUAN, TỔ CHỨC</span></p>
+                                                    <p style="margin-top:6pt; margin-bottom:6pt; text-align:center; font-size:13pt"><span style="font-weight:bold">---------------</span></p>
+                                                </td>
+                                                <td style="width:284pt; vertical-align:top; background-color:#ffffff">
+                                                    <p style="margin-top:6pt; margin-bottom:6pt; text-align:center; font-size:13pt"><span style="font-weight:bold; -aw-import:spaces">&#xa0;&#xa0; </span><span style="font-weight:bold">CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM </span></p>
+                                                    <p style="margin-top:6pt; margin-bottom:6pt; text-align:center; font-size:13pt"><span style="font-weight:bold">Độc lập - Tự do - Hạnh phúc</span></p>
+                                                    <p style="margin-top:6pt; margin-bottom:6pt; text-align:center; font-size:13pt"><span style="font-weight:bold">---------------</span></p>
+                                                    <p style="margin-top:6pt; margin-bottom:6pt; text-align:center; font-size:13pt"><span style="font-style:italic; -aw-import:spaces">&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0; </span><span style="font-style:italic">Thứ <span>@((int)DateTime.UtcNow.DayOfWeek + 1)</span>, ngày <span>@DateTime.Now.Day</span> tháng <span>@DateTime.Now.Month</span> năm <span>@DateTime.Now.Year</span></span></p>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                    <p style="margin-top:6pt; margin-bottom:6pt; text-align:justify; line-height:normal; font-size:13pt"><span style="font-weight:bold; -aw-import:ignore">&#xa0;</span></p>
+                                    <p style="margin-top:6pt; margin-bottom:6pt; text-align:center; line-height:normal; font-size:13pt"><span style="font-weight:bold">BIÊN BẢN</span><br /><span style="font-weight:bold">Giao nhận </span><span style="-aw-bookmark-end:bookmark118"></span><span style="-aw-bookmark-end:bookmark119"></span><span style="font-weight:bold">Bản kê khai tài sản, thu nhập năm <span id="spanNamKeKhai2" name="spanNamKeKhai2"></span></span></p>
+                                    <p style="margin-top:6pt; margin-bottom:6pt; text-align:center; line-height:normal; font-size:13pt"><span style="font-weight:bold">---------------</span></p>
+                                    <p style="margin-top:6pt; margin-bottom:6pt; text-align:justify; line-height:normal; font-size:13pt">
+                                        <span>Vào lúc,</span>
+                                        <span id="spanGioGiaoNhan" name="spanGioGiaoNhan"> ... </span>
+                                        <span> ngày </span>
+                                        <span id="spanNgayGiaoNhan" name="spanNgayGiaoNhan"> ... </span>
+                                        <span> tháng </span>
+                                        <span id="spanThangGiaoNhan" name="spanThangGiaoNhan"> ... </span>
+                                        <span> năm </span>
+                                        <span id="spanNamGiaoNhan" name="spanNamGiaoNhan"> ... </span>
+                                        <span>, tại </span>
+                                        <span id="spanDiaDiemGiaoNhan" name="spanDiaDiemGiaoNhan"> ................................... </span>
+                                    </p>
+                                    <p style="margin-top:6pt; margin-bottom:6pt; text-align:justify; line-height:normal; font-size:13pt"><span>Chúng tôi gồm:</span></p>
+                                    <p style="margin-top:6pt; margin-bottom:6pt; text-align:justify; line-height:normal; font-size:13pt"><span style="font-weight:bold">BÊN GIAO: <span id="spanCoQuanGiao" name="spanCoQuanGiao"></span></p>
+                                    <p style="margin-top:6pt; margin-bottom:6pt; text-align:justify; line-height:normal; font-size:13pt"><span>Ông (bà):</span><span id="spanCanBoGiao" name="spanCanBoGiao"></span></p>
+                                    <p style="margin-top:6pt; margin-bottom:6pt; text-align:justify; line-height:normal; font-size:13pt"><span>Chức vụ công tác:</span><span id="spanChucVuBenGiao" name="spanChucVuBenGiao"></span></p>
+                                    <p style="margin-top:6pt; margin-bottom:6pt; text-align:justify; line-height:normal; font-size:13pt"><span style="font-weight:bold">BÊN NHẬN: <span id="spanCoQuanNhan" name="spanCoQuanNhan"></span></span></p>
+                                    <p style="margin-top:6pt; margin-bottom:6pt; text-align:justify; line-height:normal; font-size:13pt"><span>Ông (bà): <span id="spanCanBoNhan" name="spanCanBoNhan"></span></span></p>
+                                    <p style="margin-top:6pt; margin-bottom:6pt; text-align:justify; line-height:normal; font-size:13pt"><span>Chức vụ công tác: <span id="spanChucVuBenNhan" name="spanChucVuBenNhan"></span></span></p>
+                                    <p style="margin-top:6pt; margin-bottom:6pt; text-indent:36pt; text-align:justify; line-height:normal; font-size:13pt"><span>Tiến hành giao nhận Bản kê khai tài sản, thu nhập năm <span id="spanNamKeKhai3" name="spanNamKeKhai3"></span> gồm:</span></p>
+                                    <p style="margin-top:6pt; margin-bottom:6pt; text-align:justify; line-height:normal; font-size:13pt"><span style="font-weight:bold">I. Kê khai TSTN hằng năm <span id="spanNamKeKhai4" name="spanNamKeKhai4"></span></span></p>
+                                    <p style="margin-top:6pt; margin-bottom:6pt; text-align:justify; line-height:normal; font-size:13pt"><span>1. Danh sách người có nghĩa vụ kê khai hằng năm năm <span id="spanNamKeKhai5" name="spanNamKeKhai5"></span></span></p>
+                                    <table cellspacing="0" cellpadding="0" class="TableGrid" style="width: 100%; margin-bottom:0pt; border:0.75pt solid #000000; -aw-border:0.5pt single; -aw-border-insideh:0.5pt single #000000; -aw-border-insidev:0.5pt single #000000; border-collapse:collapse" id="dsKeKhaiHN">
+                                        <tr>
+                                            <td style="width:33.3pt; border-right-style:solid; border-right-width:0.75pt; border-bottom-style:solid; border-bottom-width:0.75pt; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top; -aw-border-bottom:0.5pt single; -aw-border-right:0.5pt single">
+                                                <p style="margin-top:6pt; margin-bottom:6pt; text-align:center; font-size:13pt"><span style="font-weight:bold">STT</span></p>
+                                            </td>
+                                            <td style="width:120.95pt; border-right-style:solid; border-right-width:0.75pt; border-left-style:solid; border-left-width:0.75pt; border-bottom-style:solid; border-bottom-width:0.75pt; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top; -aw-border-bottom:0.5pt single; -aw-border-left:0.5pt single; -aw-border-right:0.5pt single">
+                                                <p style="margin-top:6pt; margin-bottom:6pt; text-align:center; font-size:13pt"><span style="font-weight:bold">Họ và tên</span></p>
+                                            </td>
+                                            <td style="width:85.15pt; border-right-style:solid; border-right-width:0.75pt; border-left-style:solid; border-left-width:0.75pt; border-bottom-style:solid; border-bottom-width:0.75pt; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top; -aw-border-bottom:0.5pt single; -aw-border-left:0.5pt single; -aw-border-right:0.5pt single">
+                                                <p style="margin-top:6pt; margin-bottom:6pt; text-align:center; font-size:13pt"><span style="font-weight:bold">Chức vụ</span></p>
+                                            </td>
+                                            <td style="width:163.8pt; border-left-style:solid; border-left-width:0.75pt; border-bottom-style:solid; border-bottom-width:0.75pt; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top; -aw-border-bottom:0.5pt single; -aw-border-left:0.5pt single">
+                                                <p style="margin-top:6pt; margin-bottom:6pt; text-align:center; font-size:13pt"><span style="font-weight:bold">Đơn vị công tác</span></p>
+                                            </td>
+                                        </tr>
+                                        
+                                    </table>
+                                    <p style="margin-top:6pt; margin-bottom:6pt; line-height:normal; font-size:13pt"><span>2. Số lượng các bản kê khai: <span id="spanSoLuongKeKhaiHangNam" name="spanSoLuongKeKhaiHangNam"></span></span></p>
+                                    <p style="margin-top:6pt; margin-bottom:6pt; line-height:normal; font-size:13pt"><span><span style="width:28.35pt; display:inline-block">&#xa0;</span>Lý do không bàn giao đủ số lượng bản kê khai (nếu có): <span id="LyDoKhongBanGiaoKKDuHangNam" name="LyDoKhongBanGiaoKKDuHangNam"></span></span></p>
+                                    <p style="margin-top:6pt; margin-bottom:6pt; line-height:normal; font-size:13pt"><span>3. Tình trạng tài liệu giao nộp: <span id="TinhTrangGiaoBanKKHangNam" name="TinhTrangGiaoBanKKHangNam"></span></span><span style="width:28.35pt; display:inline-block">&#xa0;</span></p>
+                                    <p style="margin-top:6pt; margin-bottom:6pt; line-height:normal; font-size:13pt"><span style="font-weight:bold">II. Kê khai TSTN bổ sung năm <span id="spanNamKeKhai6" name="spanNamKeKhai6"></span></span></p>
+                                    <p style="margin-top:6pt; margin-bottom:6pt; line-height:normal; font-size:13pt"><span>1. Danh sách người có nghĩa vụ kê khai bổ sung năm <span id="spanNamKeKhai7" name="spanNamKeKhai7"></span></span></p>
+                                    <table cellspacing="0" cellpadding="0" class="TableGrid" style="width: 100%; margin-bottom: 0pt; border: 0.75pt solid #000000; -aw-border: 0.5pt single; -aw-border-insideh: 0.5pt single #000000; -aw-border-insidev: 0.5pt single #000000; border-collapse: collapse" id="dsKeKhaiBS">
+                                        <tr>
+                                            <td style="width:33.3pt; border-right-style:solid; border-right-width:0.75pt; border-bottom-style:solid; border-bottom-width:0.75pt; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top; -aw-border-bottom:0.5pt single; -aw-border-right:0.5pt single"  >
+                                                <p style="margin-top:6pt; margin-bottom:6pt; text-align:center; font-size:13pt"><span style="font-weight:bold">STT</span></p>
+                                            </td>
+                                            <td style="width:120.95pt; border-right-style:solid; border-right-width:0.75pt; border-left-style:solid; border-left-width:0.75pt; border-bottom-style:solid; border-bottom-width:0.75pt; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top; -aw-border-bottom:0.5pt single; -aw-border-left:0.5pt single; -aw-border-right:0.5pt single">
+                                                <p style="margin-top:6pt; margin-bottom:6pt; text-align:center; font-size:13pt"><span style="font-weight:bold">Họ và tên</span></p>
+                                            </td>
+                                            <td style="width:85.15pt; border-right-style:solid; border-right-width:0.75pt; border-left-style:solid; border-left-width:0.75pt; border-bottom-style:solid; border-bottom-width:0.75pt; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top; -aw-border-bottom:0.5pt single; -aw-border-left:0.5pt single; -aw-border-right:0.5pt single">
+                                                <p style="margin-top:6pt; margin-bottom:6pt; text-align:center; font-size:13pt"><span style="font-weight:bold">Chức vụ</span></p>
+                                            </td>
+                                            <td style="width:163.8pt; border-left-style:solid; border-left-width:0.75pt; border-bottom-style:solid; border-bottom-width:0.75pt; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top; -aw-border-bottom:0.5pt single; -aw-border-left:0.5pt single">
+                                                <p style="margin-top:6pt; margin-bottom:6pt; text-align:center; font-size:13pt"><span style="font-weight:bold">Đơn vị công tác</span></p>
+                                            </td>
+                                        </tr>
+                                        
+                                    </table>
+                                    <p style="margin-top:6pt; margin-bottom:6pt; line-height:normal; font-size:13pt"><span>2. Số lượng các bản kê khai: <span id="spanSoLuongKeKhaiBoSung" name="spanSoLuongKeKhaiBoSung"></span></span></p>
+                                    <p style="margin-top:6pt; margin-bottom:6pt; line-height:normal; font-size:13pt"><span><span style="width:28.35pt; display:inline-block">&#xa0;</span>Lý do không bàn giao đủ số lượng bản kê khai (nếu có): <span id="LyDoKhongBanGiaoKKDuBoSung" name="LyDoKhongBanGiaoKKDuBoSung"></span></span></p>
+                                    <p style="margin-top:6pt; margin-bottom:6pt; line-height:normal; font-size:13pt"><span>3. Tình trạng tài liệu giao nộp: <span id="TinhTrangGiaoBanKKBoSung" name="TinhTrangGiaoBanKKBoSung"></span></span><span style="width:28.35pt; display:inline-block">&#xa0;</span></p>
+                                    <p style="margin-top:6pt; margin-bottom:6pt; text-align:justify; line-height:normal; font-size:13pt"><span>Biên bản này được lập thành hai bản; bên giao giữ một bản, bên nhận giữ một bản./.</span></p>
+                                    <p style="margin-top:6pt; margin-bottom:6pt; text-align:justify; line-height:normal; font-size:13pt"><span style="font-style:italic; -aw-import:ignore">&#xa0;</span></p>
+
+                                    <p style="margin-top:6pt; margin-bottom:6pt; text-align:justify; line-height:normal"><span style="-aw-import:ignore">&#xa0;</span></p>
+                                </div>
+                            </div>
+                            <div class="col-md-5" style=" padding-top: 1%; padding-bottom: 1%; padding-left: 2%; padding-right: 2%; border-radius: 10px; box-shadow: 0 5px 20px 0 rgb(0 0 0 / 15%); margin-top: 10px;">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <div class="title-input-custom">
+                                            <label>CÔNG VĂN</label>
+                                            <input type="text" name="ID" id="ID" hidden class="form-control" placeholder="Nhập số công văn"/>
+                                        </div>
+                                    </div>
+                                    <div class="col-7">
+                                        <div class="form-group">
+                                            <label>Công văn số</label>
+                                            <input type="text" class="form-control" placeholder="Nhập số công văn" id="CongVanSo" name="CongVanSo">
+                                        </div>
+                                    </div>
+                                    <div class="col-5">
+                                        <div class="form-group">
+                                            <label>Năm kê khai</label>
+                                            <input type="text" class="form-control" placeholder="Nhập năm kê khai" id="NamKeKhai" name="NamKeKhai">
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <div class="form-group">
+                                            <label>Ngày ra công văn</label>
+                                            <input type="date" class="form-control" placeholder="Nhập ngày ra công văn" id="CongVanNgay" name="CongVanNgay">
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <div class="title-input-custom">
+                                            <label>ĐỊA ĐIỂM VÀ THỜI GIAN GIAO NHẬN</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <div class="form-group">
+                                            <label>Địa điểm giao nhận</label>
+                                            <input type="text" class="form-control" placeholder="Nhập địa điểm giao nhận biên bản" id="DiaDiemGiaoNhan" name="DiaDiemGiaoNhan">
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <div class="form-group">
+                                            <label>Ngày giao nhận biên bản</label>
+                                            <input type="datetime-local" class="form-control" placeholder="Nhập ngày giao nhận biên bản" id="NgayGiaoNhan" name="NgayGiaoNhan" value="2015-01-02T11:42:00">
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <div class="title-input-custom">
+                                            <label>BÊN GIAO</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <div class="form-group">
+                                            <label>Cơ quan/đơn vị</label>
+                                            <select class="form-control" name="Ma_CoQuan_DonVi_BenGiao" id="Ma_CoQuan_DonVi_BenGiao" style="width: 100%; height: 100%" >
+                                                
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <div class="form-group">
+                                            <label>Cán bộ</label>
+                                            <select class="form-control" name="Ma_CanBo_BenGiao" id="Ma_CanBo_BenGiao" style="width: 100%; height: 100%">
+                                             
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <div class="form-group">
+                                            <label>Chức vụ: <span style=" font-weight: 500;" id="ChucVuBenGiao" name="ChucVuBenGiao"></span></label>
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <div class="title-input-custom">
+                                            <label>BÊN NHẬN</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <div class="form-group">
+                                            <label>Cơ quan/đơn vị</label>
+                                            
+                                            <select class="form-control" name="CoQuanBenNhan" id="CoQuanBenNhan" style="width: 100%; height: 100%" disabled>
+                                                <option selected>Thanh Tra</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <div class="form-group">
+                                            <label>Cán bộ</label>
+                                            <input type="hidden" class="form-control" id="Ma_CoQuan_DonVi_BenNhan" name="Ma_CoQuan_DonVi_BenNhan" />
+                                            <select class="form-control" name="Ma_CanBo_BenNhan" id="Ma_CanBo_BenNhan" style="width: 100%; height: 100%">
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <div class="form-group">
+                                            <label>Chức vụ: <span style=" font-weight: 500;" id="ChucVuBenNhan" name="ChucVuBenNhan"></span></label>
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <div class="title-input-custom">
+                                            <label>KÊ KHAI TSTN HẰNG NĂM</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <div class="form-group">
+                                            <label>Số lượng các bản kê khai (Đơn vị tính: bản kê khai)</label>
+                                            <input type="number" class="form-control" id="SoLuongBanKeKhaiHangNam" name="SoLuongBanKeKhaiHangNam">
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <div class="form-group">
+                                            <label>Lý do không bàn giao đủ số lượng bản kê khai (nếu có)</label>
+                                            <textarea type="number" class="form-control" id="LyDoKeKhaiHangNam" name="LyDoKeKhaiHangNam"></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <div class="form-group">
+                                            <label>Tình trạng tài liệu giao nộp</label>
+                                            <input type="text" class="form-control" id="TinhTrangTaiLieuHangNam" name="TinhTrangTaiLieuHangNam">
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <div class="title-input-custom">
+                                            <label>KÊ KHAI TSTN BỔ SUNG</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <div class="form-group">
+                                            <label>Số lượng các bản kê khai (Đơn vị tính: bản kê khai)</label>
+                                            <input type="number" class="form-control" id="SoLuongBanKeKhaiBoSung" name="SoLuongBanKeKhaiBoSung">
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <div class="form-group">
+                                            <label>Lý do không bàn giao đủ số lượng bản kê khai (nếu có)</label>
+                                            <textarea type="number" class="form-control" id="LyDoKeKhaiBoSung" name="LyDoKeKhaiBoSung"></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <div class="form-group">
+                                            <label>Tình trạng tài liệu giao nộp</label>
+                                            <input type="text" class="form-control" id="TinhTrangTaiLieuBoSung" name="TinhTrangTaiLieuBoSung">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    </div>
+                </div>
+            </div>
+        </div>
+</section>
+
+<script src="~/Scripts/NV_GiaoNhanBanKeKhai.js"></script>
+
